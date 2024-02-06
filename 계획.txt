@@ -20,4 +20,4 @@ https://otexts.com/fppkr/
 2월 13일 : 4주차 과제 복습
 2월 14일 : 5주차 과제 복습
 
-vscode gpu 설정
+vscode gpu 설정, (SQL,SAS 학습)

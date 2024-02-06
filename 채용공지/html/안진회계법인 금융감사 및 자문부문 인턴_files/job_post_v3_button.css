@@ -1,0 +1,52 @@
+@charset "euc-kr";
+/* CSS Document */
+
+
+/*작은버튼*/
+#templwrap_v3 .temp_btn_sm {min-width:50px; display:inline-block; padding:2px 5px; background:#FF460A; color:#ffffff; font-weight:bold; font-size:0.94em; margin:0px 5px; cursor: pointer;  text-align:center;}
+#templwrap_v3 .temp_btn_sm.btn2{border-radius:5px;}
+#templwrap_v3 .temp_btn_sm.btn3{border-radius:50px;}
+#templwrap_v3 .temp_btn_sm.btn4{box-shadow:rgba(255,255,255,0.5) 0 1px 0px 0 inset; border-radius:3px; border:solid 1px #FF460A;}
+
+
+/*큰버튼*/
+#templwrap_v3 .temp_btn {min-width:200px; display:inline-block; padding:20px; background:#FF460A; color:#ffffff; font-weight:bold; margin:5px 10px; cursor: pointer; text-align:center;}
+#templwrap_v3 .temp_btn.btn2{border-radius:5px;}
+#templwrap_v3 .temp_btn.btn3{border-radius:55px;}
+#templwrap_v3 .temp_btn.btn4{border-radius:20px 0px;}
+#templwrap_v3 .temp_btn.btn5{border:solid 1px #FF460A; color:#FF460A; background:#ffffff; box-shadow:5px 5px 0px rgba(255,70,10,1)}
+#templwrap_v3 .temp_btn.btn6{box-shadow:rgba(255,255,255,0.5) 0 30px 20px 0 inset; border-radius:3px; border:solid 1px #FF460A; }
+#templwrap_v3 .temp_btn.btn7{box-shadow:rgba(255,70,10,0.4) 0 9px 12px 0; }
+#templwrap_v3 .temp_btn.btn8{background:#FF460A; background:radial-gradient(100% 100% at 100% 0, #FFB40A 0, #FF460A 100%)}
+#templwrap_v3 .temp_btn.btn9{border:solid 1px #FF460A; color:#FF460A; background:transparent; position:relative;}
+#templwrap_v3 .temp_btn.btn9:before{content:""; width:100%; height:100%; background:rgba(255,70,10,0.2); position:absolute; left:10px; top:8px;}
+#templwrap_v3 .temp_btn.btn10{border-radius:50px; position:relative;}
+#templwrap_v3 .temp_btn.btn10:before{content:""; width:90%; height:50%; background:linear-gradient(#fff 0, rgba(255, 255, 255, 0) 100%); opacity:0.5; position:absolute; left:5%; top:0px; border-radius:125px;}
+
+/*애니메이션버튼*/
+#templwrap_v3 .temp_btn.btn_a1, #templwrap_v3 .temp_btn_sm.btn_a1 {transition:background 0.2s ease-in;}
+#templwrap_v3 .temp_btn.btn_a1:hover, #templwrap_v3 .temp_btn_sm.btn_a1:hover {background:#d21e00; transition:background 0.2s ease-in;}
+	
+#templwrap_v3 .temp_btn.btn_a2, #templwrap_v3 .temp_btn_sm.btn_a2{box-shadow: inset 0px 0 0 0 #d21e00; transition:ease-out 0.5s;}
+#templwrap_v3 .temp_btn.btn_a2:hover, #templwrap_v3 .temp_btn_sm.btn_a2:hover{box-shadow: inset 300px 0 0 0 #d21e00; }
+	
+#templwrap_v3 .temp_btn.btn_a3, #templwrap_v3 .temp_btn_sm.btn_a3{box-shadow: inset 0px 0 0 0 #d21e00; transition:ease-out 0.5s;}
+#templwrap_v3 .temp_btn.btn_a3:hover, #templwrap_v3 .temp_btn_sm.btn_a3:hover{box-shadow: inset 0 0 200px 0 #d21e00; }
+	
+#templwrap_v3 .temp_btn.btn_a4, #templwrap_v3 .temp_btn_sm.btn_a4 {transform:scale(1); transition:transform 0.3s ease-out;}
+#templwrap_v3 .temp_btn.btn_a4:hover, #templwrap_v3 .temp_btn_sm.btn_a4:hover {transform:scale(1.058); transition:transform 0.3s ease-out;}
+	
+#templwrap_v3 .temp_btn.btn_a5, #templwrap_v3 .temp_btn_sm.btn_a5 {box-shadow:0 6px #d21e00;}
+#templwrap_v3 .temp_btn.btn_a5:hover, #templwrap_v3 .temp_btn_sm.btn_a5:hover {box-shadow:0 4px #d21e00; position:relative;top:2px;}
+	
+#templwrap_v3 .temp_btn.btn_a6, #templwrap_v3 .temp_btn_sm.btn_a6 {background-size: 300% 100%; transition: all .4s ease-in-out; background-image: linear-gradient(to right, #FF460A, #d21e00, #ff861b, #ff5b0a) }
+#templwrap_v3 .temp_btn.btn_a6:hover, #templwrap_v3 .temp_btn_sm.btn_a6:hover {background-position: 100% 0; transition: all .4s ease-in-out;}
+	
+#templwrap_v3 .temp_btn.btn_a7 > span, #templwrap_v3 .temp_btn_sm.btn_a7 > span{transition:all 0.3s ease-out;  position: relative;   display: inline-block;}
+#templwrap_v3 .temp_btn.btn_a7 > span:after, #templwrap_v3 .temp_btn_sm.btn_a7 > span:after{content: '\276F'; position: absolute; opacity: 0; top:50%; right:-20px; transform: translateY(-50%)}
+#templwrap_v3 .temp_btn.btn_a7:hover > span, #templwrap_v3 .temp_btn_sm.btn_a7:hover > span{padding-right:10px;}
+#templwrap_v3 .temp_btn.btn_a7:hover > span:after, #templwrap_v3 .temp_btn_sm.btn_a7:hover > span:after{ opacity: 1; right:-5px;transition:right 0.3s ease-out;}
+
+#templwrap_v3 .temp_btn.row2 {padding:9px; vertical-align: middle;}
+#templwrap_v3 table .temp_btn, #templwrap_v3 ul li .temp_btn, #templwrap_v3 ol li .temp_btn, #templwrap_v3 dl dt .temp_btn, #templwrap_v3 dl dd .temp_btn,
+#templwrap_v3 table .temp_btn_sm, #templwrap_v3 ul li .temp_btn_sm, #templwrap_v3 ol li .temp_btn_sm, #templwrap_v3 dl dt .temp_btn_sm, #templwrap_v3 dl dd .temp_btn_sm{margin:0; line-heigth:1.5;}

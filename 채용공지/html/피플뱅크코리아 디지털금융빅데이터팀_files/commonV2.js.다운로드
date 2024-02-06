@@ -1,0 +1,181 @@
+// Copyright ⓒ 1998~2015 Incruit Corporation All rights reserved
+
+var DATE_SEPERATOR="/";var G_DOMAIN_INCRUIT="incruit.com";var G_DOMAIN_ALBATING="albating.com";var G_HOSTNAME_EDIT="https://"+G_SERVER_SET+"edit.incruit.com";var G_HOSTNAME_SSL_EDIT="https://"+G_SERVER_SET+"edit.incruit.com";var G_HOSTNAME_FILE="http://"+G_SERVER_SET+"file.incruit.com";var G_HOSTNAME_SSL_FILE="https://"+G_SERVER_SET+"file.incruit.com";var G_HOSTNAME_MY="https://"+G_SERVER_SET+"my.incruit.com";var G_HOSTNAME_PHOTO="https://"+G_SERVER_SET+"photo.incruit.com";var G_HOSTNAME_PARTNER="http://"+G_SERVER_SET+"partner.incruit.com";var G_HOSTNAME_ALBA="http://"+G_SERVER_SET+"alba.incruit.com";var G_HOSTNAME_JOB="https://"+G_SERVER_SET+"job.incruit.com";var G_HOSTNAME_TV="http://"+G_SERVER_SET+"tv.incruit.com";var G_HOSTNAME_RECRUITER="https://"+G_SERVER_SET+"recruiter.incruit.com";var G_HOSTNAME_RESUMEDB="https://"+G_SERVER_SET+"resumedb.incruit.com";var G_HOSTNAME_SEARCH="https://"+G_SERVER_SET+"search.incruit.com";var G_HOSTNAME_CHAT="http://"+G_SERVER_SET+"chat.incruit.com";var G_HOSTNAME_SALARY="http://"+G_SERVER_SET+"salary.incruit.com";var G_HOSTNAME_CP="http://"+G_SERVER_SET+"cp.incruit.com";var G_HOSTNAME_INCRUIT="https://"+G_SERVER_SET+"www.incruit.com";var G_HOSTNAME_IEMS="http://"+G_SERVER_SET+"iems.incruit.com";var G_HOSTNAME_EDU="https://"+G_SERVER_SET+"edu.incruit.com";var G_HOSTNAME_PEOPLE="https://"+G_SERVER_SET+"people.incruit.com";var G_HOSTNAME_OPENSALARY="http://"+G_SERVER_SET+"salary.incruit.com";var G_HOSTNAME_GONGMO="https://"+G_SERVER_SET+"gongmo.incruit.com";var G_HOSTNAME_SCHOOL="https://"+G_SERVER_SET+"school.incruit.com";var G_HOSTNAME_SSL_SCHOOL="https://"+G_SERVER_SET+"school.incruit.com";var G_HOSTNAME_MOBILE="https://"+G_SERVER_SET+"m.incruit.com";var G_HOSTNAME_MNUGU="http://"+G_SERVER_SET+"m.nugu.incruit.com";var G_HOSTNAME_MALBA="http://"+G_SERVER_SET+"m.alba.incruit.com";var G_HOSTNAME_LAB="https://"+G_SERVER_SET+"lab.incruit.com";var G_IS_WS_v2="1";var G_SECONDARY_DOMAIN="";var thisLocationArray=location.href.split("//");var domainThis=thisLocationArray[1];domainThis=domainThis.split("/");domainThis=domainThis[0];if(domainThis.indexOf('.')>0){G_SECONDARY_DOMAIN=domainThis.substr(0,domainThis.indexOf('.')).replace(G_SERVER_SET,"");domainThis=domainThis.substr(domainThis.indexOf('.')+1,domainThis.length);}
+function goCL(o,c,s,d){var r=o.href;if(r!=undefined)r=r.substring(0,r.indexOf("?"));if(d==null)d='';if(d=='')d=o.name;var l='/g_common/popup/chkclickjs.asp'
+l+='?click='+c;l+='&data='+escape(d);l+='&sn='+s;l+='&rd='+escape(r);l+='&dm='+parseInt(Math.random()*100000);if(document.images)(new Image()).src=l;return true;}
+function goCLv2(r,c,s,d){if(d==null)d='';var l='/g_common/popup/chkclickjs.asp'
+l+='?click='+c;l+='&data='+escape(d);l+='&sn='+s;l+='&rd='+escape(r);l+='&dm='+parseInt(Math.random()*100000);if(document.images)(new Image()).src=l;return true;}
+function goADJob(o,e,n,t,job){try{if(e.button==1||e.button==0){var shref=o.href;if(shref!=''){var u="/g_common/popup/popupmanager.asp?t=1&rd="+escape(shref);var screenPosX=(screen.width-825)/2;if(job!='')u+="&job="+job;var maxThisY=screen.height-50;var marginY=0;if(navigator.userAgent.indexOf("MSIE 6")>0){marginY=60;}
+else if(navigator.userAgent.indexOf("MSIE 7")>0){marginY=80;}
+else if(navigator.userAgent.indexOf("Firefox")>0){marginY=50;}
+else if(navigator.userAgent.indexOf("Opera")>0){marginY=30;}
+else if(navigator.userAgent.indexOf("Netscape")>0){marginY=-2;}else{marginY=80;}
+thisY=maxThisY-marginY;if((shref.indexOf('job.incruit.com/jobdb_info/jobpost.asp')>=0)||(shref.indexOf('job.incruit.com/entry/jobpost.asp')>=0)||(shref.indexOf('job.incruit.com/senior/jobpost.asp')>=0))
+{var f="marginwidth=0,toolbar=no,location=no,directories=yes,status=yes,scrollbars=yes,menubar=yes,resizable=yes,width=1020,height="+thisY+",top=0,left="+screenPosX;}
+else
+{var f="marginwidth=0,toolbar=yes,location=yes,directories=yes,status=yes,scrollbars=yes,menubar=yes,resizable=yes,width=825,height="+thisY+",top=0,left="+screenPosX;}
+if(t=="1")f="";window.open(u,n,f);}}}catch(e){}
+return false;}
+function goJobPostOut(shref){shref=shref.toLowerCase().replace("jobpost.asp","jobpostout.asp");if(shref!=''){var f="marginwidth=0,toolbar=yes,location=yes,directories=yes,status=yes,scrollbars=yes,menubar=yes,resizable=yes,width=1124,height=640,top=0,left=0";window.open(shref,'pop',f);}}
+function open_win(strURL,Winnm,Winwidth,Winheight,Screenwidth,Screenheight,Scrool,rtnObj){var left,top
+if(Screenwidth==""&&Screenheight==""){left=(screen.width/2)-(Winwidth/2)
+top=(screen.height/2)-(Winheight/2);}else{left=Screenwidth
+top=Screenheight}
+objPopupWindow=window.open(strURL,Winnm,'width='+Winwidth+',height='+Winheight+',top='+top+',left='+left+',marginwidth=0,toolbar=no,location=no,directories=no,status=no,scrollbars='+Scrool+',menubar=no');if(rtnObj){return objPopupWindow;}}
+if(!window.addNamespace)
+{window.addNamespace=function(ns)
+{var nsParts=ns.split(".");var root=window;for(var nIndex=0;nIndex<nsParts.length;nIndex++)
+{if(typeof(root[nsParts[nIndex]])=="undefined")root[nsParts[nIndex]]={};root=root[nsParts[nIndex]];}}}
+if(jQuery){jQuery(function(){if(jQuery.validator){jQuery.validator.setDefaults({onkeyup:false,onclick:false,onfocusout:false,showErrors:function(errorMap,errorList){if(errorList!="")alert(errorList[0].message);}});}});jQuery.ajaxSetup({beforeSend:function(request){try{_trk_clickPage(this.url,'');}catch(e){}}});}
+var isRshistoryBack=false;function rshistoryInit(initCaller){dhtmlHistory.initialize();dhtmlHistory.addListener(rshChange);if(dhtmlHistory.isFirstLoad()){initCaller.call();}}
+function rshChange(key,historyData){if(historyData!=null){isRshistoryBack=true;jQuery("#rshIdx").val(key.replace(/rshIdx\:/,""));rshistoryChange(key,historyData);}}
+function rshistoryHandler(objData,caller){if(dhtmlHistory!=null){if(isRshistoryBack==false){jQuery("#rshIdx").val(parseInt(jQuery("#rshIdx").val())+1);var rshdt=new objData(caller);dhtmlHistory.add("rshIdx:"+jQuery("#rshIdx").val(),rshdt);}
+isRshistoryBack=false;}}
+function rshistoryDebug(msg,clear){if(clear==true)
+jQuery("#output").html("<p>"+msg+"</p>");else
+jQuery("#output").html("<p>"+msg+"</p>");}
+String.prototype.isDate=function(){var date=""+this;date=date.replace(/\/|\-/g,"");if(date.length!=8)return false;var year=date.substring(0,4);var month=date.substring(4,6);var day=date.substring(6,8);var min_year=1900;var m=parseInt(month,10);var is=(m>=1&&m<=12);if(is){m=parseInt(month,10)-1;var d=parseInt(day,10);var end=new Array(31,28,31,30,31,30,31,31,30,31,30,31);if((year%4==0&&year%100!=0)||year%400==0){end[1]=29;}
+is=(d>=1&&d<=end[m]);}
+if(is){is=parseInt(year,10)>=min_year;}
+return is;}
+String.prototype.getLength=function(){var len=0;for(var i=0;i<this.length;i++){chrCode=this.charCodeAt(i);if(chrCode>128)
+len=len+3;else
+len++;}
+return len;}
+String.prototype.isNumeric=function(){var val=this;if(val){val=val.replace(/,/g,"");val=parseInt(val);if(val==NaN)
+return false;else
+return true;}
+else
+return false;}
+String.prototype.replaceAll=function(src,dest){var val=this;var idx=val.indexOf(src);while(idx>=0){val=val.replace(src,dest);idx=val.indexOf(src);}
+return val;}
+String.prototype.isEmail=function(){var val=this;if(val){if(val.search(/([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,8}|[0-9]{1,3})(\]?)$/)==-1){return false;}
+else{return true;}}
+else
+return false;}
+String.prototype.isPhone=function(){var val=this;if(val){if(val.search(/^\d{2,4}-\d{3,4}-\d{4}$/)==-1)
+return false;else
+return true;}else
+return false;}
+String.prototype.isLength=function(){var min=arguments[0];var max=arguments[1]?arguments[1]:null;var success=true;if(this.length<min)success=false;if(max&&this.length>max)success=false;return success;}
+String.prototype.ExistsSpecialChar=function(){var val=this;var chk=false;var ret=0;for(var i=0;i<val.length;i++)
+{ret=val.charCodeAt(i);if((ret<32)||(ret>32&&ret<35)||(ret>35&&ret<38)||(ret>57&&ret<65)||(ret>90&&ret<95)||(ret==96)||(ret>122&&ret<12353&&ret!=8213&&ret!=126)||(ret==12927))
+{chk=true;}}
+return chk;}
+function checkBetweens(objFrom,objTo)
+{if(objFrom==null||objTo==null)return false;var valFrom=objFrom.val();var valTo=objTo.val();if(valFrom.length==0||valTo.length==0)return true;valFrom=valFrom.replace(/\/|\-|\,/g,"");valTo=valTo.replace(/\/|\-|\,/g,"");if(parseInt(valFrom)>parseInt(valTo))
+{alert("끝값은 시작값보다 크거나 같아야 합니다.");objTo.focus();return false;}
+return true;}
+function isValidDate(param){try
+{param=param.replace(/-/g,'');if(isNaN(param)||param.length!=8){return false;}
+var year=Number(param.substring(0,4));var month=Number(param.substring(4,6));var day=Number(param.substring(6,8));var dd=day/0;if(month<1||month>12){return false;}
+var maxDaysInMonth=[31,28,31,30,31,30,31,31,30,31,30,31];var maxDay=maxDaysInMonth[month-1];if(month==2&&(year%4==0&&year%100!=0||year%400==0)){maxDay=29;}
+if(day<=0||day>maxDay){return false;}
+return true;}catch(err){return false;}}
+function win_open_jatp(ref){open_win('/g_common/popup/popupjatpresultdetail.asp?ref='+ref,'jattest','750','600','100','100','YES');}
+function win_open_jat(ref){open_win('/g_common/popup/popupjatresult.asp?ref='+ref,'jattest','750','600','100','100','YES');}
+function win_open_cbreport_my(MEM_NO){var CBR_MY_URL='http://www.allcredit.co.kr/acs/cp/cp009/rpt/CP0090_RDView.jsp';open_win(CBR_MY_URL+'?mgtNo='+MEM_NO+'&rptId=CP9201','cbreport_my','730','600','100','100','yes');}
+function win_open_cbreport_recruiter(idno,docno){var CBR_RECRUIT_URL='http://join.creditbank.co.kr/rep/incruit/creditsearch.asp';open_win(CBR_RECRUIT_URL+'?mode=popup&doccode='+docno+'&encjumin='+idno,'cbreport','730','600','100','100','yes');}
+function win_open_recmdview(ref){open_win(G_HOSTNAME_MY+'/resume/popuprecmdview.asp?ref='+ref,'recmd','700','600','100','100','yes');}
+function win_open_noservice(){open_win(G_HOSTNAME_RESUMEDB+'/l_common/popup/popupresumeservice.asp','service','490','300','100','100','yes');}
+function MailSelect(eElement,sElement){var eElem=jQuery("#"+eElement);var sElem=jQuery("#"+sElement);if(sElem.val()==""){eElem.attr("disabled",true);eElem.val('');}else if(sElem.val()=="0"){eElem.attr("disabled",false);eElem.val('');}else{eElem.attr("disabled",true);jQuery("#"+sElement+" option:selected").each(function(){eElem.val(jQuery(this).text());});}}
+function MailSelect2(eElement,sElement){var eElem=jQuery("#"+eElement);var sElem=jQuery("#"+sElement);if(sElem.val()==""){eElem.attr("disabled",true);eElem.attr("style",'display:none');eElem.val('');}else if(sElem.val()=="0"){eElem.attr("disabled",false);eElem.attr("style",'display:block');eElem.val('');}else{eElem.attr("disabled",true);eElem.attr("style",'display:none');jQuery("#"+sElement+" option:selected").each(function(){eElem.val(jQuery(this).text());});}}
+function GetAdSponsor(divName,adty,adcnt,adlen,adrank){jQuery.ajax({url:'/g_common/bizcommon/v2/sponsoradvertise_ajax.asp',type:'POST',data:{adty:adty,adcnt:adcnt,adlen:adlen,adrank:adrank},success:function(data){jQuery("."+divName).html(data);},error:function(error){}});}
+function CallDownLoader(filePath,fileName){document.location.replace(G_HOSTNAME_SSL_FILE+"/g_common/library/filedownloader.asp?filepath="+filePath+"&filename="+escape(fileName))}
+function CallDownLoaderV2(filePathName){document.location.replace(G_HOSTNAME_SSL_FILE+"/g_common/library/filedownloader.asp?finfo="+filePathName);}
+function isContentJuminCheck(name){var chkIdenty=escape(jQuery(name).val());var regExp=new RegExp(/\d{6}(\-|)[1-4]\d{6}/ig);var match=chkIdenty.match(regExp);if(match!=null){if(isValidPersonID(match)){alert("글 내용에 주민등록번호 입력은 허용치 않습니다.\n\n확인 후 다시 등록 하세요.");var range=jQuery(name).createTextRange();range.findText(match);range.select();return true;}}}
+function isValidPersonID(sResNo){sResNo=""+sResNo;sResNo=sResNo.replace(/\-/g,"");if(sResNo.length<13)return false;var a=new Array(6)
+var b=new Array(7)
+var tot=0
+var c=0
+var sJumin0=sResNo.substring(0,6);var sJumin1=sResNo.substring(6,13);for(var i=1;i<7;i++){a[i]=sJumin0.substring(i-1,i);b[i]=sJumin1.substring(i-1,i);if(i<3)
+c=Number(b[i])*(i+7);else
+c=Number(b[i])*((i+9)%10);tot=tot+Number(a[i])*(i+1)+c;}
+b[7]=sJumin1.substring(6,7);if(Number(b[7])!=((11-(tot%11))%10))
+return false;else
+return true;}
+function putCommaStr(numericString){if(numericString.length==0)return"";numericString=stripCommasStr(numericString);var tempValue="";var iIndex=numericString.indexOf(".");if(-1==iIndex)iIndex=numericString.length;for(iIndexComma=iIndex-3;iIndexComma>0;iIndexComma=iIndex-3){tempValue="";tempValue+=numericString.substring(0,iIndexComma);tempValue+=",";tempValue+=numericString.substring(iIndexComma);numericString=tempValue;iIndex=iIndexComma;}
+return numericString;}
+function stripCommasStr(numericString){if(numericString.length==0)return"";var tempValue="";var iIndex=numericString.indexOf(",");for(;iIndex!=-1;iIndex=numericString.indexOf(",")){tempValue="";tempValue+=numericString.substring(0,iIndex);tempValue+=numericString.substring(iIndex+1);numericString=tempValue;}
+return numericString;}
+function addOnBookMark(favurl,favtitle){var appname=navigator.appName;if(appname=="Microsoft Internet Explorer"){if(favurl==null||favurl=="")
+favurl=location.href;if(favurl==null||favtitle=="")
+favtitle=document.title;if(document.all)window.external.AddFavorite(favurl,favtitle);}
+else{alert("본 서비스는 Internet Explore 에서만 지원합니다. \nInternet Explore 에서 실행해주세요. ");}}
+function isValidNumber(control,phoneNumber)
+{if(phoneNumber!='')
+{if(!isNum(phoneNumber))
+{alert("숫자 타입만 입력 가능합니다.");jQuery("#"+control).focus();jQuery("#"+control).val("");}}
+return;}
+function returnError(obj,msg){alert(msg);if(obj!=null){if(!obj.disabled){obj.focus();Try.these(function(){obj.select();});}}
+return false;}
+jQuery(function(){if(jQuery("#kw").length>0){jQuery(document).keydown(function(e){var keys=[8,9,13,16,17,18,32,36,35,34,33,20,37,39,38,40,224];var evt=e?e:window.event;var keycode=evt.keyCode;var node=evt.target||evt.srcElement;var q=document.getElementById('kw');for(var i=0,len=keys.length;i<len;i++){if(keys[i]==keycode){return true;}}
+if(evt.ctrlKey||evt.metaKey){return true;}
+if(node&&(node.nodeName=='INPUT'||node.nodeName=='TEXTAREA')){return true;}
+if(q){try{if(e.keyCode!=123){q.style.imeMode='inactive';q.focus();q.select();}}catch(err){return true;}}});}
+jQuery("#searchWrap").submit(function(e){e.preventDefault();var kw=jQuery("#kw").val();alert(kw);return false;});});function LenByte(data)
+{var len=0;var str=data.substring(0);if(str==null)return 0;for(var i=0;i<str.length;i++)
+{var ch=escape(str.charAt(i));if(ch.length==1)len++;else if(ch.indexOf("%u")!=-1)len+=2;else if(ch.indexOf("%")!=-1)len+=ch.length/3;}
+return len;}
+function resize_image(i,maxWidth,maxHeight){if(i){x=new Image();x.src=i.src;var width=x.width;var height=x.height;if(!maxWidth){maxWidth=120;}
+if(!maxHeight){maxHeight=120;}
+if(width>=maxWidth&&height>=maxHeight){if((width/maxWidth)>(height/maxHeight)){resizeHeight=Math.round(height*(maxWidth/width));resizeWidth=Math.round(width*(resizeHeight/height));}else{resizeWidth=Math.round(width*(maxHeight/height));resizeHeight=Math.round(height*(resizeWidth/width));}}else if(width>=maxWidth&&height<maxHeight){resizeWidth=maxWidth;resizeHeight=Math.round(height*(maxWidth/width));}else if(width<maxWidth&&height>=maxHeight){resizeWidth=Math.round(width*(maxHeight/height));resizeHeight=maxHeight;}else{resizeWidth=width;resizeHeight=height;}
+jQuery(i).css("width",resizeWidth+"px");jQuery(i).css("height",resizeHeight+"px");}}
+function ImgEditorPop(memno,companyno,type,imgid,redirecturl){document.domain=domainThis;var w,h;if(navigator.appName.indexOf("Microsoft")>-1){if(navigator.appVersion.indexOf("MSIE 6")>-1){w=582;if(type==1||type==2){h=262;}else{h=297;}}else{w=575;if(type==1||type==2){h=236;}else{h=271;}}}else{w=575;if(type==1||type==2){h=360;}else{h=281;}}
+var param="Mem="+memno+"&Comp="+companyno+"&Type="+type+"&ImgId="+imgid+"&RedirectUrl="+redirecturl;open_win(G_HOSTNAME_PHOTO+'/upload/imageupload.asp?'+param,'ImgEditor',w,h,'','','yes');}
+function ImgEditorPop_Result(rtnval){if(rtnval){try
+{if(rtnval.sType=="1"){jQuery("MyRsmImg").src=rtnval.ImageUrl;}else{document.location.reload();}}catch(e){document.location.reload();}}else{document.location.reload();}}
+function ImgEditorPopRtnVal(memno,companyno,type,imgid,redirecturl){document.domain=domainThis
+var param="Mem="+memno+"&Comp="+companyno+"&Type="+type+"&ImgId="+imgid+"&RedirectUrl="+redirecturl;var w,h;if(navigator.appName.indexOf("Microsoft")>-1){if(navigator.appVersion.indexOf("MSIE 6")>-1){w=582;h=296;}else{w=575;h=270;}}else{w=575;h=280;}
+open_win(G_HOSTNAME_PHOTO+'/upload/imageupload.asp?'+param,'ImgEditor',w,h,'','','yes');}
+function ImgEditorPopRtnVal_Result(rtnval){if(rtnval){if(rtnval.sType=="7"){document.all.Img_Path.value=rtnval.Img_Path;document.all.Img_Nm.value=rtnval.Img_Nm;document.all.HterPhoto.src=rtnval.HterPhoto;}
+if(rtnval.sType=="8"){document.all.Img_Path.value=rtnval.Img_Path;document.all.Img_Nm.value=rtnval.Img_Nm;document.CompCustomer.CompCustomer.src=rtnval.CompCustomer;}
+if(rtnval.sType=="9"){document.all.ImageUrl.value=rtnval.ImageUrl;document.all.PhotoUrl.src=rtnval.ImageUrl;}}else{document.location.reload();}}
+function ImgPhoto_Del(photopath,photonm,encodeid,companyno,memno,type,hseq){var conFirmMsg=confirm('사진을 삭제하시겠습니까?');if(conFirmMsg){jQuery.ajax({url:'/g_common/bizcommon/v2/photoimage_ajax.asp',type:'POST',data:{Photo_Path:photopath,Photo_Nm:photonm,Encode_Id:encodeid,Comp:companyno,Mem:memno,Photo_Type:type,Hter_seq:hseq},success:function(data){jQuery("div#divphotoview").html(data);alert("사진이 삭제되었습니다.");document.location.reload();},error:function(error){}});}}
+function fn_MyAlarmClick(domain,alarmid,rdlink){var stcnt=jQuery("#mynewslist .name.yet").length;if(stcnt>0){var l='/g_common/common/v2/globalheader_ajax.asp'
+l+='?mode=mynews&act=view';if(document.images)(new Image()).src=l;}
+var l='/g_common/popup/chkclickjs.asp'
+l+='?click=18516';l+='&data='+escape(alarmid);l+='&sn='+domain;l+='&rd='+escape(rdlink);l+='&dm='+parseInt(Math.random()*100000);if(document.images)(new Image()).src=l;return true;}
+function fn_ShowLeftMenu(id){if(document.getElementById("aButton"+id).className=="openChild"){document.getElementById("LeftMenu"+id).style.display='none';document.getElementById("aLeftMenu"+id).className="";document.getElementById("aButton"+id).className="openChild open";}else{jQuery("#LeftMenu"+id).slideDown(200);document.getElementById("LeftMenu"+id).style.display='block';document.getElementById("aLeftMenu"+id).className="close";document.getElementById("aButton"+id).className="openChild";}}
+function fn_ShowLeftMenu_WS(id){var strbtn=document.getElementById("LeftMenuBtn"+id);if(document.getElementById("LeftMenu"+id).style.display=="block"){document.getElementById("LeftMenu"+id).style.display="none";strbtn.className="openChild open";strbtn.getElementsByTagName('span')[0].innerHTML="하위메뉴보기";}else{document.getElementById("LeftMenu"+id).style.display="block";strbtn.className="openChild";strbtn.getElementsByTagName('span')[0].innerHTML="하위메뉴닫기";}}
+function fn_ShowLeftMenu_V1(id){if(jQuery("#LeftMenu"+id).css("display")=="block"){jQuery("#LeftMenu"+id).slideDown(150);jQuery("#LeftMenu"+id).css('display','none');jQuery("#hLeftMenu"+id).removeClass("active");}else{jQuery("#LeftMenu"+id).slideDown(200);jQuery("#LeftMenu"+id).css('display','block')
+jQuery("#hLeftMenu"+id).addClass("active");}}
+function addString(str1,str2,addType){if(str1==""){str1=str2;}else{if(str2!=""){str1=str1+addType+str2;}}
+return str1;}
+function fn_SetSearchBar(){var selectTotal=new WGN_SD.Selectbox('selectTotal');selectTotal._source.onchange=function(){if(this.selectedIndex==10){try{window.hFrame.query="Nonekw";window.hFrame.setQueryDisplayOff();window.hFrame.setGuideDisplayOff();}catch(e){jQuery("#hFrame").attr("src","about:blank");};if(jQuery('#search').length>=1){jQuery('#search').attr("action",G_HOSTNAME_INCRUIT+"/network/allsearchresult");};jQuery('#kw').NuguMasterAutoCmplt({idx:'0',lang:'1'});jQuery(".srch_btn").bind("click",function(e){if(jQuery("#kw").val()==MSG.HEADER.SEARCH||jQuery.trim(jQuery("#kw").val())==""){jQuery("#kw").val("");jQuery("#kw").focus();return false;}else{location.href=encodeURI(G_HOSTNAME_INCRUIT+"/network/allsearchresult?schwd="+jQuery('#kw').val());return false;}});}else{jQuery(".srch_btn").unbind();try{window.hFrame.query="kw";}catch(e){jQuery("#hFrame").attr("src","about:blank");};if(jQuery('#search').length>=1){jQuery('#search').attr("action","http://search.incruit.com");};jQuery("#hFrame").attr("src","/g_common/library/glb_headersearcharkV2.html");jQuery('#kw').unautocomplete();}};}
+function fn_SetSearchBarV2(v){var selectTotal=new WGN_SD.Selectbox('selectTotal');selectTotal._source.onchange=function(){var index=this.selectedIndex;var option=this.options;if(option[index].value=="nugu_all"){try{window.hFrame.query="Nonekw";window.hFrame.setQueryDisplayOff();window.hFrame.setGuideDisplayOff();}catch(e){jQuery("#hFrame").attr("src","about:blank");};jQuery('#search').attr("action",G_HOSTNAME_NUGUWWW+"/network/allsearchresult");jQuery('#kw').NuguMasterAutoCmplt({idx:'0',lang:'1'});jQuery(".srch_btn").bind("click",function(e){if(jQuery("#kw").val()==MSG.HEADER.SEARCH||jQuery.trim(jQuery("#kw").val())==""){jQuery("#kw").val("");jQuery("#kw").focus();return false;}else{location.href=encodeURI(G_HOSTNAME_INCRUIT+"/network/allsearchresult?schwd="+jQuery('#kw').val());return false;}});}else if(option[index].value=="compsearch"){try{window.hFrame.query="Nonekw";window.hFrame.setQueryDisplayOff();window.hFrame.setGuideDisplayOff();}catch(e){jQuery("#hFrame").attr("src","about:blank");};jQuery('#kw').unautocomplete();jQuery('#search').attr("action","/companies/companysearch_result.asp");jQuery('#kw').unbind().bind("keypress",function(e){var searchwd=jQuery(this).val();if(e.keyCode=="13"){location.href=G_HOSTNAME_INCRUIT+"/companies/companysearch_result.asp?searchwd="+searchwd;}});jQuery(".srch_btn").unbind("click").bind("click",function(e){var searchwd=jQuery("#kw").val()
+location.href=G_HOSTNAME_INCRUIT+"/companies/companysearch_result.asp?searchwd="+searchwd;return false;});}else{jQuery(".srch_btn").unbind("click");jQuery("#kw").unbind().unbind("keypress").val("");try{window.hFrame.query="kw";}catch(e){jQuery("#hFrame").attr("src","about:blank");};jQuery('#search').attr("action","http://search.incruit.com");jQuery("#hFrame").attr("src",G_HOSTNAME_INCRUIT+"/g_common/library/glb_headersearcharkV2.html");jQuery('#kw').unautocomplete();}};selectTotal.onclick(v);}
+function setGoogleAnalytics(strurl){try{if(strurl!=''){ga('send','pageview',strurl);}}catch(e){}}
+function openEdit_01(strURL,Winnm,Winwidth,Winheight,Screenwidth,Screenheight,Scrool){if(domainThis.indexOf("incruit.com")=="0"){document.domain=domainThis;}
+var left,top
+if(Screenwidth==""&&Screenheight==""){left=(screen.width/2)-(Winwidth/2)
+top=(screen.height/2)-(Winheight/2);}else{left=Screenwidth
+top=Screenheight}
+window.open(strURL,Winnm,'width='+Winwidth+',height='+Winheight+',top='+top+',left='+left+',marginwidth=0,toolbar=no,location=no,directories=no,status=no,scrollbars='+Scrool+',menubar=no');}<!--로그인 관련 레이어-->function fn_loginLayer(){jQuery.ajax({type:"POST",url:"../../g_common/library/setcustomcookie_ajax.asp",data:{mode:jQuery('#LoginMode').val(),cookiename:jQuery('#LoginCookieNm').val()},success:function(msg){jQuery('.adviceBoxWrap').addClass('hide');},error:function(ex){jQuery('.adviceBoxWrap').addClass('hide');}});}
+function fnLoginLayerCountDown(){setTimeout(fn_loginLayer,10000);}
+function fnSetCookieNoneJobPost(){jQuery.ajax({type:"POST",url:"/g_common/popup/popuponeresume.asp",data:{mode:'nonejobpostcookie'},success:function(msg){jQuery('#divNoneJobPost').css({'display':'none'});}});}
+function fn_RecmdDetView(obj)
+{var rseq=obj.id.substr(obj.id.indexOf("_")+1);if(jQuery(obj).hasClass("open")==true){jQuery(obj).removeClass("open");jQuery(obj).addClass("close");jQuery(obj).text("인성 및 직무능력 평가닫기");jQuery('#recmdscoreView_'+rseq).addClass("show");}else{jQuery(obj).removeClass("close");jQuery(obj).addClass("open");jQuery(obj).text("인성 및 직무능력 평가보기");jQuery('#recmdscoreView_'+rseq).removeClass("show");}}
+function fn_RecmdLayer(obj)
+{var $seq=jQuery(obj).attr('seq');var writerPos=jQuery("#writer_"+$seq).offset();var $layer=jQuery("#divRecmdContainer");if($layer.length==0){$layer=jQuery("<div/>").hide().attr('id','divRecmdContainer').css("position","absolute").css('display','block').appendTo(document.body);var html="<div class=\"layer_out1 recmdbox\" id=\"divRecRelInfo\">"+"    <div class=\"layer_outside\">"+"     <div class=\"tagging\">"+"      <div class=\"recmdInfoWrap\">"+"       <span class=\"infoName\"></span>"+"                  <span class=\"infoCompanyTit\"></span>"+"                  <span class=\"infoRelation\"></span>"+"      </div>"+"     </div>"+"    </div>"+"</div>"
+$layer.children().remove();jQuery(html).appendTo($layer);}
+var $divRecRelInfo=jQuery("#divRecRelInfo");$divRecRelInfo.delay(1000).mouseenter(function(){jQuery(this).stop(true);jQuery(this).css("display","block").css("opacity","1");}).mouseleave(function(){jQuery(this).fadeOut(500,function(){jQuery("#divRecmdContainer").css("display","none");});});$divRecRelInfo.find('.infoName').text(jQuery(obj).text());$divRecRelInfo.find('.infoCompanyTit').text(jQuery(obj).parent().find("[name='RecFrCompNm']").val());$divRecRelInfo.find('.infoRelation').text(jQuery(obj).parent().find("[name='RecRelNm']").val());$divRecRelInfo.css('display','block');$layer.css('display','block');$layer.css("left",writerPos.left-5);$layer.css("top",writerPos.top-$divRecRelInfo.height()-5);}
+function fn_RecmdLayerClose(){jQuery("#divRecRelInfo").fadeOut(500,function(){jQuery("#divRecmdContainer").css("display","none");});}
+function fnSetCookieRecommendEvnt(){jQuery.ajax({type:"POST",url:"/g_common/popup/popuponeresume.asp",data:{mode:'recommendentry'},success:function(msg){jQuery('#RecommendPromotion').css({'display':'none'});}});}
+function fnLoginCertAtuth(mem,url){if(mem.length<1){location.href=G_HOSTNAME_EDIT+'/login/login.asp?gotourl='+encodeURIComponent(document.URL);}else{jQuery.ajax({type:"POST",url:"/g_common/bizcommon/v2/certauth_ajax.asp",data:{mode:''},success:function(data){if(data.length>0){if(confirm(data.replace(/\\n/gi,'\n'))){location.href=G_HOSTNAME_SSL_EDIT+'/cert/cert.asp?gotourl='+encodeURIComponent(url);}else{return false;}}else{return true;}}});}}
+function fnSetCookieNaeilSongProm(){jQuery.ajax({type:"POST",url:"/g_common/popup/popuponeresume.asp",data:{mode:'naeilsongprom'},success:function(msg){jQuery('#layer_naeilsong').css({'display':'none'});}});}
+function fn_chrByte(chr){if(escape(chr).length>4)
+return 2;else
+return 1;}
+function fn_LeftBytePlus(str,limit,strplus){var tmpStr=str;var bytecnt=0;var len=str.length;var tmpplus="";for(i=0;i<len;i++){bytecnt+=fn_chrByte(str.charAt(i));if(bytecnt==limit-1){if(fn_chrByte(str.charAt(i+1))==2){tmpStr=str.substring(0,i+1);tmpplus=strplus;}else{if(i+2!=len)tmpplus=strplus;tmpStr=str.substring(0,i+2);}
+break;}else if(bytecnt==limit){if(i+1!=len)tmpplus=strplus;tmpStr=str.substring(0,i+1);break;}}
+return(tmpStr+tmpplus);}
+function fn_EmailCollectionDeny(){open_win(G_HOSTNAME_INCRUIT+"/docs/popupemailcollectiondeny.asp","popupemailcollectiondeny","440","200","","","no");}
+function fn_KcbCertPopup(str){window.open("/g_common/popup/popupkcbcert.asp?loc="+str+"","auth_popup","width=430,height=640,scrollbar=yes");}
+function isNum(str){for(var idx=0;idx<str.length;idx++){if(str.charAt(idx)<'0'||str.charAt(idx)>'9'){return false;}}
+return true;}
+function fnFalseComp(){var mode="";if($("#cbyn").val()=="Y")mode="2"
+else{if($("#FCYN").val()=="X")mode="1";else mode="2"}
+if(mode=="1"){location.href=G_HOSTNAME_RECRUITER+"/recruiter/recruiterinfomng.asp?from=jobbuilder";return;}
+else{alert("내부 정책에 따라 귀사는 해당 서비스를 이용하실 수 없습니다.\n문의사항은 고객센터로 연락주시기 바랍니다.");location.href=G_HOSTNAME_RECRUITER
+return;}}
