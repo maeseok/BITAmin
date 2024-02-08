@@ -1,14 +1,19 @@
-setwd("C:\\Users\\songh\\OneDrive\\BITAMIN\\WinterProject")
-
+setwd("C:/Users/LWG/Desktop/2023/코딩/BITAmin/겨울방학 프로젝트")
+install.packages("readxl")
 library(readxl)
+install.packages("lmtest")
 library(lmtest)
+install.packages("urca")
 library(urca)
+install.packages("forecast")
 library(forecast)
+install.packages("vars")
 library(vars)
+install.packages("tseries")
 library(tseries)
 
 #월별수익률 ts객체 설정
-return <- read_xlsx('삼성증권_월간수익률.xlsx', sheet=1)
+return <- read_xlsx('KCC_monthlyReturn.xlsx', sheet=1)
 return <- ts(return[[2]], start = c(2013,1), frequency = 12)
 return
 
@@ -16,7 +21,7 @@ return
 
 #var1
 
-data <- read_xlsx('variable_data.xlsx', sheet=1)
+data <- read_xlsx('data.xlsx', sheet=1)
 
 adf.test(data[[2]])
 pp.test(data[[2]])
@@ -121,6 +126,73 @@ pp.test(diff(data[[10]]))
 var9 <- ts(diff(data[[10]])[3:length(diff(data[[10]]))], start = c(2013,1), frequency = 12)
 var9
 
+#var10
+
+adf.test(data[[11]])
+pp.test(data[[11]])
+
+adf.test(diff(data[[11]]))
+pp.test(diff(data[[11]]))
+
+var10 <- ts(diff(data[[11]])[3:length(diff(data[[11]]))], start = c(2013,1), frequency = 12)
+var10
+
+
+#var11
+
+adf.test(data[[12]])
+pp.test(data[[12]])
+
+adf.test(diff(data[[12]]))
+pp.test(diff(data[[12]]))
+
+var11 <- ts(diff(data[[12]])[3:length(diff(data[[12]]))], start = c(2013,1), frequency = 12)
+var11
+
+#var12
+
+adf.test(data[[13]])
+pp.test(data[[13]])
+
+adf.test(diff(data[[13]]))
+pp.test(diff(data[[13]]))
+
+var12 <- ts(diff(data[[13]])[3:length(diff(data[[13]]))], start = c(2013,1), frequency = 12)
+var12
+
+#var13
+
+adf.test(data[[14]])
+pp.test(data[[14]])
+
+adf.test(diff(data[[14]]))
+pp.test(diff(data[[14]]))
+
+var13 <- ts(diff(data[[14]])[3:length(diff(data[[14]]))], start = c(2013,1), frequency = 12)
+var13
+
+#var14
+
+adf.test(data[[15]])
+pp.test(data[[15]])
+
+adf.test(diff(data[[15]]))
+pp.test(diff(data[[15]]))
+
+var14 <- ts(diff(data[[15]])[3:length(diff(data[[15]]))], start = c(2013,1), frequency = 12)
+var14
+
+#var15
+
+adf.test(data[[16]])
+pp.test(data[[16]])
+
+adf.test(diff(data[[16]]))
+pp.test(diff(data[[16]]))
+
+var15 <- ts(diff(data[[16]])[3:length(diff(data[[16]]))], start = c(2013,1), frequency = 12)
+var15
+
 #그랜저-인과관계 검정
 
 v1 <- cbind(return, var1)
@@ -130,7 +202,7 @@ grangertest(return~var1, order=1) # var1 인과관계x
 
 v2 <- cbind(return, var2)
 VARselect(v2, lag.max=12, type='const') # BIC = 2
-grangertest(return~var2, order=2) # 90% 신뢰수준에서 var2 인과관계o
+grangertest(return~var2, order=2) # var2 인과관계x
 
 v3 <- cbind(return, var3)
 VARselect(v3, lag.max=12, type='const') # BIC = 1
@@ -146,7 +218,7 @@ grangertest(return~var5, order=2) # var5 인과관계x
 
 v6 <- cbind(return, var6)
 VARselect(v6, lag.max=12, type='const') # BIC = 3
-grangertest(return~var6, order=3) # 90% 신뢰수준에서 var6 인과관계o
+grangertest(return~var6, order=3) #
 
 v7 <- cbind(return, var7)
 VARselect(v7, lag.max=12, type='const') # BIC = 3
@@ -154,24 +226,49 @@ grangertest(return~var7, order=3) # var7 인과관계x
 
 v8 <- cbind(return, var8)
 VARselect(v8, lag.max=12, type='const') # BIC = 1
-grangertest(return~var8, order=1) # var3 인과관계x
+grangertest(return~var8, order=1) # var8 인과관계o -> 0.02951
 
 v9 <- cbind(return, var9)
 VARselect(v9, lag.max=12, type='const') # BIC = 1
-grangertest(return~var9, order=1) # 90% 신뢰수준에서 var9 인과관계o
+grangertest(return~var9, order=1) # 
 
-#인과관계가 있는 변수 : var2, var6, var9
+v10 <- cbind(return, var10)
+VARselect(v10, lag.max=12, type='const') # BIC =
+grangertest(return~var10, order=1) # var10 인과관계o -> 0.01197
+
+v11 <- cbind(return, var11)
+VARselect(v11, lag.max=12, type='const') # BIC = 1
+grangertest(return~var11, order=1) # 
+
+v12 <- cbind(return, var12)
+VARselect(v12, lag.max=12, type='const') # BIC = 1
+grangertest(return~var12, order=1) # 
+
+v13 <- cbind(return, var13)
+VARselect(v13, lag.max=12, type='const') # BIC = 1
+grangertest(return~var13, order=1) # var13 인과관계o -> 0.01925
+
+v14 <- cbind(return, var14)
+VARselect(v14, lag.max=12, type='const') # BIC = 1
+grangertest(return~var14, order=1) # var14 인과관계o -> 0.008534
+
+v15 <- cbind(return, var15)
+VARselect(v15, lag.max=12, type='const') # BIC = 1
+grangertest(return~var15, order=1) # 
+
+
+#인과관계가 있는 변수 : var8(경제심리지수), var10(규소가격), var13(건설수주액_경상), var14(건설기성액_경상)
 
 #VAR 모델링
 
-v_final <- cbind(return, var2, var6, var9)
+v_final <- cbind(return, var8, var10, var13, var14)
 VARselect(v_final, lag.max = 12, type='const')  # BIC = 1
 VAR_model <- VAR(v_final, p = 1, type='const')
 
 forecast <- predict(VAR_model, n.ahead=6)
 forecast
 
-obs <- window(return, start = c(2011,1))
+obs <- window(return, start = c(2013,1))
 
 plot(obs, xlab="", ylab="")
 lines(forecast, lty=2)
