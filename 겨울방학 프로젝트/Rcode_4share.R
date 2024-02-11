@@ -1,4 +1,4 @@
-setwd("C:/Users/LWG/Desktop/2023/코딩/BITAmin/겨울방학 프로젝트")
+
 install.packages("readxl")
 library(readxl)
 install.packages("lmtest")
@@ -13,6 +13,7 @@ install.packages("tseries")
 library(tseries)
 
 #월별수익률 ts객체 설정
+setwd("C:/Users/LWG/Desktop/2023/코딩/BITAmin/겨울방학 프로젝트")
 return <- read_xlsx('KCC_monthlyReturn.xlsx', sheet=1)
 return <- ts(return[[2]], start = c(2013,1), frequency = 12)
 return
@@ -259,16 +260,35 @@ grangertest(return~var15, order=1) #
 
 #인과관계가 있는 변수 : var8(경제심리지수), var10(규소가격), var13(건설수주액_경상), var14(건설기성액_경상)
 
-#VAR 모델링
+#VAR 모델링 -> 다시해보기
+new_return <- window(return, start = c(2021,1))
+plot(new_return, xlab="", ylab="", lwd=2)
+grid()
+
 
 v_final <- cbind(return, var8, var10, var13, var14)
-VARselect(v_final, lag.max = 12, type='const')  # BIC = 1
-VAR_model <- VAR(v_final, p = 1, type='const')
+v_final_1 <- window(v_final, end = c(2022,6))
 
-forecast <- predict(VAR_model, n.ahead=6)
-forecast
+VARselect(v_final_1, lag.max = 12, type='const')  # BIC = 1
 
-obs <- window(return, start = c(2013,1))
+VAR_model_1 <- VAR(v_final_1, p =1, type='const')
+forecast <- predict(VAR_model_1, n.ahead=6)
 
-plot(obs, xlab="", ylab="")
-lines(forecast, lty=2)
+var1_fcst <- ts(forecast$fcst$return[,1], start = c(2022,7), frequency = 12)
+lines(var1_fcst, lty=2, col='blue', lwd=3)
+legend('bottomleft', legend = c('Observations', 'VAR_Forecasts(lag=1)'),lty = c(1, 2),col = c('black', 'blue'))
+
+
+VAR_model_2 <- VAR(v_final_1, p =11, type='const')
+forecast_2 <- predict(VAR_model_2, n.ahead=6)
+var2_fcst <- ts(forecast_2$fcst$return[,1], start = c(2022,7), frequency = 12)
+lines(var2_fcst, lty=2, col='red', lwd=3)
+legend('bottomleft', legend = c('Observations', 'VAR_Forecasts(lag=1)', 'VAR_Forecasts(lag=11)'),lty = c(1, 2, 2),col = c('black', 'blue', 'red'))
+
+
+
+VAR_model_3 <- VAR(v_final_1, p = 2, type='const')
+forecast_3 <- predict(VAR_model_3, n.ahead=6)
+var3_fcst <- ts(forecast_3$fcst$return[,1], start = c(2022,7), frequency = 12)
+lines(var3_fcst, lty=2, col='green', lwd=3)
+legend('bottomleft', legend = c('Observations', 'VAR_Forecasts(lag=1)', 'VAR_Forecasts(lag=11)', 'VAR_Forecasts(lag=2)'),lty = c(1, 2, 2, 2),col = c('black', 'blue', 'red', 'green'))
