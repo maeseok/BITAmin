@@ -290,7 +290,7 @@ var2_fcst
 lines(var2_fcst, lty=2, col='red', lwd=3)
 legend('bottomleft', legend = c('Observations', 'VAR_Forecasts(lag=2)', 'VAR_Forecasts(lag=11)'),lty = c(1, 2, 2),col = c('black', 'blue', 'red'))
 
-
+legend('topright', legend = c('Observations', 'VAR_Forecasts(lag=2)', 'VAR_Forecasts(lag=11)', 'AR_Forecasts'),lty = c(1, 2, 2),col = c('black', 'blue', 'red', 'green'))
 #HQ 
 VAR_model_3 <- VAR(v_final_1, p = 2, type='const')
 forecast_3 <- predict(VAR_model_3, n.ahead=6)
