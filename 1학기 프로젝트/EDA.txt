@@ -1,0 +1,80 @@
+- 데이터셋의 구성 : 
+제주도 10대 ~ 60대의 연령별 3000시간 이상 음성 데이터 - wav 제외
+원본 방언 텍스트 및 방언에 대응하는 표준어 대응쌍을 포함하 50만건 - JSON
+
+방언 표기는 방언의 형태가 드러나는 방식으로
+방언 관련x는 표준어를 적는 방식으로 
+
+- 사용 데이터 : 
+JSON : 대화인원, 대화종류, 날짜, 대화인원의 정보, 관계 -> 표준어,사투리 -> 문장 쪼개기 - 표준어, 사투리 각각 
+->JSON 1개당 1번의 대화 = 30분 이하 정도
+->txt랑 JSON 1:1 매칭
+
+- 데이터 전처리 :
+1.데이터 추출 = JSON에서 추출
+2.토큰화 = 라이브러리 사용
+3.인코딩 = 어떤 인코딩 사용?
+4.데이터 분할 및 불균형 처리
+
+아래처럼 ()나 /가 # , 영어 등 포함되는건 어떻게 처리할지?
+->정규표현식 이용 삭제?
+https://machinelog.tistory.com/entry/%EC%9E%90%EC%97%B0%EC%96%B4-%EA%B0%9C%EC%9D%B8-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8-%ED%95%9C%EA%B5%AD%EC%96%B4%EB%A5%BC-%ED%99%9C%EC%9A%A9%ED%95%9C-Byte-Pair-Encoding
+
+
+->라벨1 맨 처음 데이터
+		{
+			"id": "DZES20000002.1.1.14",
+			"start": 20.41995232040687,
+			"end": 22.69,
+			"speaker_id": "2",
+			"form": "(겅허고)/(그러고) 예초 벌초(하다그네)/(하다가)",
+			"standard_form": "그러고 예초 벌초(하다그네)/(하다가)",
+			"dialect_form": "겅허고 예초 벌초(하다그네)/(하다가)",
+			"note": "",
+			"eojeolList": [
+				{
+					"id": 1,
+					"eojeol": "겅허고",
+					"standard": "그러고",
+					"isDialect": true
+				},
+				{
+					"id": 2,
+					"eojeol": "예초",
+					"standard": "예초",
+					"isDialect": false
+				},
+				{
+					"id": 3,
+					"eojeol": "벌초(하다그네)/(하다가)",
+					"standard": "벌초(하다그네)/(하다가)",
+					"isDialect": false
+				}
+			]
+		},
+
+        				{
+					"id": 5,
+					"eojeol": "이거(이)/(#이)",
+					"standard": "이거(이)/(#이)",
+					"isDialect": false
+				},
+
+                		{
+			"id": "DZJD21002316.1.1.29",
+			"start": 74.26,
+			"end": 75.42,
+			"speaker_id": "2",
+			"form": "@웃음",
+			"standard_form": "{laughing}",
+			"dialect_form": "{laughing}",
+			"note": "",
+			"eojeolList": [
+				{
+					"id": 1,
+					"eojeol": "{laughing}",
+					"standard": "{laughing}",
+					"isDialect": false
+				}
+			]
+		},
