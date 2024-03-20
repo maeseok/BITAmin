@@ -78,3 +78,5 @@ https://machinelog.tistory.com/entry/%EC%9E%90%EC%97%B0%EC%96%B4-%EA%B0%9C%EC%9D
 				}
 			]
 		},
+
+허깅페이스 - 모델 - korean - 모델선택? - use in transformer
