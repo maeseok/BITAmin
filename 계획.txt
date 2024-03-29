@@ -62,9 +62,14 @@ https://jasoseol.com/recruit - 자소설닷컴
 3월 25일 : 복습,발표자료 등 정리(발표시간 체크) + 3주차 복습 마무리 + 발표자료 제출 
 3월 26일 : NLP학습 및 포스팅 + 컴구 과제 완료 + 복습과제 제출
 3월 27일 : 발표
-3월 28일 : NLP + 컴구 과제 제출
-3월 29일 : NLP + 신시 과제(chapter2) + 확랜 과제
-3월 30일 : 오후10시 줌 + 4주차 복습(컴구 성능 내용 꼭 복습하기)
+3월 28일 : NLP + 컴구 과제 제출 + torch는 gpu 힘들듯 -> 캐글 노트북으로 진행하기로
+3월 29일 : NLP + 신시 과제(chapter2) 
+3월 30일 : 확랜 수업, 과제 + 오후10시 줌 + 4주차만 복습(컴구 성능 내용 꼭 복습하기)
+3월 31일 : 1~4주차 복습
+
+캐글 노트북 : 세션 끊기면 날라감 -> 끊기기 전에 데이터 로컬에 저장 후 데이터셋으로 올리면 됨
+             모델을 이제 어떻게 바꿀지가 문제?
+
 
 프로젝트 : NLP, 제주도 방언 양방향 변환
 -> 1안 : 버츄얼, VR 관련 분야의 최근 성장세 및 NLP : 왜 성장했는지, 어느 것을 기점으로? (해당 분야의 유명한 이세계아이돌, 플레이브)
@@ -91,3 +96,29 @@ vscode gpu 설정, (SQL,SAS 학습)
 
 
 https://m.blog.naver.com/86591shin/222237101158
+
+
+
+
+
+https://huggingface.co/beomi/kobert?library=true
+40000 kobert
+
+https://huggingface.co/monologg/kobert
+실패
+
+https://huggingface.co/beomi/kobert?library=true
+흠
+
+https://huggingface.co/kykim/bert-kor-base?library=true
+정확도가 별로
+
+https://huggingface.co/Helsinki-NLP/opus-mt-ko-en?library=true
+그나마 낫지만 별로임
+
+https://huggingface.co/dylanmengzhou/kobart-trans-en-ko-v2
+제일 낫지만 별로임
+
+
+aff67fd137854b3632153f22c1ff7d40506aa349
+

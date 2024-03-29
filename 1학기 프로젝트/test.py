@@ -5,10 +5,10 @@ import tensorflow as tf
 
 print(f'tf.__version__: {tf.__version__}')
 
-#gpus = tf.config.experimental.list_physical_devices('GPU')
-# tf.config.list_physical_devices('GPU') 이 코드도 가능
-#for gpu in gpus:
-#    print(gpu)
+gpus = tf.config.experimental.list_physical_devices('GPU')
+tf.config.list_physical_devices('GPU') #이 코드도 가능
+for gpu in gpus:
+    print(gpu)
 print("Num GPUs Available: ", len(tf.config.experimental.list_physical_devices('GPU')))
 #device_lib.list_local_devices()
 #print(tf.__version__) # 텐서플로우 버전 확인
