@@ -79,9 +79,11 @@ https://jasoseol.com/recruit - 자소설닷컴
 4월 10일 : 기초웹프 오전 11시 줌 + 컴구,기계학습 총복습 + @
 4월 11일 : 확랜 복습
 4월 12일 : 확랜 과제(추가검토필요), 신시 과제, 컴구 과제, 웹프 과제
-4월 13일~15일 : 신시 복습 
+4월 13일 : 개념 복습 및 정리
+4월 14일 : 개념 복습 및 책 과제 풀이
+4월 15일 : 책 30문제(탭에 풀기) + 강의자료, 책 개념 복습(강의자료에 추가 정리)
 4월 16일 : 신시 오후 5시 시험
-
+https://www.studocu.com/ko/document/sejong-university/electric-circuits/chap02sp1solutions-for-signal-processing-first/13065573
 
 4월 22일 : 기초웹프 오전 10시 시험
 4월 23일 : 컴구 오후 2시 시험 (오픈북)
