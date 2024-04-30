@@ -3,7 +3,6 @@ function max(first, ...rests) {
     let output
     let items
 
-    // 매개변수의 자료형에 따라 조건 분기하기
     if (Array.isArray(first)) {
       output = first[0]
       items = first
@@ -11,7 +10,7 @@ function max(first, ...rests) {
       output = first
       items = rests
     }
-    // 이전 절에서 살펴보았던 최솟값 구하는 공식
+
     for (const item of items) {
       if (output < item) {
         output = item
