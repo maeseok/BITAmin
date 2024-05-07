@@ -108,7 +108,7 @@ https://www.studocu.com/ko/document/sejong-university/electric-circuits/chap02sp
 5월 04일 : 미용실 2시반
 5월 05일 : 확랜 9주차 + 음성 인식 가능성
 5월 06일 : 기초웹프 아침 10시 줌 + 음성 인식 가능성
-5월 07일 : 음성 인식 가능성(kospeech 모델 만들어보기)
+5월 07일 : 음성 인식 가능성 + 신시 과제
 5월 08일 : 비타민 세션 + 음성 인식 가능성 확인 토의
 5월 09일 ~ 정보보안,신시 복습
 
