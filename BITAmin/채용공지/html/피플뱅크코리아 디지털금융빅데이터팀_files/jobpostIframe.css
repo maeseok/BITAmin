@@ -1,0 +1,139 @@
+@charset "euc-kr";
+/* INCRUIT 20111226 */
+.load_Jobdetail{font-family:"Malgun Gothic",sans-serif;font-size:15px;letter-spacing:-0.075em;}
+.load_Jobdetail div, .load_Jobdetail p{width:auto !important;}
+.load_Jobdetail table{width:100%;}
+*{ font-family:sans-serif; }
+body, html{width:100%;}
+html {margin:0;padding:0;touch-action:pan-y;}
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,textarea,p,blockquote,th,td,input,select,textarea,button {margin:0;padding:0}
+fieldset,img {border:0 none}
+dl,ul,ol,menu,li {list-style:none}
+blockquote, q {quotes: none}
+blockquote:before, blockquote:after,q:before, q:after {content:'';content:none}
+input,select,textarea,button {vertical-align:middle}
+button {border:0 none;background-color:transparent;cursor:pointer; outline:none;}
+body,th,td,input,select,textarea,button {font-family:inherit, sans-serif;font-size:12px;color:inherit;}
+a {color:inherit;text-decoration:none}
+a:active, a:hover {text-decoration:underline}
+address,caption,cite,code,dfn,em,var {font-style:normal;font-weight:normal}
+dl:after, ul:after {display:block; clear:both; content:'';}
+/* 2016-04-26 sbLee */
+.skip {display: inline-block; overflow: hidden; position: absolute; width: 1px; height: 1px; font-size: 1px; line-height: 1px; text-indent: 4px; white-space: nowrap;}
+.m_useMapLink {display:none;}
+.pc_useMapLink {display:inline;}
+@media screen and (max-width:640px){
+html, body {overflow-x:scroll;} /* 모바일 iframe 스크롤  */
+}
+#wrap.w700 {}
+#wrap.w700 #content_job{max-width:100%;margin:0 auto;}
+.frame-header {position:relative;height:40px;background-color:#ff460a; /* zoom:2; */ }
+.frame-header .cp_title {text-align: center;padding-top: 10px;font-size: 15px;font-weight: bold;letter-spacing: -1px;color: #fff}
+.frame-header .frame-close {position:absolute;right:0;top:0;width:39px;height:39px;background:url(/ui/m_static/image/new_main/icon/applyPop_x.png) 50% 50% no-repeat;background-size:20px 20px}
+.frame-header .frame-close span {display:block;text-indent:-9999em;font-size:0;}
+#content_job {line-height:1.5; word-break:break-all}
+#content_job pre {overflow:visible;word-break:normal;white-space:pre-line}
+/* 잡알리오 공고 sbLee 2017-09-08 */
+	.alioNotice-box {margin-top:20px;padding-bottom:24px;}
+	.alioNotice-box .jobviewTxtPart {position:absolute;right:0;margin-top:0}
+	.alioNotice-box .jobviewTxtPart li {font-family: "Magul Gothic", sans-serif;font-size: 12px;color: #a9a9a9;line-height: 24px;letter-spacing: -2px;}
+	.alioNotice-box .alio-btnWrap {width:100%;text-align:right;}
+	.alioNotice-box .alio-btnWrap .blank {display:inline-block;line-height:1;color:#dcdcdc;vertical-align:-1px;font-family:dotum, sans-serif;font-size:14px}
+	.alioNotice-box .alio-btnWrap .btns_m_white {font-size: 15px;color: #0a47ff;text-decoration:underline;height: 24px;padding: 4px 0 3px 7px;padding: 4px 11px 0 11px\9;vertical-align: middle;margin-right: 1px;margin-bottom: 3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+	.alioNotice-box .alio-btnWrap .btns_filedown {max-width:187px;margin:0 0 3px 3px;text-align:right}
+
+	/* mobile */ 	
+	.applyWrap .alioNotice-box {position:relative;/* padding:0; */}
+	.applyWrap .alioNotice-box .jobviewTxtPart {right:0;}
+	.applyWrap .alioNotice-box .jobviewTxtPart li {font-size: 11px;line-height: 15px;padding: 10px 14px 10px 0;}
+	.applyWrap .alioNotice-box .alio-btnWrap {box-sizing:border-box}
+	.applyWrap .alioNotice-box .alio-btnWrap .jobview_h4 {display:inline-block;height:24px;padding:4px 0 3px 7px;}
+	.applyWrap .alioNotice-box .alio-btnWrap:after {content:'';display:block;clear:both;}
+	.applyWrap .alioNotice-box .alio-btnWrap .btns_filedown {display:inline-block;float:right;max-width:50%;width:auto;color: #0a47ff;text-decoration:underline;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+	.applyWrap .alioNotice-box .alio-btnWrap .btns_filedown:last-child{margin-bottom:0px;}
+
+/* 구글 iframe 높이 버그 */
+iframe[name='google_conversion_frame'] { height: 0 !important;  line-height: 0 !important;   font-size: 0 !important; position:absolute; top:-9999em !important; }
+
+/* 이 기업에 입사하면 좋은이유 */
+	.jobview_like{ background:#f8f8f8; border:1px solid #eee; border-bottom:2px solid #ff460a; padding:23px 32px; margin-top:-27px; }
+	.jobview_like p{ font-weight:bold; font-size:16px; line-height:23px; font-family:"Malgun Gothic","Helvetica", sans-serif; letter-spacing:-1px; color:#333; }
+	.jobview_like ul{ padding:9px 0 0 7px; }
+	.jobview_like ul li{ position:relative; line-height:22px; height:22px; color:#4a4a4a; padding:0 0 0 10px; }
+	.jobview_like ul li strong{ color:#ff460a; }
+	.jobview_like ul li span{ position:absolute; left:0; top:50%; margin-top:-1px; width:2px; height:2px; background:#ff460a; }
+
+/* 공채예상공고 소개 2018-08-08 sbLee */
+.openRecruitment_preview{}
+.openRecruitment_preview .preview_cnt {/* border-bottom:1px solid #dfdfdf; */background-color:#ffffff;}
+.openRecruitment_preview .preview_cnt img {vertical-align:top}
+.openRecruitment_preview .preview_cnt .head_info {width:667px;min-height:207px;padding-top:33px;margin-bottom:6px;font-family: 'Noto Sans KR', sans-serif;text-align:center;background:#353231 url(/ui/static/image/job/gongche/head_topBg.jpg) 0 0 no-repeat}
+.openRecruitment_preview .preview_cnt .head_info .title {margin-bottom:20px;}
+.openRecruitment_preview .preview_cnt .head_info .company_name {margin-bottom:13px;height:35px;}
+.openRecruitment_preview .preview_cnt .head_info .company_name a {font-size:35px;line-height:32px;font-weight:bold;color:#fff;text-decoration:none;vertical-align:middle}
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+	.openRecruitment_preview .preview_cnt .head_info .company_name {margin-bottom:12px;}
+	.openRecruitment_preview .preview_cnt .head_info .company_name a {line-height:35px;}
+}
+.openRecruitment_preview .preview_cnt .head_info .job_date {}
+.openRecruitment_preview .preview_cnt .head_info .job_date dt,
+.openRecruitment_preview .preview_cnt .head_info .job_date dd {display:inline-block;line-height:1;font-size:21px;letter-spacing:-0.03em;color:#fff}
+.openRecruitment_preview .preview_cnt .head_info .notice-txt {margin-top:24px;font-size:15px;color:#dbdbdb;line-height:1;letter-spacing:-0.05em}
+
+.openRecruitment_preview .preview_cnt .etc_banner {margin-bottom:6px;}
+.openRecruitment_preview .preview_cnt .scrap_banner {margin-bottom:10px;}
+.openRecruitment_preview .preview_cnt .addCompany {padding:25px 0 0;border-top:1px solid #dfdfdf}
+
+/* 공채예상공고 소개 수정 2018-09-03 sbLee */
+.openRecruitment_preview .preview_cnt .head_top {}
+.openRecruitment_preview .preview_cnt .gongcheCompany_info {padding:55px 0;}
+.openRecruitment_preview .preview_cnt .gongcheCompany_info .company_name {font-size:40px;letter-spacing:-0.075em;font-weight:bold;font-family: "Malgun Gothic", "Helvetica", sans-serif !important;color:#000;line-height:44px;text-align:center;}
+.openRecruitment_preview .preview_cnt .gongcheCompany_info .btn_moreCmp {display:block;width:99px;margin:19px auto;}
+.openRecruitment_preview .preview_cnt .gongcheCompany_info .job_date {text-align:center;margin-top:20px;}
+.openRecruitment_preview .preview_cnt .gongcheCompany_info .job_date dt,
+.openRecruitment_preview .preview_cnt .gongcheCompany_info .job_date dd {display:inline-block;font-family: "Malgun Gothic", "Helvetica", sans-serif !important; color:#ad3434;font-size:20px;}
+.openRecruitment_preview .preview_cnt .gongcheCompany_info .job_date dt {letter-spacing:-0.14em}
+.openRecruitment_preview .preview_cnt .gongcheCompany_info .notice-txt {margin:15px auto 0;text-align:center;font-size:14px;font-family: "Malgun Gothic", "Helvetica", sans-serif !important;color:#817f7f;letter-spacing:-0.075em}
+.openRecruitment_preview .preview_cnt .checkPoint {background:#fafafa;padding-bottom:35px;}
+.openRecruitment_preview .preview_cnt .checkPoint.cnt02 {}
+.openRecruitment_preview .preview_cnt .checkPoint .banner_link {width:648px;margin:0 auto;}
+.openRecruitment_preview .preview_cnt .checkPoint .banner_link:after {clear:both;content:'';display:block;}
+.openRecruitment_preview .preview_cnt .checkPoint .banner_link li {float:left;margin-right:20px}
+.openRecruitment_preview .preview_cnt .checkPoint .banner_link li.last {margin-right:0;}
+.openRecruitment_preview .preview_cnt .checkPoint.cnt02 .btmodify {display:block;width:231px;height:61px;margin:0 auto;background:url(/ui/static/image/job/gongche/btn_cmpScrap.gif) 0 0 no-repeat;}
+.openRecruitment_preview .preview_cnt .checkPoint.cnt02 .btmodify.on,
+.openRecruitment_preview .preview_cnt .checkPoint.cnt02 .btmodify:hover {background-position:0 -61px;}
+
+/* 공모전 상세요강 확대보기 sbLee 2019-06-12 */
+#wrap.gongmo-iframe {}
+#wrap.gongmo-iframe #content_job {max-width:100%;margin:0 auto}
+#wrap.gongmo-iframe #content_job img {max-width:100%}
+#wrap.gongmo-iframe #content_job .sectionWrap02 {padding:20px 10px}
+#wrap.gongmo-iframe #content_job .adCompanyInfo {min-height:35px;padding:10px 0; margin:10px 0; border-top:1px solid #dbdbdb; border-bottom:1px solid #dbdbdb; overflow:hidden;}
+#wrap.gongmo-iframe #content_job .adCompanyInfo .incruitLogo {display:inline-block; width:120px; padding:20px 0; text-align:center;}
+#wrap.gongmo-iframe #content_job .adCompanyInfo .adCompanTxt {display:inline-block; width:72%;  padding:20px 10px 0 0; font-size:0.9em; letter-spacing:-1px; color:#888; line-height:1.4em; text-align:left;}
+#wrap.gongmo-iframe #content_job .adCompanyInfo .qrCode { width:70px; padding:10px;display:none;}
+#wrap.gongmo-iframe #content_job .adCompanyInfo .adCompanTxt.none {width:81%;}
+@media (max-width:720px) {
+	#wrap.gongmo-iframe #content_job .adCompanyInfo {text-align:center;}
+	#wrap.gongmo-iframe #content_job .adCompanyInfo .adCompanTxt {width:100%;text-align:center;padding:10px;box-sizing:border-box;}
+}
+
+#content_job .shoptemp-border{box-sizing:border-box;}
+#content_job img{max-width:100%;}
+.noneDrag {-ms-user-select: none; -moz-user-select: -moz-none; -webkit-user-select: none; -khtml-user-select: none; user-select:none;}
+
+
+#content_job{width:100%;margin:0 auto;}
+
+
+/* 상세내용없는 경우 펌글 */
+.jobview_textview *{font-family:"Malgun Gothic",sans-serif;letter-spacing:-0.075em;box-sizing:border-box;}
+.jobview_textview{max-width:900px;width:100%;margin:0 auto 0 auto;border-top:2px solid #bebebe;}
+.jobview_textview table{width:100%;border-spacing:0;border-collapse:collapse;}
+.jobview_textview table th{width:19.66%;font-weight:normal;font-size:15px;line-height:22px;color:#666;padding:16px 0;border-bottom:1px solid #ddd;background:#f7f7f7;}
+.jobview_textview table td{width:80.34%;font-size:15px;line-height:22px;color:#484848;padding:16px 0 16px 32px;border-bottom:1px solid #ddd;background:#fff;}
+.jobview_textview table .sq_blut{display:block;position:relative;padding:0 0 0 9px;}
+.jobview_textview table .sq_blut:after{content:"";display:block;position:absolute;left:0;top:50%;width:3px;height:3px;margin-top:-1.5px;border-radius:30px;background:#484848;}
+.jobview_textview table .textVer{display:block;}
+.jobview_textview .jobview_textview_box{font-size:15px;line-height:30px;color:#484848;padding:26px 0 0 0;}

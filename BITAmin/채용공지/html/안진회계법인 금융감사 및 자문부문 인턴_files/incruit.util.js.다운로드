@@ -1,0 +1,5426 @@
+﻿/*==========================================
+	Incruit Utility JS Framework
+*==========================================
+*	작 성 자 : 한승엽
+*	작 성 일 : 2013-11-26
+*	주의사항 :
+*	수정이력 :  2015-10-13(이성빈) - 취얼업 포인트 관련 작업.
+*				2015-11-19(정성우) - 취업학교 학번 회원가입 팝업 오픈 소스 추가
+*				2017-09-06(김진수) - iNcruit.Component.CSSLoader, iNcruit.Component.ObjectLoader 추가
+*				2017-09-26(김성진) - iNcruit.empknow.LoadData.New 취업자료 없을경우 해당영역 hide()
+*				2018-03-19(진상철) - iNcruitApp.sendBridge 앱 브릿지 연결 함수 추가
+*				2017-09-26(김성진) - iNcruit.empknow.LoadData.New 뉴스 오픈여부 파라미터 추가
+*				2020-07-08 (진상철) - G_HOSTNAME_INCRUIT 를 https로 수정
+*				2020-07-13 (진상철) - G_HOSTNAME_MOBILE을 https로 수정
+*				2020-07-14 (진상철) - G_HOSTNAME_MAPI를 https로 수정, G_HOSTNAME_NUGUMYPHOTO에서 http: 제거
+*				2020-07-15 (진상철) - G_HOSTNAME_RECRUITER를 https로 수정
+*				2020-08-05 (한동석) - G_HOSTNAME_EDU를 https로 수정
+*				2020-09-03 (진상철) - G_HOSTNAME_PEOPLE https 변경
+*				2020-11-03 (진상철) - 앱 브릿지 함수 내 버전확인 예외처리 제거
+*				2020-12-14 (김성진) - iNcruit.util.IsApp  앱여부 수정
+*				2021-05-11 (김성진) - iNcruit.util.IsiPad (아이패드여부) 추가
+*				2021-03-19 (한동석) - 취업비서App 하이브리드 전환 개발 - https://incruit.dooray.com/project/posts/2869577124120941273
+*				2021-06-18 (한동석) - 취업비서App 하이브리드 전환 개발 후속 - https://incruit.dooray.com/project/posts/3018856535577992599
+*				2021-10-01 (김성진) - 인스타그랩앱,페이스북앱 페이코로그인 _self 처리
+*				2021-10-06 (김성진) - 프리로더 관련 앱 브릿지 추가
+*				2021-11-10 (김성진) - 구글 로그인 스크립트 오류 수정 (#google_signin_btn 요소 여부 추가)
+*				2021-12-08 (김성진) - iNcruit.util.IsApp 에 타블렛앱(INC_PAD) 추가
+*				2022-01-06 (진상철) - iNcruitApp_CallBack에 OPENKCBRECV 예외처리 추가
+*				2022-07-26 (김성진) - file.incruit.com 스크립트 오류로 에어브릿지 제거
+*				2022-09-05 (한동석) - jobdb_info/jobpostcontmobile.asp 페이지에선 에어브릿지 초기화하지 않도록 처리
+*				2022-11-22 (임상균) - 구 네비게이션 제거 help 추가
+* 				2023-04-21 (김아영) - G_HOSTNAME_LAB
+*				2023-06-27 (임상균) - attr $ -> jQuery 로 수정
+*				2023-06-27 (임상균) - recruiter 구액션바 제거
+*				2023-08-28 (김성진) - 소셜 로그인 앱 콜백 핸드폰번호 추가
+*				2023-11-06 (임상균) - 셜록N 기본 액션바 출력
+*==========================================*/
+
+/* Description
+
+iNcruit Utility Framework은 JSON 기반의 extend 가능한 JS Framework을 지향합니다.
+공통으로 사용되는 Event Bind 처리 및 Data 처리, Text에 대한 처리를 제공합니다.
+
+Usage :
+
+*/
+if (!iNcruit) {
+	var iNcruit = {};
+}
+
+/* ----------------------------------------------------------------------------
+	에어브릿지
+ ----------------------------------------------------------------------------*/
+// file과 공고뷰의 iframe영역 모바일뷰의 경우는 에어브릿지 사용하지 않음
+
+if(document.location.href.indexOf("file.incruit.com") == -1 && document.location.href.indexOf("jobdb_info/jobpostcontmobile.asp") == -1 && document.location.href.indexOf("/jobpostcont.asp") == -1 ) {
+
+	(function(a_,i_,r_,_b,_r,_i,_d,_g,_e){if(!a_[_b]){var d={queue:[]};_r.concat(_i).forEach(function(a){var i_=a.split("."),a_=i_.pop();i_.reduce(function(a,i_){return a[i_]=a[i_]||{}},d)[a_]=function(){d.queue.push([a,arguments])}});a_[_b]=d;a_=i_.getElementsByTagName(r_)[0];i_=i_.createElement(r_);i_.onerror=function(){d.queue.filter(function(a){return 0<=_i.indexOf(a[0])}).forEach(function(a){a=a[1];a=a[a.length-1];"function"===typeof a&&a("error occur when load airbridge")})};i_.async=1;i_.src="//static.airbridge.io/sdk/latest/airbridge.min.js";a_.parentNode.insertBefore(i_,a_)}})(window,document,"script","airbridge","init fetchResource setBanner setDownload setDownloads setDeeplinks sendSMS sendWeb setUserAgent setUserAlias addUserAlias setMobileAppData setUserId setUserEmail setUserPhone setUserAttributes clearUser setDeviceIFV setDeviceIFA setDeviceGAID events.send events.signIn events.signUp events.signOut events.purchased events.addedToCart events.productDetailsViewEvent events.homeViewEvent events.productListViewEvent events.searchResultViewEvent".split(" "),["events.wait"]);
+	airbridge.init({
+		app: 'incruitapp',
+		webToken: 'cb9650dd943a4da39b2118c414f6df22',
+		utmParsing: true,
+		urlQueryMapping: {
+			channel: 'utm_source',
+			medium: 'utm_medium',
+			campaign: 'utm_campaign',
+			content: 'utm_content',
+			term: ['k_keyword', 'utm_term']
+		}
+	});
+}
+
+
+// 에어브릿지 PC(모웹 포함)
+function goAIR(cate, act, lbl,val){
+//	try	{
+		//alert(cate + " / " + act + " / " + lbl + " / " + val);
+		if (act == "") {
+			act = null;
+		}
+		if (lbl == "") {
+			lbl = null;
+		}
+		if (val == "") {
+			val = null;
+		}
+		airbridge.events.send(cate, {
+			label: lbl,
+			action: act,
+			value: val
+			/*
+			semanticAttributes: {
+				transactionID: "transaction_123",
+			},
+			customAttributes: {
+				key: "value",
+			}*/
+		});
+//	} catch(e) {
+//	}
+}
+
+/* ----------------------------------------------------------------------------
+	Default Value
+ ----------------------------------------------------------------------------*/
+iNcruit.util 			= {};	// 일반 Util Function
+iNcruit.user			= {};	// Login User Info
+iNcruit.text 			= {};	// Text 처리
+iNcruit.img 			= {};	// Image 관련 처리
+iNcruit.event 			= {};	// Event 처리
+iNcruit.banner 			= {};	// Banner 처리
+iNcruit.domain 			= {};	// Domain 처리
+iNcruit.empknow 		= {};	// 취업자료
+iNcruit.login 			= {};	// 로그인 레이어
+iNcruit.compinfo 		= {};	// 기업정보 관련
+iNcruit.template 		= {};
+iNcruit.layer 			= {};
+iNcruit.cookie 			= {};
+iNcruit.popup 			= {};	// 팝업 관련
+iNcruit.scrap 			= {};	// 스크랩
+iNcruit.singlesign 		= {};	// 연동로그인(소셜, 간편)
+iNcruit.Request 		= {};	// Request 객체 생성
+iNcruit.URL 			= {};
+iNcruit.AutoComplete	= {};
+iNcruit.Component 		= {};	// JavaScript Component
+iNcruit.Storage			= {};
+
+
+/* ----------------------------------------------------------------------------
+	00 Component Loader 우선 정의.
+	Component에 따라 init 과정 및 동적 Loading이 필요한 모든 경우의 대비를 위해
+	가장 먼저 Loader를 준비한다.
+ ----------------------------------------------------------------------------*/
+iNcruit.Component.Loader = function(src, callback) {
+	// Javascritp 파일 Lazy Loader
+	// callback으로 On Load 처리
+	var script = document.createElement('script');
+	script.src = src;
+
+	if(callback !== null){
+		if (script.readyState) { // IE, incl. IE9
+			script.onreadystatechange = function() {
+				if (script.readyState == "loaded" || script.readyState == "complete") {
+					script.onreadystatechange = null;
+					callback();
+				}
+			};
+		} else {
+			script.onload = function() { // Other browsers
+				callback();
+			};
+		}
+	}
+	document.getElementsByTagName('head')[0].appendChild(script);
+}
+
+
+/* ----------------------------------------------------------------------------
+	Domain
+ ----------------------------------------------------------------------------*/
+
+//var G_SERVER_SET = "beta";
+//var G_SERVER_SET = "Semi"
+//var G_SERVER_SET = ""
+if (typeof G_SERVER_SET == "undefined") {
+
+	var url = location.href;
+
+	if (url.indexOf("beta") > 0 ) {
+		iNcruit.domain.G_SERVER_SET = "beta";
+	} else if (url.indexOf("semi") > 0 ){
+		iNcruit.domain.G_SERVER_SET = "semi";
+	} else {
+		iNcruit.domain.G_SERVER_SET = "";
+	}
+
+	G_SERVER_SET = iNcruit.domain.G_SERVER_SET;
+} else {
+	iNcruit.domain.G_SERVER_SET = G_SERVER_SET;
+}
+
+var G_SUB_DOMAIN = location.hostname.split('.').shift();
+
+
+
+var G_DOMAIN_INCRUIT  = "incruit.com";
+var G_DOMAIN_ALBATING = "albating.com";
+
+var G_HOSTNAME_EDIT 		= "http://"+ iNcruit.domain.G_SERVER_SET +"edit.incruit.com";
+var G_HOSTNAME_SSL_EDIT 	= "https://"+ iNcruit.domain.G_SERVER_SET +"edit.incruit.com";
+var G_HOSTNAME_FILE 		= "https://"+ iNcruit.domain.G_SERVER_SET +"file.incruit.com";
+var G_HOSTNAME_MY 			= "https://"+ iNcruit.domain.G_SERVER_SET +"my.incruit.com";
+var G_HOSTNAME_PHOTO 		= "https://"+ iNcruit.domain.G_SERVER_SET +"photo.incruit.com";
+var G_HOSTNAME_NUGUPHOTO 	= "http://"+ iNcruit.domain.G_SERVER_SET +"nuguphoto.incruit.com";
+var G_HOSTNAME_PARTNER 		= "http://"+ iNcruit.domain.G_SERVER_SET +"partner.incruit.com";
+var G_HOSTNAME_ALBA 		= "http://"+ iNcruit.domain.G_SERVER_SET +"alba.incruit.com";
+var G_HOSTNAME_JOB 			= "https://"+ iNcruit.domain.G_SERVER_SET +"job.incruit.com";
+var G_HOSTNAME_INCRUIT 		= "https://"+ iNcruit.domain.G_SERVER_SET +"www.incruit.com";
+var G_HOSTNAME_SEARCH 		= "https://"+ iNcruit.domain.G_SERVER_SET +"search.incruit.com";
+var G_HOSTNAME_RECRUITER 	= "https://"+ iNcruit.domain.G_SERVER_SET +"recruiter.incruit.com";
+var G_HOSTNAME_RESUMEDB 	= "https://"+ iNcruit.domain.G_SERVER_SET +"resumedb.incruit.com";
+var G_HOSTNAME_EDU 			= "https://"+ iNcruit.domain.G_SERVER_SET +"edu.incruit.com";
+var G_HOSTNAME_PEOPLE 		= "https://"+ iNcruit.domain.G_SERVER_SET +"people.incruit.com";
+var G_HOSTNAME_OPENSALARY 	= "https://"+ iNcruit.domain.G_SERVER_SET +"salary.incruit.com";
+var G_HOSTNAME_GONGMO 		= "https://"+ iNcruit.domain.G_SERVER_SET +"gongmo.incruit.com";
+var G_HOSTNAME_BOC 			= "http://"+ iNcruit.domain.G_SERVER_SET +"boc.incruit.com";
+var G_HOSTNAME_MNUGU		= "http://"+ iNcruit.domain.G_SERVER_SET +"m.nugu.incruit.com";
+var G_HOSTNAME_IMG			= "//"+ iNcruit.domain.G_SERVER_SET +"img.incruit.com";
+var G_HOSTNAME_MYLOGO		= "https://"+ iNcruit.domain.G_SERVER_SET +"mylogo.incruit.com";
+var G_HOSTNAME_MOBILE		= "https://"+ iNcruit.domain.G_SERVER_SET +"m.incruit.com";
+var G_HOSTNAME_UNSE			= "https://"+ iNcruit.domain.G_SERVER_SET +"unse.incruit.com";
+var G_HOSTNAME_CHIEF		= "https://"+ iNcruit.domain.G_SERVER_SET +"chief.incruit.com";
+var G_HOSTNAME_STAFFING		= "https://"+ iNcruit.domain.G_SERVER_SET +"staffing.incruit.com";
+var G_HOSTNAME_SCHOOL		= "https://"+ iNcruit.domain.G_SERVER_SET +"school.incruit.com";
+var G_HOSTNAME_SSL_SCHOOL 	= "https://"+ iNcruit.domain.G_SERVER_SET +"school.incruit.com";
+var G_HOSTNAME_EVENT		= "https://"+ iNcruit.domain.G_SERVER_SET +"event.incruit.com";
+var G_HOSTNAME_STATIC		= "https://"+ iNcruit.domain.G_SERVER_SET +"s.incru.it";
+var G_HOSTNAME_NUGUWWW		= G_HOSTNAME_INCRUIT;
+var G_HOSTNAME_MAPI			= "https://"+ iNcruit.domain.G_SERVER_SET +"mapi.incruit.com";
+var G_HOSTNAME_NUGUPHOTO	= "http://"+ iNcruit.domain.G_SERVER_SET +"nuguphoto.incruit.com";
+var G_HOSTNAME_NUGUMYPHOTO	= "//"+ iNcruit.domain.G_SERVER_SET +"myphoto.incruit.com";
+var G_HOSTNAME_CHEERUP		= "http://"+ iNcruit.domain.G_SERVER_SET +"cheerup.incruit.com";
+var G_HOSTNAME_ALBATING	 	= "http://"+ iNcruit.domain.G_SERVER_SET +"albating.incruit.com";
+var G_HOSTNAME_SALARY		= "http://"+ iNcruit.domain.G_SERVER_SET +"salary.incruit.com";
+
+var G_HOSTNAME_CAMPUS		= "http://"+ iNcruit.domain.G_SERVER_SET +"campus.incruit.com";
+var G_HOSTNAME_CASH			= "http://"+ iNcruit.domain.G_SERVER_SET +"cash.incruit.com";
+var G_HOSTNAME_CLUB			= "http://"+ iNcruit.domain.G_SERVER_SET +"club.incruit.com";
+var G_HOSTNAME_COMPPHOTO	= "http://"+ iNcruit.domain.G_SERVER_SET +"compphoto.incruit.com";
+var G_HOSTNAME_COUPON		= "http://"+ iNcruit.domain.G_SERVER_SET +"coupon.incruit.com";
+var G_HOSTNAME_DEV			= "http://"+ iNcruit.domain.G_SERVER_SET +"dev.incruit.com";
+var G_HOSTNAME_GIFT			= "http://"+ iNcruit.domain.G_SERVER_SET +"gift.incruit.com";
+var G_HOSTNAME_HELP			= "https://"+ iNcruit.domain.G_SERVER_SET +"help.incruit.com";
+var G_HOSTNAME_HR	   		= "http://"+ iNcruit.domain.G_SERVER_SET +"help.incruit.com";
+var G_HOSTNAME_JOBDIC   	= "http://"+ iNcruit.domain.G_SERVER_SET +"hr.incruit.com";
+var G_HOSTNAME_KISINFO  	= "http://"+ iNcruit.domain.G_SERVER_SET +"kisinfo.incruit.com";
+var G_HOSTNAME_MALBA		= "http://"+ iNcruit.domain.G_SERVER_SET +"m.alba.incruit.com";
+var G_HOSTNAME_MYPHOTO  	= "http://"+ iNcruit.domain.G_SERVER_SET +"myphoto.incruit.com";
+var G_HOSTNAME_NAME	 		= "http://"+ iNcruit.domain.G_SERVER_SET +"name.incruit.com";
+var G_HOSTNAME_NUGU	 		= "http://"+ iNcruit.domain.G_SERVER_SET +"www.incruit.com";
+var G_HOSTNAME_TV	   		= "http://"+ iNcruit.domain.G_SERVER_SET +"tv.incruit.com";
+var G_HOSTNAME_WORLDJOB 	= "http://"+ iNcruit.domain.G_SERVER_SET +"worldjob.incruit.com";
+var G_HOSTNAME_AC			= "http://"+ iNcruit.domain.G_SERVER_SET +"ac.incruit.com";
+var G_HOSTNAME_SSL_INCRUIT	= "https://"+ iNcruit.domain.G_SERVER_SET +"www.incruit.com";
+var G_HOSTNAME_SHI_PT		= "http://"+ iNcruit.domain.G_SERVER_SET +"shi-pt.incruit.com";
+var G_HOSTNAME_LAB 			= "https://"+ G_SERVER_SET +"lab.incruit.com";
+
+
+iNcruit.domain.G_SUB_DOMAIN				= G_SUB_DOMAIN;
+
+iNcruit.domain.G_HOSTNAME_EDIT		 	= G_HOSTNAME_EDIT;
+iNcruit.domain.G_HOSTNAME_SSL_EDIT	 	= G_HOSTNAME_SSL_EDIT;
+iNcruit.domain.G_HOSTNAME_FILE		 	= G_HOSTNAME_FILE;
+iNcruit.domain.G_HOSTNAME_MY		   	= G_HOSTNAME_MY;
+iNcruit.domain.G_HOSTNAME_PHOTO			= G_HOSTNAME_PHOTO;
+iNcruit.domain.G_HOSTNAME_PARTNER	  	= G_HOSTNAME_PARTNER;
+iNcruit.domain.G_HOSTNAME_ALBA		 	= G_HOSTNAME_ALBA;
+iNcruit.domain.G_HOSTNAME_JOB		  	= G_HOSTNAME_JOB;
+iNcruit.domain.G_HOSTNAME_INCRUIT		= G_HOSTNAME_INCRUIT;
+iNcruit.domain.G_HOSTNAME_SEARCH		= G_HOSTNAME_SEARCH;
+iNcruit.domain.G_HOSTNAME_RECRUITER		= G_HOSTNAME_RECRUITER;
+iNcruit.domain.G_HOSTNAME_RESUMEDB		= G_HOSTNAME_RESUMEDB;
+iNcruit.domain.G_HOSTNAME_EDU			= G_HOSTNAME_EDU;
+iNcruit.domain.G_HOSTNAME_PEOPLE		= G_HOSTNAME_PEOPLE;
+iNcruit.domain.G_HOSTNAME_OPENSALARY	= G_HOSTNAME_OPENSALARY;
+iNcruit.domain.G_HOSTNAME_GONGMO		= G_HOSTNAME_GONGMO;
+iNcruit.domain.G_HOSTNAME_BOC			= G_HOSTNAME_BOC;
+iNcruit.domain.G_HOSTNAME_MNUGU			= G_HOSTNAME_MNUGU;
+iNcruit.domain.G_HOSTNAME_IMG			= G_HOSTNAME_IMG;
+iNcruit.domain.G_HOSTNAME_MYLOGO		= G_HOSTNAME_MYLOGO;
+iNcruit.domain.G_HOSTNAME_NUGUPHOTO		= G_HOSTNAME_NUGUPHOTO;
+iNcruit.domain.G_HOSTNAME_MOBILE		= G_HOSTNAME_MOBILE;
+iNcruit.domain.G_HOSTNAME_UNSE			= G_HOSTNAME_UNSE;
+iNcruit.domain.G_HOSTNAME_CHIEF			= G_HOSTNAME_CHIEF;
+iNcruit.domain.G_HOSTNAME_STAFFING		= G_HOSTNAME_STAFFING
+iNcruit.domain.G_HOSTNAME_SCHOOL		= G_HOSTNAME_SCHOOL;
+iNcruit.domain.G_HOSTNAME_EVENT			= G_HOSTNAME_EVENT;
+iNcruit.domain.G_HOSTNAME_STATIC		= G_HOSTNAME_STATIC;
+iNcruit.domain.G_HOSTNAME_NUGUWWW		= G_HOSTNAME_NUGUWWW;
+iNcruit.domain.G_HOSTNAME_MAPI			= G_HOSTNAME_MAPI;
+iNcruit.domain.G_HOSTNAME_NUGUPHOTO		= G_HOSTNAME_NUGUPHOTO;
+iNcruit.domain.G_HOSTNAME_NUGUMYPHOTO	= G_HOSTNAME_NUGUMYPHOTO;
+iNcruit.domain.G_HOSTNAME_CHEERUP		= G_HOSTNAME_CHEERUP;
+iNcruit.domain.G_HOSTNAME_ALBATING		= G_HOSTNAME_ALBATING;
+iNcruit.domain.G_HOSTNAME_SALARY		= G_HOSTNAME_SALARY;
+iNcruit.domain.G_HOSTNAME_CAMPUS		= G_HOSTNAME_CAMPUS;
+iNcruit.domain.G_HOSTNAME_CASH			= G_HOSTNAME_CASH;
+iNcruit.domain.G_HOSTNAME_CLUB			= G_HOSTNAME_CLUB;
+iNcruit.domain.G_HOSTNAME_COMPPHOTO		= G_HOSTNAME_COMPPHOTO;
+iNcruit.domain.G_HOSTNAME_COUPON		= G_HOSTNAME_COUPON;
+iNcruit.domain.G_HOSTNAME_DEV			= G_HOSTNAME_DEV;
+iNcruit.domain.G_HOSTNAME_GIFT			= G_HOSTNAME_GIFT;
+iNcruit.domain.G_HOSTNAME_HELP			= G_HOSTNAME_HELP;
+iNcruit.domain.G_HOSTNAME_HR			= G_HOSTNAME_HR;
+iNcruit.domain.G_HOSTNAME_JOBDIC		= G_HOSTNAME_JOBDIC;
+iNcruit.domain.G_HOSTNAME_KISINFO		= G_HOSTNAME_KISINFO;
+iNcruit.domain.G_HOSTNAME_MALBA			= G_HOSTNAME_MALBA;
+iNcruit.domain.G_HOSTNAME_MYPHOTO		= G_HOSTNAME_MYPHOTO;
+iNcruit.domain.G_HOSTNAME_NAME			= G_HOSTNAME_NAME;
+iNcruit.domain.G_HOSTNAME_NUGU			= G_HOSTNAME_NUGU;
+iNcruit.domain.G_HOSTNAME_TV			= G_HOSTNAME_TV;
+iNcruit.domain.G_HOSTNAME_WORLDJOB		= G_HOSTNAME_WORLDJOB;
+iNcruit.domain.G_HOSTNAME_AC			= G_HOSTNAME_AC;
+iNcruit.domain.G_HOSTNAME_SSL_INCRUIT	= G_HOSTNAME_SSL_INCRUIT;
+iNcruit.domain.G_HOSTNAME_SHI_PT		= G_HOSTNAME_SHI_PT;
+
+
+iNcruit.domain.TransDomainURL = function(url) {
+	url = url.replace("[[GC_HOSTNAME_INCRUIT]]"		, iNcruit.domain.G_HOSTNAME_INCRUIT);		//인크루트(www)
+	url = url.replace("[[GC_HOSTNAME_ALBATING]]"   	, iNcruit.domain.G_HOSTNAME_ALBATING);  	//알바팅
+	url = url.replace("[[GC_HOSTNAME_SALARY]]"	 	, iNcruit.domain.G_HOSTNAME_SALARY);   		//연봉정보
+	url = url.replace("[[GC_HOSTNAME_EDIT]]"	   	, iNcruit.domain.G_HOSTNAME_EDIT);   		//회원
+	url = url.replace("[[GC_HOSTNAME_SSL_EDIT]]"   	, iNcruit.domain.G_HOSTNAME_SSL_EDIT);  	//https회원
+	url = url.replace("[[GC_HOSTNAME_MY]]"		 	, iNcruit.domain.G_HOSTNAME_MY);   			//나의 인크루트
+	url = url.replace("[[GC_HOSTNAME_PEOPLE]]"	 	, iNcruit.domain.G_HOSTNAME_PEOPLE);   		//일과 사람
+	url = url.replace("[[GC_HOSTNAME_ALBA]]"	   	, iNcruit.domain.G_HOSTNAME_ALBA);   		//알바팅
+	url = url.replace("[[GC_HOSTNAME_OPENSALARY]]" 	, iNcruit.domain.G_HOSTNAME_OPENSALARY);   	//연봉정보
+	url = url.replace("[[GC_HOSTNAME_EDU]]"			, iNcruit.domain.G_HOSTNAME_EDU);   		//교육정보
+	url = url.replace("[[GC_HOSTNAME_SEARCH]]"	 	, iNcruit.domain.G_HOSTNAME_SEARCH);   		//통합검색
+	url = url.replace("[[GC_HOSTNAME_RECRUITER]]"  	, iNcruit.domain.G_HOSTNAME_RECRUITER);   	//기업정보
+	url = url.replace("[[GC_HOSTNAME_RESUMEDB]]"   	, iNcruit.domain.G_HOSTNAME_RESUMEDB);   	//인재검색
+	url = url.replace("[[GC_HOSTNAME_JOB]]"			, iNcruit.domain.G_HOSTNAME_JOB);   		//채용정보
+	url = url.replace("[[GC_HOSTNAME_STAFFING]]"   	, iNcruit.domain.G_HOSTNAME_STAFFING);   	//파견대행
+	url = url.replace("[[GC_HOSTNAME_CHIEF]]"	  	, iNcruit.domain.G_HOSTNAME_CHIEF);   		//헤드헌팅
+	url = url.replace("[[GC_HOSTNAME_CASH]]"	   	, iNcruit.domain.G_HOSTNAME_CASH);   		//결제
+	url = url.replace("[[GC_HOSTNAME_JOBDIC]]"	 	, iNcruit.domain.G_HOSTNAME_JOBDIC);   		//직업사전
+	url = url.replace("[[GC_HOSTNAME_NUGU]]"	   	, iNcruit.domain.G_HOSTNAME_NUGU);   		//누구
+	url = url.replace("[[GC_HOSTNAME_NAME]]"	   	, iNcruit.domain.G_HOSTNAME_NAME);   		//명함홈피
+	url = url.replace("[[GC_HOSTNAME_HELP]]"	   	, iNcruit.domain.G_HOSTNAME_HELP);   		//고객만족센터
+	url = url.replace("[[GC_HOSTNAME_HR]]"		 	, iNcruit.domain.G_HOSTNAME_HR);   			//인재경영
+	url = url.replace("[[GC_HOSTNAME_TV]]"		 	, iNcruit.domain.G_HOSTNAME_TV);   			//TV
+	url = url.replace("[[GC_HOSTNAME_GONGMO]]"	 	, iNcruit.domain.G_HOSTNAME_GONGMO);   		//공모전
+	url = url.replace("[[GC_HOSTNAME_CAMPUS]]"	 	, iNcruit.domain.G_HOSTNAME_CAMPUS);   		//캠퍼스
+	url = url.replace("[[GC_HOSTNAME_GIFT]]"	   	, iNcruit.domain.G_HOSTNAME_GIFT);   		//취업상품권
+	url = url.replace("[[GC_HOSTNAME_COUPON]]"	 	, iNcruit.domain.G_HOSTNAME_COUPON);   		//무료이용권
+	url = url.replace("[[GC_HOSTNAME_CLUB]]"	   	, iNcruit.domain.G_HOSTNAME_CLUB);   		//클럽
+	url = url.replace("[[GC_HOSTNAME_FILE]]"	   	, iNcruit.domain.G_HOSTNAME_FILE);   		//파일
+	url = url.replace("[[GC_HOSTNAME_MYLOGO]]"	 	, iNcruit.domain.G_HOSTNAME_MYLOGO);   		//기업로고(http://mylogo.incruit.com)
+	url = url.replace("[[GC_HOSTNAME_MYPHOTO]]"		, iNcruit.domain.G_HOSTNAME_MYPHOTO);   	//개인이미지(http://myphoto.incruit.com)
+	url = url.replace("[[GC_HOSTNAME_KISINFO]]"		, iNcruit.domain.G_HOSTNAME_KISINFO);   	//한국신용평가
+	url = url.replace("[[GC_HOSTNAME_COMPPHOTO]]"  	, iNcruit.domain.G_HOSTNAME_COMPPHOTO);   	//기업이미지(http://compphoto.incruit.com)
+	url = url.replace("[[GC_HOSTNAME_UNSE]]"	   	, iNcruit.domain.G_HOSTNAME_UNSE);   		//운세
+	url = url.replace("[[GC_HOSTNAME_EVENT]]"	  	, iNcruit.domain.G_HOSTNAME_EVENT);   		//이벤트
+	url = url.replace("[[GC_HOSTNAME_WORLDJOB]]"   	, iNcruit.domain.G_HOSTNAME_WORLDJOB);   	//해외취업
+	url = url.replace("[[GC_HOSTNAME_DEV]]"			, iNcruit.domain.G_HOSTNAME_DEV);   		//개발자서비스
+	url = url.replace("[[GC_HOSTNAME_MOBILE]]"	 	, iNcruit.domain.G_HOSTNAME_MOBILE);   		//모바일서비스
+	url = url.replace("[[GC_HOSTNAME_MALBA]]"	  	, iNcruit.domain.G_HOSTNAME_MALBA);   		//모바일 아르바이트
+	url = url.replace("[[GC_HOSTNAME_MNUGU]]"	  	, iNcruit.domain.G_HOSTNAME_MNUGU);   		//모바일 인맥서비스
+
+	return url;
+};
+
+/*
+	CONST
+*/
+iNcruit.CONST = {};
+iNcruit.CONST.COMPANY_LOGO = iNcruit.domain.G_HOSTNAME_IMG + "/ui/static/image/recmd/noimg_company.gif";
+iNcruit.CONST.PROFILE_IMAGE = iNcruit.domain.G_HOSTNAME_IMG + "/ui/static/image/myincruit/noPhoto.png";
+
+/* ----------------------------------------------------------------------------
+	UTIL
+ ----------------------------------------------------------------------------*/
+ iNcruit.util.isValidBizRegNo = function(bizno) {
+	var chkRule = "137137135";
+	var step1, step2, step3, step4, step5, step6, step7;
+
+	step1 = 0;
+
+	for (var i=0; i<7; i++)
+	{
+		step1 = step1 + (bizno.substring(i, i+1) * chkRule.substring(i, i+1));
+	}
+
+	step2 = step1 % 10;
+	step3 = (bizno.substring(7, 8) * chkRule.substring(7, 8)) % 10;
+	step4 = bizno.substring(8, 9) * chkRule.substring(8, 9);
+	step5 = Math.round(step4 / 10 - 0.5);
+	step6 = step4 - (step5 * 10);
+	step7 = (10 - ((step2 + step3 + step5 + step6) % 10)) % 10;
+
+	if (bizno.substring(9, 10) != step7)
+		return false;
+	else
+		return true;
+ }
+
+iNcruit.util.GetCenterPosition = function(parents,layer) {
+	this.help = "TEST";
+	var src=jQuery(layer);
+	var position={ top: 0,left: 0 };
+
+	if(parents==window) {
+		position.top=parseInt((jQuery(parents).height()-layer.height())/2+jQuery(parents).scrollTop());
+		position.left=parseInt((jQuery(parents).width()-layer.width())/2+jQuery(parents).scrollLeft());
+	} else {
+		position.top=parseInt((jQuery(window).height()-layer.height())/2+jQuery(window).scrollTop());
+		position.left=parseInt((jQuery(parents).width()-layer.width())/2+jQuery(parents).scrollLeft());
+	}
+
+	return position;
+}
+iNcruit.util.GetCenterPosition.help = "화면 중앙의 좌료를 찾는다.";
+
+iNcruit.util.IsMobile = function() {
+	var uagent = navigator.userAgent.toLowerCase();
+	var mobile_reg = new RegExp('android|blackberry|iphone|ipad|ipod|opera mini|iemobile','g');
+
+	if (uagent.search(mobile_reg) >= 0) return true;
+	return false;
+
+}
+iNcruit.util.IsMobile.help = "모바일 기기 여부 확인.";
+
+iNcruit.util.IsTablet = function() {
+	var ua = window.navigator.userAgent.toLowerCase();
+
+	// 아이패드
+	if (ua.indexOf('ipad') > -1 || (ua.indexOf('macintosh') > -1 && navigator.maxTouchPoints > 2 )) {
+		return true;
+	}
+	// 갤럭시 탭
+	var galaxyTabModel = new Array('shw-','gt-p','gt-n', 'sm-t');
+	for (i = 0; i < galaxyTabModel.length; i++) {
+		if (ua.indexOf(galaxyTabModel[i]) > -1) {
+			return true;
+		}
+	}
+	return false;
+}
+
+iNcruit.util.IsSnsWebView = function() {
+	var uagent = navigator.userAgent.toLowerCase();
+	var sns_reg = new RegExp('instagram|fbav|fbios','g');
+
+	if (uagent.search(sns_reg) >= 0) return true;
+	return false;
+}
+
+iNcruit.util.IsApp = function() {
+	//var currentUrl = (location.href).toLowerCase();
+	//return (currentUrl.indexOf("f=app") > 0 || currentUrl.indexOf("f=android") > 0)
+
+	var ua = navigator.userAgent;
+	return (ua.indexOf("INCRUIT") > 0 || ua.indexOf("INC_PAD") > 0)
+	//return ("1" == "1")
+}
+
+iNcruit.util.IsTabletApp = function() {
+	var ua = navigator.userAgent;
+	return (ua.indexOf("INC_PAD") > 0)
+}
+
+iNcruit.util.IsReact = function() {
+	var _w = jQuery(document).width();
+	if(_w<1025) return true;
+	else return false;
+}
+
+iNcruit.util.GetDeviceType = function() {
+
+	var ua = navigator.userAgent;
+
+	return	  ua.match(/GoogleTV|SmartTV|Internet.TV|NetCast|NETTV|AppleTV|boxee|Kylo|Roku|DLNADOC|CE\-HTML/i) ? 'tv'
+			: ua.match(/Xbox|PLAYSTATION.3|Wii/i) ? 'tv'
+			: ua.match(/iPad/i) || ua.match(/tablet/i) && !ua.match(/RX-34/i) || ua.match(/FOLIO/i) ? 'tablet'
+			: ua.match(/Linux/i) && ua.match(/Android/i) && !ua.match(/Fennec|mobi|HTC.Magic|HTCX06HT|Nexus.One|SC-02B|fone.945/i) ? 'tablet'
+			: ua.match(/Kindle/i) || ua.match(/Mac.OS/i) && ua.match(/Silk/i) ? 'tablet'
+			: ua.match(/GT-P10|SC-01C|SHW-M180S|SGH-T849|SCH-I800|SHW-M180L|SPH-P100|SGH-I987|zt180|HTC(.Flyer|\_Flyer)|Sprint.ATP51|ViewPad7|pandigital(sprnova|nova)|Ideos.S7|Dell.Streak.7|Advent.Vega|A101IT|A70BHT|MID7015|Next2|nook/i) || ua.match(/MB511/i) && ua.match(/RUTEM/i) ? 'tablet'
+			: ua.match(/BOLT|Fennec|Iris|Maemo|Minimo|Mobi|mowser|NetFront|Novarra|Prism|RX-34|Skyfire|Tear|XV6875|XV6975|Google.Wireless.Transcoder/i) ? 'mobile'
+			: ua.match(/Opera/i) && ua.match(/Windows.NT.5/i) && ua.match(/HTC|Xda|Mini|Vario|SAMSUNG\-GT\-i8000|SAMSUNG\-SGH\-i9/i) ? 'mobile'
+			: ua.match(/Windows.(NT|XP|ME|9)/) && !ua.match(/Phone/i) || ua.match(/Win(9|.9|NT)/i) ? 'desktop'
+			: ua.match(/Macintosh|PowerPC/i) && !ua.match(/Silk/i) ? 'desktop'
+			: ua.match(/Linux/i) && ua.match(/X11/i) ? 'desktop'
+			: ua.match(/Solaris|SunOS|BSD/i) ? 'desktop'
+			: ua.match(/Bot|Crawler|Spider|Yahoo|ia_archiver|Covario-IDS|findlinks|DataparkSearch|larbin|Mediapartners-Google|NG-Search|Snappy|Teoma|Jeeves|TinEye/i) && !ua.match(/Mobile/i) ? 'desktop'
+			: 'mobile';
+}
+
+
+iNcruit.util.CompleteTemplate = function(source, data) {
+	if (typeof data != "object") {
+		return "";
+	}
+
+	for (key in data) {
+		var regexp = new RegExp('\%' + key + '\%','g');
+		source = source.replace(regexp, data[key]);
+	}
+
+	return source;
+}
+iNcruit.util.NumberToWon = function(source, unit) {
+	// comma만 생성
+	// param: source 변경액, unit 변경단위(ex: 10000 => 만원)
+
+	// 연산이 안되는 경우 -1 반환
+	if (source/unit == NaN) return -1;
+
+	if (source > unit ) {
+		var unitlength = (unit + "").length;
+		var result = (source/unit) + "";
+		var pattern = /(-?\d+)(\d{3})/;
+
+		while (pattern.test(result))
+			result = result.replace(pattern, "$1,$2");
+
+		return result;
+
+	} else {
+		// unit보다 작은 source
+		return -1;
+	}
+}
+
+iNcruit.util.NumberToCSV = function(source) {
+	// comma만 생성
+	var pattern = /(-?\d+)(\d{3})/;
+
+	var result = source + "";
+
+	while (pattern.test(result))
+		result = result.replace(pattern, "$1,$2");
+
+	return result;
+}
+
+iNcruit.util.DownloadFile = function(filepath, filename) {
+	if (iNcruit.login.IsLogin()) {
+		CallDownLoader(filepath,filename);
+	} else {
+		iNcruit.login.GoToLogin(location.href);
+	}
+}
+
+iNcruit.util.SendSMS = function(phoneNo, smstype, param, callback) {
+
+	var data = {};
+	data = param == undefined ? {} : param;
+
+	data.type = smstype;
+	data.mobile = phoneNo;
+
+	jQuery.ajax({
+		url: 	"/g_common/library/smshelper_ajax.asp",
+		data: 	data,
+		success: function(msg) {
+			alert("전송되었습니다. 감사합니다.");
+
+			if (typeof callback == "function") {
+				callback();
+			}
+		},
+		error: function(ex) {
+			alert("사용자가 많아 전송에 실패하였습니다.\n잠시후에 다시 시도해 주십시요.");
+		}
+	});
+}
+
+iNcruit.util.FormSerialize = function (form) {
+	var arrayData = form.serializeArray();
+	var objectData;
+
+	objectData = {};
+
+	jQuery.each(arrayData, function () {
+		var value;
+
+		if (this.value != null) {
+			value = this.value;
+		} else {
+			value = '';
+		}
+
+		if (objectData[this.name] != null) {
+			if (!objectData[this.name].push) {
+				objectData[this.name] = [objectData[this.name]];
+			}
+
+			objectData[this.name].push(value);
+		} else {
+			objectData[this.name] = value;
+		}
+	});
+
+	return objectData;
+}
+
+iNcruit.util.FormSerializeValidPlaceHolder = function(object) {
+	var name = object.name;
+	var value = object.value;
+
+	if (jQuery("input[name='" + name + "']").attr("placeholder") == value) {
+		object.value = "";
+	}
+
+	return object;
+
+}
+
+iNcruit.util.FormSerializeAjax = function (form) {
+	var arrayData = form.serializeArray();
+	var objectData;
+
+	objectData = {};
+
+	jQuery.each(arrayData, function (k,object) {
+
+		object = iNcruit.util.FormSerializeValidPlaceHolder(object);
+		var value;
+
+		if (object.value != null) {
+			value = escape(object.value);
+		} else {
+			value = '';
+		}
+
+		if (objectData[object.name] != null) {
+			if (!objectData[object.name].push) {
+				objectData[object.name] = [objectData[object.name]];
+			}
+
+			objectData[object.name].push(value);
+		} else {
+			objectData[object.name] = value;
+		}
+	});
+
+	return objectData;
+}
+
+iNcruit.util.ChkboxSerialize = function (selector) {
+	var objects = jQuery(selector);
+	var result = new Array();
+	for (var i = 0; i < objects.length; i++) {
+		result.push(jQuery(objects[i]).val());
+	}
+
+	return result;
+}
+
+iNcruit.util.IsNumber = function(src) {
+	src += '';
+	src = src.replace(/^\s*|\s*$/g, ''); // 좌우 공백 제거
+	if (src == '' || isNaN(src)) return false;
+	return true;
+}
+
+iNcruit.util.DateDiffFromNow = function(date1) {
+	return iNcruit.util.DateDiff(date1, new Date());
+}
+
+iNcruit.util.DateDiff = function(date1, date2) {
+	return Math.floor((Date.UTC(date1.getFullYear(), date1.getMonth(), date1.getDate()) - Date.UTC(date2.getFullYear(), date2.getMonth(), date2.getDate()) ) /(1000 * 60 * 60 * 24));
+}
+
+iNcruit.util.TimeDiffFromNow = function(date1, isFormatted) {
+	var diffedTime = Math.floor((date1.getTime() - new Date().getTime())/1000/60 *-1);
+
+	if (isFormatted != null && isFormatted) {
+		diffedTime = diffedTime <= 60 ? diffedTime + "분 전" : Math.floor(diffedTime / 60) + "시간 전";
+	}
+
+	return diffedTime;
+
+}
+
+iNcruit.util.CreateCssClass = function(name, style) {
+	var css = document.createElement('style');
+    css.c = 'text/css';
+    document.getElementsByTagName('head')[0].appendChild(css);
+
+	if(!(css.sheet||{}).insertRule) {
+        (css.styleSheet || css.sheet).addRule(name, style);
+	} else {
+        css.sheet.insertRule(name+"{"+style+"}",0);
+	}
+}
+
+function createClass(name,rules){
+    var style = document.createElement('style');
+    style.type = 'text/css';
+    document.getElementsByTagName('head')[0].appendChild(style);
+    if(!(style.sheet||{}).insertRule)
+        (style.styleSheet || style.sheet).addRule(name, rules);
+    else
+        style.sheet.insertRule(name+"{"+rules+"}",0);
+}
+
+
+// 앱의 액션바 노출여부(앱에서 호출하여 사용함)
+function IsIncruitWebWithNavi(){
+	var addr = window.location.href;		// window.location.host  , window.location.pathname
+	var subaddr = "";
+	var resultdata = "off";					// 기본값 앱 액션바 비노출
+
+	// incruit.com 제거
+	subaddr = window.location.host.replace( ".incruit.com" , "");
+
+	// edit, people, m, event, www, news 일때만 액션바 숨김 작동. 이  외엔 액션바 노출
+	if (subaddr.indexOf("m") > -1 || subaddr.indexOf("edit") > -1 || subaddr.indexOf("people") > -1 || subaddr.indexOf("event") > -1 || subaddr.indexOf("www") > -1 || subaddr.indexOf("news") > -1 || subaddr.indexOf("help") > -1 || subaddr.indexOf("recruiter") > -1){
+		// 인크루트 도메인이 있다면 off (액션바 숨김)
+		if (addr.indexOf("incruit.com", 0) > -1){
+			//sherlockn 기본값 앱 노출 
+			if (addr.indexOf("sherlockn.incruit.com") > 0) {
+				resultdata = "on"
+			} else {
+				resultdata = "off";
+			}
+		} else {
+			resultdata = "on";
+		}
+	} else {
+		 resultdata = "on";
+	}
+
+	return resultdata;		// JSON.stringify(resultdata);	// jsonstring방식으로 전달
+}
+/* ----------------------------------------------------------------------------
+	Layer popup for App download
+ ----------------------------------------------------------------------------*/
+
+iNcruit.util.isAndroid = function() {
+	return navigator.userAgent.match(/android/i);
+};
+
+iNcruit.util.isiOS = function() {
+	return navigator.userAgent.match(/iPhone/i) ||
+		navigator.userAgent.match(/iPad/i) ||
+		navigator.userAgent.match(/iPod/i);
+};
+
+iNcruit.util.IsiPad = function() {
+	var strmaxtouch = navigator.maxTouchPoints;
+
+	if (strmaxtouch == 5) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+iNcruit.util.runAppOrInstall = function(urlScheme) {
+	var start = new Date();
+
+	var isAndroid = iNcruit.util.isAndroid();
+	var isIos = iNcruit.util.isiOS();
+
+	setTimeout(function() {
+		var reStart = new Date();
+		var datediff = reStart.getTime() - start.getTime();
+
+		if (datediff > 2000) {
+			return;
+		}
+
+		if (isAndroid) {
+		} else if (isIos) {
+			window.location.href = 'http://itunes.apple.com/us/app/id366417871?mt=8';
+		}
+	}, 1000);
+
+	if (isAndroid) {
+		window.location.href = "market://details?id=incruit.app&url=incruit.app://main";
+	} else if (isIos) {
+		window.location.href = "incruitapp://";
+	}
+}
+
+/* ----------------------------------------------------------------------------
+	Cookie
+ ----------------------------------------------------------------------------*/
+iNcruit.cookie.GetCookie = function(cname) {
+	if (document.cookie.indexOf(cname) < 0) return "";
+
+	var name = cname + "=";
+	var ca = document.cookie.split(';');
+
+	for(var i=0; i<ca.length; i++) {
+		var c = jQuery.trim(ca[i]);
+		if (c.indexOf(name)==0) return c.substring(name.length,c.length);
+	}
+	return "";
+}
+
+iNcruit.cookie.getJSON = function(cookieName) {
+	try {
+		var r = {}, t = Cookies.get(cookieName), a = t.split("&");
+		for (var i = 0; i < a.length; i++) {
+			var c = a[i].split("="), k = c[0], v = c[1];
+			r[k]=v;
+		}
+		return r;
+	} catch(e) {
+		return {};
+	}
+}
+
+iNcruit.cookie.SetCookie = function(cname, cvalue, exday) {
+	var d = new Date();
+	d.setTime(d.getTime() + (exday*24*60*60*1000));
+	var expires = "expires="+d.toUTCString();
+	document.cookie = cname + "=" + cvalue + "; " + expires;
+}
+
+incCookie = iNcruit.cookie;
+
+
+/* ----------------------------------------------------------------------------
+	IMAGE
+ ----------------------------------------------------------------------------*/
+iNcruit.img.OnErrorCompanyLogo = function(target) {
+	jQuery(target).attr("src",iNcruit.CONST.COMPANY_LOGO);
+}
+
+iNcruit.img.OnErrorProfileImg = function(target) {
+	jQuery(target).attr("src",iNcruit.CONST.PROFILE_IMAGE);
+}
+
+/* ----------------------------------------------------------------------------
+	TEXT
+ ----------------------------------------------------------------------------*/
+
+iNcruit.text.GetByte = function(text) {
+	// 한글은 UTF-8 인코딩으로 계산되서 3Byte로 계산된다.
+	return (function(s,b,i,c){
+		for(b=i=0;c=s.charCodeAt(i++);b+=c>>11?3:c>>7?2:1);
+		return b
+	})(text);
+}
+
+
+iNcruit.text.CheckText = function (_option) { //option의 type에 따른 Text를 검사한다.
+	this.defaultoption = {
+		target : "",
+		type : "blank" // blank, specialchar, number, alphabet
+	}
+
+	this.option = jQuery.extend(this.defaultoption, _option);
+	//this.instance = null;
+	//console.log("iNcruit.text.CheckText: target = " + this.option.target + ", option = " + this.option.type );
+
+	if (this.option.target != "") {
+		var reg = null;
+		switch(this.option.type) {
+			case "0001":
+			case "specialchar":
+				reg = /[~!@\#$%<>^&*\()\-=+_\']/gi;
+				break;
+			case "email":
+				reg = /\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/;
+				break;
+			case "id":
+				reg = /^[0-9a-zA-Z\_]*$/;
+				break;
+			case "pwdspecial":
+				reg = /[`~!@#$%^&*|\\\'\";:\/?]/gi;
+				break;
+			case "pwdalphabet":
+				reg =  /[a-zA-Z]/g;
+				break;
+			case "pwdnumber":
+				reg = /[0-9]/gi;
+				break;
+			case "pwdnumber":
+				reg = /[0-9]/gi;
+				break;
+			case "whitespace":
+				reg = /\s/g;
+				break;
+			case "htmltag":
+				reg = /<(.|\n)*?>/gi;
+				break;
+			case "number":
+				reg = /^[0-9]*$/;
+				break;
+			case "telno":
+				reg = /^\d{2,3}-\d{3,4}-\d{4}$/;
+				break;
+			case "mobileno":
+				reg = /01[016789][1-9]{1}[0-9]{2,3}[0-9]{4}$/g;
+				break;
+			case "alphabet":
+				reg =  /^[a-zA-Z]*$/;
+				break;
+			case "hangul":
+				reg = /^[ㄱ-ㅎㅏ-ㅣ가-힣]+$/;
+				break;
+			case "ha":
+				reg = /^[ㄱ-ㅎ|가-힣|a-z|A-Z]+$/
+				break;
+			case "name":
+				reg = /^[ㄱ-ㅎ|가-힣|a-z|A-Z\s]+$/
+				break;
+			default:
+		}
+		return reg.test(this.option.target);
+	} else {
+		return true;
+	}
+
+	return false;
+}
+
+iNcruit.text.RemoveTag = function(text) {
+	var reg = /<(.|\n)*?>/gi;
+	return text.replace(reg, "");
+}
+
+/* ----------------------------------------------------------------------------
+	EVENT BINDING
+ ----------------------------------------------------------------------------*/
+/*
+	ToggleInputText
+	input text의 Toggle Event를 생성한다.
+*/
+iNcruit.event.ToggleInputText = function InputText(_option) { //input text의 Toggle Event를 생성한다.
+
+	this.defaultoption = {
+		target : "",				// input box의 jQuery Selector
+		defText : "defaulttext",	// input box의 기본 텍스트 attribute 이름
+		defText2 : "placeholder",	// HTML 5 Placeholder 속성 지원
+		bindType : "focus",			// on toggle 상태에 bind 될 event name
+		unbindType : "blur",		// off toggle 상태에 bind 될 event name
+		blankText : "",				// on toggle시 기본 텍스트를 대체 할 Text
+		offClass : "",				// off시 삭제될 class
+		onClass : "",
+		blurTextColor : "#ccc",
+		focusTextColor : "",
+		checkType : "",
+		checkMessage : "잘못된 입력입니다.",
+		focus: null,
+		blur:null
+	}
+
+	this.option = jQuery.extend(this.defaultoption, _option);
+	this.instance = null;
+
+	if (this.option.target != "") {
+		var setText = this.option.blankText;
+		var unsetText = typeof jQuery(this.option.target).attr(this.option.defText) != "undefined" ? jQuery(this.option.target).attr(this.option.defText) : jQuery(this.option.target).attr(this.option.defText2);
+		var offClass = this.option.offClass;
+		var onClass = this.option.onClass;
+		var blurColor = this.option.blurTextColor;
+		var focusColor = this.option.focusTextColor;
+		var checkType = this.option.checkType
+		var checkMessage = this.option.checkMessage
+		var focus = this.option.focus;
+		var blur = this.option.blur;
+
+		if (focusColor == "") {
+			focusColor = jQuery(this.option.target).css("color") == undefined ? "#000" : jQuery(this.option.target).css("color");
+		}
+
+		//init
+		jQuery(this.option.target).removeClass(onClass).addClass(offClass);
+
+		if (jQuery.trim(jQuery(this.option.target).val()) == "") {
+			jQuery(this.option.target).val(unsetText);
+		}
+
+		if (offClass == "" && onClass == "" && blurColor != "" && jQuery(this.option.target).val() == unsetText) {
+			jQuery(this.option.target).css({"color":blurColor});
+		}
+
+		// Focus
+		jQuery(this.option.target).bind(this.option.bindType, function() {
+			if(jQuery(this).val() == unsetText) {
+				jQuery(this).val(setText).removeClass(offClass).addClass(onClass);
+				if (offClass == "" && onClass == "" && focusColor != "") {
+					jQuery(this).css({"color":focusColor});
+				}
+			}
+
+			if (typeof focus === "function") {
+				focus();
+			}
+		});
+
+		// Blur
+		jQuery(this.option.target).bind(this.option.unbindType, function() {
+			if(jQuery(this).val() == setText) {
+				jQuery(this).val(unsetText).removeClass(onClass).addClass(offClass);
+				if (offClass == "" && onClass == "" && blurColor != "") {
+					jQuery(this).css({"color":blurColor});
+				}
+			}
+
+			if (typeof blur === "function") {
+				blur();
+			}
+		});
+
+		// key input
+		if (checkType != "") {
+			jQuery(this.option.target).bind("keyup", function(e) {
+				if (!iNcruit.text.CheckText({target:jQuery(this).val(), type:checkType})) {
+					alert(checkMessage);
+					return ;
+				}
+			});
+		}
+	}
+}
+
+/* ----------------------------------------------------------------------------
+	BANNER
+ ----------------------------------------------------------------------------*/
+
+iNcruit.banner.Reset_Cookie = function(cookiepath) { //banner관련 cookie 값을 초기화
+	var _cookie = "incBanner_";
+	if (cookiepath != undefined && cookiepath != "") {
+		_cookie = cookiepath;
+	}
+
+	var cookies = document.cookie.split(';');
+
+	for (var i=0;i<cookies.length;i++) {
+		name  = cookies[i].split('=')[0];
+		if (name.indexOf(_cookie)) {
+			jQuery.cookie(name, null);
+		}
+	}
+}
+
+iNcruit.banner.Load_Mobile = function (jsonfile, useCache) { //Mobild Site Banner 로드
+	var bannerdata = {};
+	var currenttime = new Date().getTime();
+	var callcache = (useCache == undefined || useCache ? "" : "?" + currenttime);
+
+	jQuery.ajax({
+		type : "GET",
+		url: jsonfile+ callcache,
+		datatype: "json",
+		success: function(data) {
+			bannerdata = data;
+
+			if (bannerdata.items.length > 0) {
+				for (var i = 0;i <bannerdata.items.length;i++) {
+					var item = bannerdata.items[i];
+					var targettime = new Date(item.timer).getTime();
+
+					if (currenttime < targettime) {
+						if ( eval(item.condition) && ( jQuery.cookie("incBanner_" + item.id) == null || jQuery.trim(jQuery.cookie("incBanner_" + item.id)) == "")) {
+							var contents = item.context.join('').replace(/\%G_SERVER_SET\%/g, G_SERVER_SET);
+							jQuery(contents).attr("id",item.id).css({"display":"block"}).appendTo(item.target);
+							if (item.closer != undefined && item.closer != "") {
+								jQuery("#" + item.id).find(item.closer).attr("closetarget",item.id).bind("click", function() {
+									var parent = jQuery(this).attr("closetarget");
+									jQuery.cookie("incBanner_" + parent, "checked" , { path: '/', expires: 1 });
+									jQuery("#" + parent).remove();
+								});
+							}
+						}
+					}
+				}
+			}
+		},
+		error : function(jqXHR, textStatus, errorThrown) {
+			//alert(textStatus + "," + errorThrown + JSON.stringify(jqXHR));
+		},
+		complete : function(jqXHR, textStatus, errorThrown) {
+			//alert("C:" + textStatus);
+		}
+	});
+}
+
+
+/* ----------------------------------------------------------------------------
+	취업자료
+ ----------------------------------------------------------------------------*/
+iNcruit.empknow.LoadData = function (company_no, company_nm, target) {
+	var comp_nm = "";
+	if(company_nm.indexOf("%") > -1){
+		comp_nm = company_nm;
+	} else{
+		comp_nm = escape(company_nm);
+	}
+
+	jQuery.ajax({
+		url		: '/s_common/jobpost/Info_15_EmpKnowledge_AJAX.asp',
+		type	: 'GET',
+		data	: { comps: company_no, compj:company_no, comp_nm:comp_nm, ty:"person" },
+		success	: function(data) {
+					jQuery(target).html(data);
+					iNcruit.empknow.CreatePage(target, target+"Cate","");
+		}
+	});
+}
+
+iNcruit.empknow.LoadDataV2 = function (company_no, company_nm, target, targetview) {
+	var comp_nm = "";
+	if(company_nm.indexOf("%") > -1){
+		comp_nm = company_nm;
+	} else{
+		comp_nm = escape(company_nm);
+	}
+
+	jQuery.ajax({
+		url		: '/s_common/jobpost/Info_15_EmpKnowledge_AJAX.asp',
+		type	: 'GET',
+		data	: { comps: company_no, compj:company_no, comp_nm:comp_nm, ty:"person" },
+		success	: function(data) {
+					if (data!=''){
+						jQuery(target).html(data);
+						iNcruit.empknow.CreatePage(target, target+"Cate","");
+						jQuery(targetview).css('display','block');
+					}else{
+						jQuery('.btn_bon').css('display','block');
+					}
+		}
+	});
+}
+
+iNcruit.empknow.LoadData.New = function (company_no, company_nm, target, targetCate) {
+
+	var comp_nm = "";
+	if(company_nm.indexOf("%") > -1){
+		comp_nm = company_nm;
+	} else{
+		comp_nm = escape(company_nm);
+	}
+
+	var news_open = jQuery("#news_open_yn").val();
+
+	jQuery.ajax({
+		url		: '/s_common/jobpost/Info_15_EmpKnowledge_AJAX.asp',
+		type	: 'get',
+		dataType : 'html',
+		data	: { comps: company_no, compj:company_no, comp_nm:comp_nm, ty:"person_new" , news_open: news_open },
+		success	: function(data) {
+				if (data!=''){
+					jQuery(target).append(data);
+					iNcruit.empknow.CreatePage.New("#tbyEmpKnow", targetCate, "");
+				} else {
+					jQuery(target).hide();
+					jQuery(targetCate).hide();
+					jQuery("#h2GetJobPds").hide();
+					jQuery("#ulEmpKnowPage").hide();
+					//jQuery("#h2Cmmnt").css('padding-top','0px');
+				}
+				//iNcruit.empknow.CreatePage.New(target, targetCate, "");
+		}
+	});
+}
+
+iNcruit.empknow.CreatePage = function (source, target, data, filter) {
+	var filterText = filter == undefined ? "" : filter;
+
+	var src = jQuery(source);
+
+	var cateItem = [];
+	var totalCnt = 0;
+
+	if (data == undefined || data.length <= 0) {
+		var items = jQuery(src).find("input[itype='empKnowledge_cnt']");
+		if (items.length <= 0) return;
+
+
+		for (var i = 0; i < items.length; i++) {
+
+			var item = {};
+			item.icd = jQuery(items[i]).attr("icd");
+			item.iname = jQuery(items[i]).attr("iname");
+			item.val = parseInt(jQuery(items[i]).val());
+			totalCnt += item.val;
+			cateItem.push(item);
+		}
+
+		//전체 카테코리명 생성
+		var item = {};
+		item.icd = "00";
+		item.iname= "전체";
+		item.val = totalCnt;
+
+		if (item.val > 0) cateItem.splice(0,0,item);
+	}  else {
+		cateItem = data;
+		totalCnt = cateItem[0].val;
+	}
+
+	var cateLength = cateItem.length;
+
+	for (var i = 0; i<cateLength;i++) {
+		var cItem = cateItem[i];
+		var classOn = cateItem[i].icd == "00" ? "on" : "";
+		var strHTML = "";
+		strHTML = (iNcruit.util.IsMobile())? "<li litype=\"empknow_cate\" catecd=\"" + cItem.icd + "\"><button type=\"button\" class=\"btn_tab " + classOn + "\">" + cItem.iname + "(<em>" + cItem.val + "</em>)</button></li>":"<li litype='empknow_cate'  class='" + classOn + "' catecd='" + cItem.icd + "'><a href=\"javascript:\">" + cItem.iname + "(<em>" + cItem.val + "</em>)</a></li>";
+		jQuery(strHTML)
+			.appendTo(target)
+			.bind("click", function() {
+				if(iNcruit.util.IsMobile()){
+					jQuery("li[litype='empknow_cate'] button").removeClass("on");
+					jQuery(this).find("button").addClass("on");
+				}else{
+					jQuery("li[litype='empknow_cate']").removeClass("on");
+					jQuery(this).addClass("on");
+				}
+				iNcruit.empknow.ChangePage(source, jQuery(this).attr("catecd"), 1, filterText);
+			});
+
+	}
+
+	if (totalCnt > 10) {
+		var pageSize = parseInt(totalCnt / 10) + 1;
+		var pageIndex = 1;
+
+		if (filterText != "")
+			jQuery(source + " > li:contains(" + filterText + "):gt(" + parseInt(pageIndex * 10 -1) + ")").hide();
+		else
+			jQuery(source + " > li:gt(" + parseInt(pageIndex * 10 -1) + ")").hide();
+
+		iNcruit.empknow.CreatePageNav(source, "00", pageSize, filter);
+
+	} else {
+		iNcruit.empknow.CreatePageNav(source, "00", 0, filter);
+	}
+}
+
+iNcruit.empknow.CreatePage.New = function (source, target, data, filter) {
+	var filterText = filter == undefined ? "" : filter;
+
+	var src = jQuery(source);
+
+	var cateItem = [];
+	var totalCnt = 0;
+
+	if (data == undefined || data.length <= 0) {
+		var items = jQuery(src).find("input[itype='empKnowledge_cnt']");
+		if (items.length <= 0) return;
+
+		for (var i = 0; i < items.length; i++) {
+
+			var item = {};
+			item.icd = jQuery(items[i]).attr("icd");
+			item.iname = jQuery(items[i]).attr("iname");
+			item.val = parseInt(jQuery(items[i]).val());
+			totalCnt += item.val;
+			cateItem.push(item);
+		}
+
+		//전체 카테코리명 생성
+		var item = {};
+		item.icd = "00";
+		item.iname= "전체";
+		item.val = totalCnt;
+
+		if (item.val > 0) cateItem.splice(0,0,item);
+	}  else {
+		cateItem = data;
+		totalCnt = cateItem[0].val;
+	}
+
+	var cateLength = cateItem.length;
+
+	for (var i = 0; i<cateLength;i++) {
+		var classOn = cateItem[i].icd == "00" ? "on" : "";
+		var cItem = cateItem[i];
+		var strGbn = i == cateLength-1 ? "" : "<span>|</span>";
+		var strClickNm = "탭-";
+
+		switch(cateItem[i].icd){
+			case "00" :
+				strClickNm += "전체"
+				break;
+			case "01" :
+				strClickNm += "자기소개서"
+				break;
+			case "02" :
+				strClickNm += "면접"
+				break;
+			case "03" :
+				strClickNm += "취업지식"
+				break;
+			case "04" :
+				strClickNm += "기업정보"
+				break;
+			case "05" :
+				strClickNm += "관련뉴스"
+		}
+		var strHTML = "";
+		strHTML = (iNcruit.util.IsMobile())? "<li litype=\"empknow_cate\" catecd=\"" + cItem.icd + "\"><button type=\"button\" onclick=\"goCL(this, '18855', 'job', '" + strClickNm + "');\" class=\"btn_tab " + classOn + "\">" + cItem.iname + "(<em>" + cItem.val + "</em>)</button></li>":"<li litype='empknow_cate' class='" + classOn + "' catecd='" + cItem.icd + "'><a onclick=\"goCL(this, '18855', 'job', '" + strClickNm + "');\" href=\"javascript:\">" + cItem.iname + "(" + cItem.val + ")</a></li>";
+		jQuery(strHTML)
+			.appendTo(target)
+			.bind("click", function() {
+				if(iNcruit.util.IsMobile()){
+					jQuery("li[litype='empknow_cate'] button").removeClass("on");
+					jQuery(this).find("button").addClass("on");
+				}else{
+					jQuery("li[litype='empknow_cate']").removeClass("on");
+					jQuery(this).addClass("on");
+				}
+				iNcruit.empknow.ChangePage.New(source, jQuery(this).attr("catecd"), 1, filterText);
+			})
+			.append(strGbn);
+
+	}
+
+	if (totalCnt > 10) {
+		var pageSize = parseInt((totalCnt - 1) / 10) + 1;
+		pageSize = (pageSize <= 0)? 1:pageSize;
+		var pageIndex = 1;
+
+		if (filterText != "")
+			jQuery(source + " > tr:contains(" + filterText + "):gt(" + parseInt(pageIndex * 10 -1) + ")").hide();
+		else
+			jQuery(source + " > tr:gt(" + parseInt(pageIndex * 10 -1) + ")").hide();
+
+		iNcruit.empknow.CreatePageNav.New(source, "00", pageSize, filter);
+
+	} else {
+		iNcruit.empknow.CreatePageNav.New(source, "00", 0, filter);
+	}
+
+}
+
+iNcruit.empknow.UpdateCategory = function(target, filter) {
+	var filterText = filter == undefined ? "" : filter;
+	//iNcruit.empknow.CreatePage(target, target+"Cate");
+
+	if (filterText == "") {
+		jQuery(target+"Cate").find("li").unbind("click");
+		jQuery(target+"Cate").html("");
+		iNcruit.empknow.CreatePage(target, target+"Cate", "");
+	} else {
+		var data = [];
+		var cates = jQuery(target).find("input[itype='empKnowledge_cnt']");
+
+		var totalCnt = 0;
+		for (var i = 0; i < cates.length; i++) {
+
+
+			var item = {};
+			item.icd = jQuery(cates[i]).attr("icd");
+			item.iname = jQuery(cates[i]).attr("iname");
+			var items = jQuery(target+" > li[catecd='" + item.icd + "']:contains(" + filterText + ")");
+			item.val = parseInt(items.length);
+			totalCnt += item.val;
+
+			if(item.val > 0)
+				data.push(item);
+		}
+
+		//전체 카테코리명 생성
+		var item = {};
+		item.icd = "00";
+		item.iname= "전체";
+		item.val = totalCnt;
+
+		data.splice(0,0,item);
+
+		jQuery(target+"Cate").find("li").unbind("click");
+		jQuery(target+"Cate").html("");
+		iNcruit.empknow.CreatePage(target, target+"Cate", data,filter);
+	}
+}
+
+iNcruit.empknow.CreatePageNav = function(target, catecd, pagesize, filter) {
+
+	var pageHtml = "";
+	var filterText = filter == undefined ? "" : filter;
+
+	if (jQuery(target+"Page").length > 0) {
+
+		if (pagesize > 0 ) {
+			for (var j = 1; j <= pagesize; j++) {
+				if (j <= 10) {
+					pageHtml += "<a atype='empPageNavItem' onclick=\"iNcruit.empknow.ChangePage('" + target + "','" + catecd + "','" + j + "','" + filterText + "');\" class='" + (j == 1 ? "on" : "") + "' >" + j + "</a>";
+				} else {
+					pageHtml += "<a atype='empPageNavItem' style=\"display:none;\" onclick=\"iNcruit.empknow.ChangePage('" + target + "','" + catecd + "','" + j + "','" + filterText + "');\" class='" + (j == 1 ? "on" : "") + "' >" + j + "</a>";
+				}
+			}
+		}
+
+		if (pagesize > 10) {
+			pageHtml = "<a atype='empPageNavPrev' style='display:none;' class='next' >이전 페이지</a>" + pageHtml;
+			pageHtml += "<a atype='empPageNavNext'  class='prev' >다음 페이지</a>";
+
+			jQuery(target+"Page").html(pageHtml).attr("currentPage",1).attr("currentCateCD",catecd);
+
+			jQuery(target + "Page > a[atype='empPageNavPrev']").hide().unbind("click").click(function() { iNcruit.empknow.PrevPage(target,catecd,1,filterText);});
+			jQuery(target + "Page > a[atype='empPageNavNext']").show().unbind("click").click(function() { iNcruit.empknow.NextPage(target,catecd,11,filterText);});
+		} else {
+			jQuery(target+"Page").html(pageHtml).attr("currentPage",1).attr("currentCateCD",catecd);
+		}
+
+
+
+	} else if (jQuery("#empknoe_morebtn").length > 0) {	//모바일
+
+		if (pagesize > 1) {
+			jQuery("#empknoe_morebtn").show().bind("click", function() {
+				if (catecd == "00") {
+					jQuery(target).find("li:hidden").show();
+				} else {
+					jQuery(target).find("li[catecd='" + catecd + "']:hidden").show();
+				}
+				jQuery(this).unbind("click").hide();
+			});
+		} else {
+			jQuery("#empknoe_morebtn").hide().unbind("click");
+		}
+	}
+}
+
+iNcruit.empknow.CreatePageNav.New = function(target, catecd, pagesize, filter) {
+	var pageHtml = "";
+	var filterText = filter == undefined ? "" : filter;
+	var ulTarget = target.replace(/tby/gi, "ul");
+	var iNewsTotal = 0;
+	var sNewsTotal = "";
+	var sCompNm = "";
+
+	if (catecd == "05") {
+		sNewsTotal = jQuery(target).find("input[newstotal]").attr("newstotal");
+		iNewsTotal = parseInt(sNewsTotal.replace(/,/g, ""));
+		sCompNm = jQuery(target).find("input[compnm]").attr("compnm");
+	}
+
+	if (jQuery(ulTarget + "Page").length > 0) {
+
+		if (iNewsTotal > 10 && catecd == "05") {
+			jQuery("#tblEmpKnow").after("<p class='bbs_list_btn_abs_r'><span class='btn_s_gray' ><a onclick=\"goCL(this, '18855', 'job', '관련뉴스 더보기');\" href='" + G_HOSTNAME_SEARCH + "/list/search.asp?col=news&il=y&Kw=" + sCompNm + "' target='_blank'>관련뉴스 " + sNewsTotal + "건 더보기</a></span></p>");
+		} else {
+			jQuery("p.bbs_list_btn_abs_r").remove();
+		}
+
+		if (pagesize > 0 ) {
+			for (var j = 1; j <= pagesize; j++) {
+				if (j <= 10) {
+					pageHtml += "<li liType='empPageNavItem' class='" + (j == 1 ? "on" : "") + "'><a onclick=\"iNcruit.empknow.ChangePage.New('" + target + "','" + catecd + "','" + j + "','" + filterText + "');\">" + j + "</a></li>";
+				} else {
+					pageHtml += "<li liType='empPageNavItem' class='" + (j == 1 ? "on" : "") + "' style=\"display:none;\"><a onclick=\"iNcruit.empknow.ChangePage.New('" + target + "','" + catecd + "','" + j + "','" + filterText + "');\">" + j + "</a></li>";
+				}
+			}
+		}
+
+		if (pagesize > 10) {
+			pageHtml = "<li class='prev' liType='empPageNavPrev' style='display:none;'><a><span>&lt;</span> 이전</a></li>" + pageHtml;
+			pageHtml += "<li class='next' liType='empPageNavNext'><a>다음 <span>&gt;</span></a></li>";
+
+			jQuery(ulTarget+"Page").html(pageHtml).attr("currentPage",1).attr("currentcatecd",catecd);
+
+			jQuery(ulTarget + "Page > li.prev").hide().unbind("click").click(function() { iNcruit.empknow.PrevPage.New(target,catecd,1,filterText);});
+			jQuery(ulTarget + "Page > li.next").show().unbind("click").click(function() { iNcruit.empknow.NextPage.New(target,catecd,11,filterText);});
+		} else {
+			jQuery(ulTarget+"Page").html(pageHtml).attr("currentpage",1).attr("currentcatecd",catecd);
+		}
+
+
+
+	} else if (jQuery("#empknoe_morebtn").length > 0) {	//모바일
+
+		if (pagesize > 1) {
+			jQuery("#empknoe_morebtn").show().bind("click", function() {
+				if (catecd == "00") {
+					jQuery(target).find("li:hidden").show();
+				} else {
+					jQuery(target).find("li[catecd='" + catecd + "']:hidden").show();
+				}
+				jQuery(this).unbind("click").hide();
+			});
+		} else {
+			jQuery("#empknoe_morebtn").hide().unbind("click");
+		}
+	}
+}
+
+iNcruit.empknow.NextPage = function(target, catecd, pageno, filter) {
+	iNcruit.empknow.ChangePage(target, catecd, pageno, filter);
+	var prevPageNo = parseInt(pageno) - 10;
+	var nextPageNo = parseInt(pageno) + 10;
+	var pageSize = parseInt(jQuery(target + "Page > a[atype='empPageNavItem']").length);
+
+	if (pageSize < nextPageNo) {
+		jQuery(target + "Page > a[atype='empPageNavPrev']").show().unbind("click").click(function() { iNcruit.empknow.PrevPage(target,catecd,prevPageNo,filter);});
+		jQuery(target + "Page > a[atype='empPageNavNext']").hide().unbind("click").click(function() { iNcruit.empknow.NextPage(target,catecd,nextPageNo,filter);});
+	} else {
+		jQuery(target + "Page > a[atype='empPageNavPrev']").show().unbind("click").click(function() { iNcruit.empknow.PrevPage(target,catecd,prevPageNo,filter);});
+		jQuery(target + "Page > a[atype='empPageNavNext']").show().unbind("click").click(function() { iNcruit.empknow.NextPage(target,catecd,nextPageNo,filter);});
+	}
+
+	jQuery(target + "Page > a[atype='empPageNavItem']").hide();
+	jQuery(target + "Page > a[atype='empPageNavItem']").slice(parseInt(pageno-1), parseInt(nextPageNo-1)).show();
+}
+
+iNcruit.empknow.PrevPage = function(target, catecd, pageno, filter) {
+	iNcruit.empknow.ChangePage(target, catecd, pageno, filter);
+	var prevPageNo = parseInt(pageno) - 10;
+	var nextPageNo = parseInt(pageno) + 10;
+
+	if (pageno > 1) {
+		jQuery(target + "Page > a[atype='empPageNavPrev']").show().unbind("click").click(function() { iNcruit.empknow.PrevPage(target,catecd,prevPageNo,filter);});
+		jQuery(target + "Page > a[atype='empPageNavNext']").show().unbind("click").click(function() { iNcruit.empknow.NextPage(target,catecd,nextPageNo,filter);});
+	} else {
+		jQuery(target + "Page > a[atype='empPageNavPrev']").hide().unbind("click").click(function() { iNcruit.empknow.PrevPage(target,catecd,1,filter);});
+		jQuery(target + "Page > a[atype='empPageNavNext']").show().unbind("click").click(function() { iNcruit.empknow.NextPage(target,catecd,11,filter);});
+	}
+
+	jQuery(target + "Page > a[atype='empPageNavItem']").hide();
+	jQuery(target + "Page > a[atype='empPageNavItem']").slice(parseInt(pageno-1), parseInt(nextPageNo-1)).show();
+}
+
+iNcruit.empknow.NextPage.New = function(target, catecd, pageno, filter) {
+	iNcruit.empknow.ChangePage.New(target, catecd, pageno, filter);
+
+	var ulTarget = target.replace(/tby/gi, "ul");
+
+	var prevPageNo = parseInt(pageno) - 10;
+	var nextPageNo = parseInt(pageno) + 10;
+
+	var pageSize = parseInt(jQuery(ulTarget + "Page > li[liType='empPageNavItem']").length);
+
+	if (pageSize < nextPageNo) {
+		jQuery(ulTarget + "Page > li[liType='empPageNavPrev']").show().unbind("click").click(function() { iNcruit.empknow.PrevPage.New(target,catecd,prevPageNo,filter);});
+		jQuery(ulTarget + "Page > li[liType='empPageNavNext']").hide().unbind("click").click(function() { iNcruit.empknow.NextPage.New(target,catecd,nextPageNo,filter);});
+	} else {
+		jQuery(ulTarget + "Page > li[liType='empPageNavPrev']").show().unbind("click").click(function() { iNcruit.empknow.PrevPage.New(target,catecd,prevPageNo,filter);});
+		jQuery(ulTarget + "Page > li[liType='empPageNavNext']").show().unbind("click").click(function() { iNcruit.empknow.NextPage.New(target,catecd,nextPageNo,filter);});
+	}
+
+	jQuery(ulTarget + "Page > li[liType='empPageNavItem']").hide();
+	jQuery(ulTarget + "Page > li[liType='empPageNavItem']").slice(parseInt(pageno-1), parseInt(nextPageNo-1)).show();
+}
+
+iNcruit.empknow.PrevPage.New = function(target, catecd, pageno, filter) {
+	iNcruit.empknow.ChangePage.New(target, catecd, pageno, filter);
+
+	var ulTarget = target.replace(/tby/gi, "ul");
+
+	var prevPageNo = parseInt(pageno) - 10;
+	var nextPageNo = parseInt(pageno) + 10;
+
+	if (pageno > 1) {
+		jQuery(ulTarget + "Page > li[liType='empPageNavPrev']").show().unbind("click").click(function() { iNcruit.empknow.PrevPage.New(target,catecd,prevPageNo,filter);});
+		jQuery(ulTarget + "Page > li[liType='empPageNavNext']").show().unbind("click").click(function() { iNcruit.empknow.NextPage.New(target,catecd,nextPageNo,filter);});
+	} else {
+		jQuery(ulTarget + "Page > li[liType='empPageNavPrev']").hide().unbind("click").click(function() { iNcruit.empknow.PrevPage.New(target,catecd,1,filter);});
+		jQuery(ulTarget + "Page > li[liType='empPageNavNext']").show().unbind("click").click(function() { iNcruit.empknow.NextPage.New(target,catecd,11,filter);});
+	}
+
+	jQuery(ulTarget + "Page > li[liType='empPageNavItem']").hide();
+	jQuery(ulTarget + "Page > li[liType='empPageNavItem']").slice(parseInt(pageno-1), parseInt(nextPageNo-1)).show();
+}
+
+iNcruit.empknow.ChangePage = function(target, catecd, pageno, filter) {
+
+	jQuery(target).find("li").hide();
+	var pageSize = 0;
+	var filterText = filter == undefined ? "": jQuery.trim(filter);
+
+	var items;
+
+	if (filterText != "") {
+		items = catecd == "00" ?  jQuery(target+" > li:contains(" + filter + ")") : jQuery(target+" > li[catecd='" + catecd + "']:contains(" + filter + ")");
+	} else {
+		items = catecd == "00" ?  jQuery(target+" > li") : jQuery(target+" > li[catecd='" + catecd + "']");
+	}
+
+	if (catecd != jQuery(target + "Page").attr("currentCateCD")) {
+
+		if (items.length > 10) {
+			pageSize = parseInt(items.length / 10) + 1 ;
+		} else {
+			pageSize = 1;
+		}
+		iNcruit.empknow.CreatePageNav(target, catecd, pageSize,filterText);
+		var items_show;
+
+		if (filterText != "") {
+			items_show = catecd == "00" ?  jQuery(target+" > li:contains(" + filter + ") :lt(10)") : jQuery(target+" > li[catecd='" + catecd + "']:contains(" + filter + ") :lt(10)");
+		} else {
+			items_show = catecd == "00" ?  jQuery(target+"  > li:lt(10)") : jQuery(target+" > li[catecd='" + catecd + "']:lt(10)");
+		}
+
+		jQuery(items_show).show();
+
+		return;
+	}
+
+	var startIndex = parseInt(pageno-1) * 10;
+	var endIndex = parseInt(pageno) * 10;
+
+	jQuery(items).slice(startIndex, endIndex).show();
+
+	if (items.length > 10) {
+		pageSize = parseInt(items.length / 10) + 1 ;
+		if (filterText != "") iNcruit.empknow.CreatePageNav(target, catecd, pageSize, filter);
+	} else {
+		if (filterText != "") iNcruit.empknow.CreatePageNav(target, catecd, 1, filter);
+	}
+
+
+	// page nav 숫자 스타일 변경
+	jQuery(target + "Page > a[atype='empPageNavItem']").removeClass("on");
+	jQuery(target + "Page > a[atype='empPageNavItem']:eq(" + parseInt(pageno-1) + ")").addClass("on");
+
+}
+
+iNcruit.empknow.ChangePage.New = function(target, catecd, pageno, filter) {
+	jQuery(target).find("tr").hide();
+
+	var ulTarget = target.replace(/tby/gi, "ul");
+
+	var pageSize = 0;
+	var filterText = filter == undefined ? "": jQuery.trim(filter);
+
+	var items;
+
+	if (filterText != "") {
+		items = catecd == "00" ?  jQuery(target+" > tr:contains(" + filter + ")") : jQuery(target+" > tr[catecd='" + catecd + "']:contains(" + filter + ")");
+	} else {
+		items = catecd == "00" ?  jQuery(target+" > tr") : jQuery(target+" > tr[catecd='" + catecd + "']");
+	}
+
+	if (catecd != jQuery(ulTarget + "Page").attr("currentcatecd")) {
+
+		if (items.length > 10) {
+			pageSize = parseInt((items.length-1) / 10) + 1 ;
+		} else {
+			pageSize = 1;
+		}
+		iNcruit.empknow.CreatePageNav.New(target, catecd, pageSize, filterText);
+		var items_show;
+
+		if (filterText != "") {
+			items_show = catecd == "00" ?  jQuery(target+" > tr:contains(" + filter + ") :lt(10)") : jQuery(target+" > tr[catecd='" + catecd + "']:contains(" + filter + ") :lt(10)");
+		} else {
+			items_show = catecd == "00" ?  jQuery(target+"  > tr:lt(10)") : jQuery(target+" > tr[catecd='" + catecd + "']:lt(10)");
+		}
+
+		jQuery(items_show).show();
+
+		return;
+	}
+
+	var startIndex = parseInt(pageno-1) * 10;
+	var endIndex = parseInt(pageno) * 10;
+
+	jQuery(items).slice(startIndex, endIndex).show();
+
+	if (items.length > 10) {
+		pageSize = parseInt(items.length / 10) + 1 ;
+		if (filterText != "") iNcruit.empknow.CreatePageNav.New(target, catecd, pageSize, filter);
+	} else {
+		if (filterText != "") iNcruit.empknow.CreatePageNav.New(target, catecd, 1, filter);
+	}
+
+
+	// page nav 숫자 스타일 변경
+	jQuery(ulTarget + "Page > li[liType='empPageNavItem']").removeClass("on");
+	jQuery(ulTarget + "Page > li[liType='empPageNavItem']:eq(" + parseInt(pageno-1) + ")").addClass("on");
+
+}
+
+iNcruit.empknow.Search = function(target, searchwd, initBtnSelector) {
+	if (jQuery.trim(searchwd) != "") {
+		jQuery(initBtnSelector).show();
+	} else {
+		jQuery(initBtnSelector).hide();
+	}
+
+	jQuery(target).find("li").hide();
+
+	var catecd = jQuery(target + "Page").attr("currentCateCD");
+	var pageno = 1;
+
+	iNcruit.empknow.ChangePage(target, catecd, pageno, searchwd);
+	iNcruit.empknow.UpdateCategory(target,searchwd);
+
+}
+
+iNcruit.empknow.SearchInit = function(target, searchwdSelector, initBtnSelector) {
+
+	jQuery(searchwdSelector).val("");
+	jQuery(initBtnSelector).hide();
+	iNcruit.empknow.Search(target,"");
+
+}
+
+
+/* ----------------------------------------------------------------------------
+	로그인 레이어
+ ----------------------------------------------------------------------------*/
+iNcruit.login.IsLogin = function() {
+	var user = iNcruit.cookie.GetCookie("incUinfo");
+	if (user == "") {
+		return false;
+	} else {
+		user = user.split("&");
+	}
+
+	for (i in user) {
+		if (user[i].indexOf("MemNo=") >= 0) {
+			if (user[i].length > 6) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+	}
+
+	return false;
+}
+
+iNcruit.login.G_Mem_Nm = function() {
+	var user = iNcruit.cookie.GetCookie("incUinfo");
+	if (user == "") {
+		return "";
+	} else {
+		user = user.split("&");
+	}
+
+	for (i in user) {
+		if (user[i].indexOf("MemNm=") >= 0) {
+			return user[i].split("=")[1];
+		}
+	}
+
+	return "";
+}
+
+iNcruit.login.ShowLoginLayer = function (insertTarget) {
+	if (typeof jQuery.validate == "undefined") {
+		iNcruit.login.GoToLogin();
+		return false;
+	}
+
+	var layerHtml = iNcruit.template.LoginLayer;
+	layerHtml = layerHtml
+		.replace(/\%HOSTNAME_EDIT\%/g, G_HOSTNAME_EDIT)
+		.replace(/\%CURRENT_URL\%/g, encodeURI(document.URL));
+
+	if (jQuery("#divLoginBox").length == 0) {
+		jQuery(layerHtml).attr("id", "divLoginBox").appendTo(jQuery(insertTarget));
+		jQuery("#btnClose_LoginBox").bind("click", function () { jQuery("#divLoginBox").remove(); });
+	}
+
+	var centerPos = iNcruit.util.GetCenterPosition(window, jQuery("#divLoginBox"));
+	jQuery("#divLoginBox").css({ top: centerPos.top, left: centerPos.left }).show();
+
+	//-- 로그인 : 보안 on/off 선택
+	jQuery("#divLoginBox").find(".slogin_on").click(function () {
+		jQuery(this).removeClass("active");
+		jQuery("#divLoginBox").find("label.slogin_off").addClass("active");
+		jQuery("#divLoginBox").find("#slogin_on").attr("checked", false).val("off");
+		jQuery("#divLoginBox").find("#slogin_off").attr("checked", true).val("on");
+	});
+
+	jQuery("#divLoginBox").find(".slogin_off").click(function () {
+		jQuery(this).removeClass("active");
+		jQuery("#divLoginBox").find("label.slogin_on").addClass("active");
+		jQuery("#divLoginBox").find("#slogin_on").attr("checked", true).val("on");
+		jQuery("#divLoginBox").find("#slogin_off").attr("checked", false).val("off");
+	});
+
+	jQuery("#fb_social, #fb_social1").bind('click', function (e) {
+		e.preventDefault();
+		signInFacebook();
+	});
+
+	jQuery("#divLoginBox").find("form#frmLogin").validate({
+		rules: {
+			txtUserID: { required: true },
+			txtPassword: { required: true }
+		},
+		messages: {
+			txtUserID: { required: "아이디를 입력하세요." },
+			txtPassword: { required: "비밀번호를 입력하세요." }
+		},
+		submitHandler: function (frm) {
+			try {
+				frm.EncID.value = Encrypt(frm.txtUserID.value);
+				frm.EncPW.value = Encrypt(frm.txtPassword.value);
+
+				if (jQuery("#slogin_on").val() == "on") {
+					frm.SSL.value = "on";
+					frm.action = G_HOSTNAME_SSL_EDIT + "/login/loginprocess.asp?gotourl=" + encodeURI(document.URL);
+				} else {
+					frm.action = G_HOSTNAME_EDIT + "/login/loginprocess.asp?gotourl=" + encodeURI(document.URL);
+					frm.SSL.value = "false";
+				}
+
+				frm.txtUserID.value = "";
+				frm.txtPassword.value = "";
+
+				frm.isKeepLogIn.value = jQuery("input#keepLogIn").attr("checked") ? "Y" : "N";
+
+				frm.submit();
+
+			} catch (ex) {
+
+				window.location.href = G_HOSTNAME_EDIT;
+			}
+
+		}
+	});
+
+	// Login Box Text 처리
+	jQuery("#txtUserID").live("focus", function () {
+		jQuery(this).removeClass("id");
+	}).live("blur", function () {
+		if (jQuery.trim(jQuery(this).val()) == "") {
+			jQuery(this).addClass("id");
+		}
+	});
+
+	jQuery("#txtPassword").live("focus", function () {
+		jQuery(this).removeClass("pwd");
+	}).live("blur", function () {
+		if (jQuery.trim(jQuery(this).val()) == "") {
+			jQuery(this).addClass("pwd");
+		}
+	});
+}
+
+iNcruit.login.GoToLogin = function(backUrl) {
+
+	var currentUrl  = "";
+	if (backUrl == undefined) {
+		currentUrl = location.href;
+	} else {
+		currentUrl = backUrl;
+	}
+
+	if (iNcruit.util.IsMobile()) {
+		location.href = iNcruit.domain.G_HOSTNAME_EDIT + "/login/loginmobile.asp?gotoURL=" + escape(currentUrl);
+	} else {
+		location.href = iNcruit.domain.G_HOSTNAME_EDIT + "/login/login.asp?gotoURL=" + escape(currentUrl);
+
+	}
+
+}
+
+iNcruit.login.OpenEntPopup = function(backUrl) {
+	var currentUrl  = "";
+	if (backUrl == undefined) {
+		currentUrl = location.href;
+	} else {
+		currentUrl = backUrl;
+	}
+
+	iNcruit.popup.open(iNcruit.domain.G_HOSTNAME_SSL_EDIT + "/entrance/entpopup.asp?gotoURL=" + escape(currentUrl), {});
+}
+
+iNcruit.login.OpenLoginPopup = function(backUrl) {
+	var currentUrl  = "";
+	if (backUrl == undefined) {
+		currentUrl = location.href;
+	} else {
+		currentUrl = backUrl;
+	}
+
+	iNcruit.popup.open(iNcruit.domain.G_HOSTNAME_SSL_EDIT + "/login/popuploginv2.asp?gotoURL=" + escape(currentUrl), {});
+}
+
+iNcruit.login.OpenEntPopupSchoolOrg = function(backUrl, OrgId, OrgUserId) {
+	var currentUrl  = "";
+	if (backUrl == undefined) {
+		currentUrl = location.href;
+	} else {
+		currentUrl = backUrl;
+	}
+
+	iNcruit.popup.open(iNcruit.domain.G_HOSTNAME_SSL_EDIT + "/entrance/entpopupschoolorg.asp?gotoURL=" + escape(currentUrl) + "&orgid=" + OrgId + "&orguserid=" + OrgUserId, {});
+}
+
+
+/* ----------------------------------------------------------------------------
+	레이어 처리
+ ----------------------------------------------------------------------------*/
+iNcruit.layer.ToggleAll = function(selector) {
+
+	jQuery(selector).toggle();
+}
+
+iNcruit.layer.ShowAll = function(selector, ref) {
+	jQuery(selector).show();
+	if (ref != undefined) {
+		jQuery(ref).remove();
+	}
+}
+
+iNcruit.layer.HideAll = function(selector) {
+	jQuery(selector).hide();
+}
+
+iNcruit.layer.ShowLayer = function(option) {
+
+	if (option.loginCheck) {
+		if (!iNcruit.login.IsLogin()) {
+			iNcruit.login.ShowLoginLayer("body");
+			return;
+		}
+	}
+
+	var layerHtml = iNcruit.util.CompleteTemplate(option.template,option.data);
+
+	if (jQuery("#" + option.container).length == 0) {
+		jQuery(layerHtml).attr("id",option.container).appendTo(jQuery(option.target));
+	}
+
+	var centerPos = iNcruit.util.GetCenterPosition(window, jQuery("#" + option.container));
+	jQuery("#" + option.container).css({top:centerPos.top, left:centerPos.left}).show();
+
+	for (var i =0;i<option.closer.length;i++) {
+		jQuery(option.closer[i]).bind("click", function() {
+				if (typeof option.func_beforeRemove  == "function") {
+					option.func_beforeRemove();
+				}
+			jQuery("#" + option.container).remove();
+		});
+	}
+
+	if (typeof option.func_afterLoad  == "function") {
+		option.func_afterLoad();
+	}
+
+}
+
+/* ----------------------------------------------------------------------------
+	기업정보 관련
+ ----------------------------------------------------------------------------*/
+
+iNcruit.compinfo.GetInitSalary = function(compno, memno, callback) {
+	//var url = G_HOSTNAME_JOB + "/s_common/jobpost/Info_16_OpenSalary_AJAX.asp?callback=?compno=" + compno + "&memno=" + memno;
+	var url = "/s_common/jobpost/info_16_opensalary_ajax.asp?callback=?"
+	jQuery.getJSON (url, {compno:compno, memno:memno}, function(data) {
+		if (typeof callback == "function") {
+			callback(data);
+		}
+	});
+}
+
+/* ----------------------------------------------------------------------------
+	팝업윈도우 관련
+ ----------------------------------------------------------------------------*/
+iNcruit.popup.open = function(url, _option) {
+	this.defaultoption = {
+		scrollbars : "1",
+		resizeable : "0",
+		left:"",
+		top:"",
+		status:"0",
+		titlebar:"1",
+		toolbar:"0",
+		width:"640",
+		height:"480"
+	};
+
+	this.option = jQuery.extend(this.defaultoption, _option);
+
+	var itemname;
+	var feature = "";
+	for (itemname in this.option) {
+		if (this.option[itemname] != undefined || this.option[itemname] === "") {
+			feature += itemname + "=" + this.option[itemname] + ",";
+		}
+
+	}
+
+	var popupwindow = window.open(url, "poplogin", feature);
+
+	return popupwindow;
+}
+
+iNcruit.popup.newWindow = function(url) {
+	var anchorID = "a" + new Date().getTime();
+	var anchor = jQuery("<a>").attr("href" , url).attr("id", anchorID).attr("target","_blank").appendTo(jQuery("body"));
+
+	jQuery(anchor)[0].click();
+}
+
+iNcruit.popup.PopupUrlHandler = function(_option) {
+	this.defaultoption = {
+		source: window,
+		target: window,
+		url : "",
+		isCloseWindow:false,
+		closeWindow:window,
+		createNewWindow:false,
+		confirmMessage: ""
+	};
+
+	this.option = jQuery.extend(this.defaultoption, _option);
+
+	if (this.option.confirmMessage != "") {
+		if(!confirm(this.option.confirmMessage)) {
+			return;
+		}
+	}
+
+	if(this.option.createNewWindow) {
+		var nw = this.option.target.open(this.option.url, '_blank');
+		if (nw == undefined) {
+			alert("팝업이 차단되어 있습니다. 팝업차단을 해제 하시고 다시 시도해 주십시요.");
+			return;
+		}
+
+		return;
+	}
+
+	if(this.option.target != null) {
+		this.option.target.location.href = this.option.url;
+	}
+
+	if(this.option.isCloseWindow) {
+		this.option.closeWindow.close();
+	}
+
+	return;
+}
+
+/* ----------------------------------------------------------------------------
+	스크랩 관련
+ ----------------------------------------------------------------------------*/
+iNcruit.scrap.checkScrapCompany = function(_option) {
+	this.defaultoption = {
+		act : "",
+		mem : "",
+		comp : "",
+		useJSONP :"",
+		success : null,
+		useJSONP :""
+	};
+
+	this.option = jQuery.extend(this.defaultoption, _option);
+	var fSuccess = typeof this.option.success == "function" ? this.option.success  : function(data) {};
+
+	jQuery.ajax({
+		type:   "GET",
+		url:	"/g_common/bizcommon/v2/inc_scrapcompany_ajax.asp",
+		dataType : (this.option.useJSONP === "Y" ? "jsonp" : "html"),
+		data : {memgi:this.option.mem, comp:this.option.comp, act:"CK"},
+		success: function(data) {
+			if (data == "Y") {
+				fSuccess("A",null);
+			} else if (data == "N") {
+				if (_option.act === "CI") {
+					iNcruit.scrap.scrapCompany(_option);
+				}
+			} else {
+				fSuccess("E",null)
+			}
+			return ;
+		},
+		error : function(e) {
+			fSuccess("E")
+		}
+	});
+}
+
+iNcruit.scrap.scrapCompany = function(_option) {
+	this.defaultoption = {
+		mem : "",
+		comp : "",
+		success : null,
+		error : null,
+		complete : null,
+		useJSONP :""
+	};
+
+	this.option = jQuery.extend(this.defaultoption, _option);
+	var fSuccess = typeof this.option.success == "function" ? this.option.success  : function(data) {};
+
+	jQuery.ajax({
+		type:   "GET",
+		url:	"/g_common/bizcommon/v2/inc_scrapcompany_ajax.asp",
+		dataType : (this.option.useJSONP === "Y" ? "jsonp" : "text"),
+		data : {mem:this.option.mem, comp:this.option.comp, act:"CI"},
+		success: function(data) {
+			var result = eval('(' + data + ')');
+			if (result.error == "0") {
+				fSuccess("Y",result);
+			} else {
+				fSuccess("E",result);
+			}
+
+		},
+		error : function(e) {
+			fSuccess("E")
+		}
+	});
+
+}
+
+
+iNcruit.scrap.unscrapCompany = function(_option) {
+	this.defaultoption = {
+		mem : "",
+		comp : "",
+		success : null,
+		error : null,
+		complete : null,
+		useJSONP :""
+	};
+
+	this.option = jQuery.extend(this.defaultoption, _option);
+	var fSuccess = typeof this.option.success == "function" ? this.option.success  : function(data) {};
+
+	jQuery.ajax({
+		type:   "GET",
+		url:	"/g_common/bizcommon/v2/inc_scrapcompany_ajax.asp",
+		dataType : (this.option.useJSONP === "Y" ? "jsonp" : "text"),
+		data : {mem:this.option.mem, comp:this.option.comp, act:"CD"},
+		success: function(data) {
+			var result = eval('(' + data + ')');
+			if (result.error == "0") {
+				fSuccess("Y",result);
+			} else {
+				fSuccess("E",result);
+			}
+
+		},
+		error : function(e) {
+			fSuccess("E")
+		}
+	});
+
+}
+
+/* ----------------------------------------------------------------------------
+	Core	: window에 바로 적용됨
+
+	ex) iNcruit.core.goCl > window.goCl
+ ----------------------------------------------------------------------------*/
+iNcruit.core = {};
+
+iNcruit.core.goCl = function(object, clickcd, clickdata) {
+	//if (object.href === undefined) return;
+	var link = object.href;
+	var timestamp = new Date().getTime();
+
+	if (clickdata == undefined) clickdata = object.text;
+
+	var l = '/g_common/popup/chkclickjs.asp'
+	l += '?click='+clickcd;								// 클릭코드
+	l += '&data='+escape(clickdata);					// 클릭데이타
+	l += '&sn='+iNcruit.domain.G_SUB_DOMAIN;			// 현재 site 서브도메인
+	l += '&rd='+escape(link);							// redirect url
+	l += '&dm=' + timestamp;		// 브라우져 캐쉬를 피하기 위한 dummy 값
+
+   if (document.images)(new Image()).src = l;
+
+	return true;
+}
+
+
+/* ----------------------------------------------------------------------------
+	IE PlaceHolder 확장
+ ----------------------------------------------------------------------------*/
+ iNcruit.supportIE_PlaceHolder = function(global) {
+	'use strict';
+
+	//
+	// Test for support. We do this as early as possible to optimise for browsers
+	// that have native support for the attribute.
+	//
+
+	var test = document.createElement('input');
+	var nativeSupport = test.placeholder !== void 0;
+
+	global.Placeholders = {
+		nativeSupport: nativeSupport,
+		disable: nativeSupport ? noop : disablePlaceholders,
+		enable: nativeSupport ? noop : enablePlaceholders
+	};
+
+	if ( nativeSupport ) {
+		return;
+	}
+
+	//
+	// If we reach this point then the browser does not have native support for
+	// the attribute.
+	//
+
+	// The list of input element types that support the placeholder attribute.
+	var validTypes = [
+		'text',
+		'search',
+		'url',
+		'tel',
+		'email',
+		'password',
+		'number',
+		'textarea'
+	];
+
+	// The list of keycodes that are not allowed when the polyfill is configured
+	// to hide-on-input.
+	var badKeys = [
+
+		// The following keys all cause the caret to jump to the end of the input
+		// value.
+
+		27, // Escape
+		33, // Page up
+		34, // Page down
+		35, // End
+		36, // Home
+
+		// Arrow keys allow you to move the caret manually, which should be
+		// prevented when the placeholder is visible.
+
+		37, // Left
+		38, // Up
+		39, // Right
+		40, // Down
+
+		// The following keys allow you to modify the placeholder text by removing
+		// characters, which should be prevented when the placeholder is visible.
+
+		8, // Backspace
+		46 // Delete
+	];
+
+	// Styling variables.
+	var placeholderStyleColor = '#ccc';
+	var placeholderClassName = 'placeholdersjs';
+	var classNameRegExp = new RegExp('(?:^|\\s)' + placeholderClassName + '(?!\\S)');
+
+	// The various data-* attributes used by the polyfill.
+	var ATTR_CURRENT_VAL = 'data-placeholder-value';
+	var ATTR_ACTIVE = 'data-placeholder-active';
+	var ATTR_INPUT_TYPE = 'data-placeholder-type';
+	var ATTR_FORM_HANDLED = 'data-placeholder-submit';
+	var ATTR_EVENTS_BOUND = 'data-placeholder-bound';
+	var ATTR_OPTION_FOCUS = 'data-placeholder-focus';
+	var ATTR_OPTION_LIVE = 'data-placeholder-live';
+	var ATTR_MAXLENGTH = 'data-placeholder-maxlength';
+
+	// Various other variables used throughout the rest of the script.
+	var UPDATE_INTERVAL = 500;
+	var head = document.getElementsByTagName('head')[ 0 ];
+	var root = document.documentElement;
+	var Placeholders = global.Placeholders;
+	var keydownVal;
+
+	// Get references to all the input and textarea elements currently in the DOM
+	// (live NodeList objects to we only need to do this once).
+	var inputs = document.getElementsByTagName('input');
+	var textareas = document.getElementsByTagName('textarea');
+
+	// Get any settings declared as data-* attributes on the root element.
+	// Currently the only options are whether to hide the placeholder on focus
+	// or input and whether to auto-update.
+	var hideOnInput = root.getAttribute(ATTR_OPTION_FOCUS) === 'false';
+	var liveUpdates = root.getAttribute(ATTR_OPTION_LIVE) !== 'false';
+
+	// Create style element for placeholder styles (instead of directly setting
+	// style properties on elements - allows for better flexibility alongside
+	// user-defined styles).
+	var styleElem = document.createElement('style');
+	styleElem.type = 'text/css';
+
+	// Create style rules as text node.
+	var styleRules = document.createTextNode(
+		'.' + placeholderClassName + ' {' +
+			'color:' + placeholderStyleColor + ';' +
+		'}'
+	);
+
+	// Append style rules to newly created stylesheet.
+	if ( styleElem.styleSheet ) {
+		styleElem.styleSheet.cssText = styleRules.nodeValue;
+	} else {
+		styleElem.appendChild(styleRules);
+	}
+
+	// Prepend new style element to the head (before any existing stylesheets,
+	// so user-defined rules take precedence).
+	head.insertBefore(styleElem, head.firstChild);
+
+	// Set up the placeholders.
+	var placeholder;
+	var elem;
+
+	for ( var i = 0, len = inputs.length + textareas.length; i < len; i++ ) {
+
+		// Find the next element. If we've already done all the inputs we move on
+		// to the textareas.
+		elem = i < inputs.length ? inputs[ i ] : textareas[ i - inputs.length ];
+
+		// Get the value of the placeholder attribute, if any. IE10 emulating IE7
+		// fails with getAttribute, hence the use of the attributes node.
+		placeholder = elem.attributes.placeholder;
+
+		// If the element has a placeholder attribute we need to modify it.
+		if ( placeholder ) {
+
+			// IE returns an empty object instead of undefined if the attribute is
+			// not present.
+			placeholder = placeholder.nodeValue;
+
+			// Only apply the polyfill if this element is of a type that supports
+			// placeholders and has a placeholder attribute with a non-empty value.
+			if ( placeholder && inArray(validTypes, elem.type) ) {
+				newElement(elem);
+			}
+		}
+	}
+
+	// If enabled, the polyfill will repeatedly check for changed/added elements
+	// and apply to those as well.
+	var timer = setInterval(function () {
+		for ( var i = 0, len = inputs.length + textareas.length; i < len; i++ ) {
+			elem = i < inputs.length ? inputs[ i ] : textareas[ i - inputs.length ];
+
+			// Only apply the polyfill if this element is of a type that supports
+			// placeholders, and has a placeholder attribute with a non-empty value.
+			placeholder = elem.attributes.placeholder;
+
+			if ( placeholder ) {
+
+				placeholder = placeholder.nodeValue;
+
+				if ( placeholder && inArray(validTypes, elem.type) ) {
+
+					// If the element hasn't had event handlers bound to it then add
+					// them.
+					if ( !elem.getAttribute(ATTR_EVENTS_BOUND) ) {
+						newElement(elem);
+					}
+
+					// If the placeholder value has changed or not been initialised yet
+					// we need to update the display.
+					if (
+						placeholder !== elem.getAttribute(ATTR_CURRENT_VAL) ||
+						( elem.type === 'password' && !elem.getAttribute(ATTR_INPUT_TYPE) )
+					) {
+
+						// Attempt to change the type of password inputs (fails in IE < 9).
+						if (
+							elem.type === 'password' &&
+							!elem.getAttribute(ATTR_INPUT_TYPE) &&
+							changeType(elem, 'text')
+						) {
+							elem.setAttribute(ATTR_INPUT_TYPE, 'password');
+						}
+
+						// If the placeholder value has changed and the placeholder is
+						// currently on display we need to change it.
+						if ( elem.value === elem.getAttribute(ATTR_CURRENT_VAL) ) {
+							elem.value = placeholder;
+						}
+
+						// Keep a reference to the current placeholder value in case it
+						// changes via another script.
+						elem.setAttribute(ATTR_CURRENT_VAL, placeholder);
+					}
+				}
+			} else if ( elem.getAttribute(ATTR_ACTIVE) ) {
+				hidePlaceholder(elem);
+				elem.removeAttribute(ATTR_CURRENT_VAL);
+			}
+		}
+
+		// If live updates are not enabled cancel the timer.
+		if ( !liveUpdates ) {
+			clearInterval(timer);
+		}
+	}, UPDATE_INTERVAL);
+
+	// Disabling placeholders before unloading the page prevents flash of
+	// unstyled placeholders on load if the page was refreshed.
+	addEventListener(global, 'beforeunload', function () {
+		Placeholders.disable();
+	});
+
+	//
+	// Utility functions
+	//
+
+	// No-op (used in place of public methods when native support is detected).
+	function noop() {}
+
+	// Avoid IE9 activeElement of death when an iframe is used.
+	//
+	// More info:
+	//	- http://bugs.jquery.com/ticket/13393
+	//	- https://github.com/jquery/jquery/commit/85fc5878b3c6af73f42d61eedf73013e7faae408
+	function safeActiveElement() {
+		try {
+			return document.activeElement;
+		} catch ( err ) {}
+	}
+
+	// Check whether an item is in an array. We don't use Array.prototype.indexOf
+	// so we don't clobber any existing polyfills. This is a really simple
+	// alternative.
+	function inArray( arr, item ) {
+		for ( var i = 0, len = arr.length; i < len; i++ ) {
+			if ( arr[ i ] === item ) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	// Cross-browser DOM event binding
+	function addEventListener( elem, event, fn ) {
+		if ( elem.addEventListener ) {
+			return elem.addEventListener(event, fn, false);
+		}
+		if ( elem.attachEvent ) {
+			return elem.attachEvent('on' + event, fn);
+		}
+	}
+
+	// Move the caret to the index position specified. Assumes that the element
+	// has focus.
+	function moveCaret( elem, index ) {
+		var range;
+		if ( elem.createTextRange ) {
+			range = elem.createTextRange();
+			range.move('character', index);
+			range.select();
+		} else if ( elem.selectionStart ) {
+			elem.focus();
+			elem.setSelectionRange(index, index);
+		}
+	}
+
+	// Attempt to change the type property of an input element.
+	function changeType( elem, type ) {
+		try {
+			elem.type = type;
+			return true;
+		} catch ( e ) {
+			// You can't change input type in IE8 and below.
+			return false;
+		}
+	}
+
+	function handleElem( node, callback ) {
+
+		// Check if the passed in node is an input/textarea (in which case it can't
+		// have any affected descendants).
+		if ( node && node.getAttribute(ATTR_CURRENT_VAL) ) {
+			callback(node);
+		} else {
+
+			// If an element was passed in, get all affected descendants. Otherwise,
+			// get all affected elements in document.
+			var handleInputs = node ? node.getElementsByTagName('input') : inputs;
+			var handleTextareas = node ? node.getElementsByTagName('textarea') : textareas;
+
+			var handleInputsLength = handleInputs ? handleInputs.length : 0;
+			var handleTextareasLength = handleTextareas ? handleTextareas.length : 0;
+
+			// Run the callback for each element.
+			var len = handleInputsLength + handleTextareasLength;
+			var elem;
+			for ( var i = 0; i < len; i++ ) {
+
+				elem = i < handleInputsLength ?
+					handleInputs[ i ] :
+					handleTextareas[ i - handleInputsLength ];
+
+				callback(elem);
+			}
+		}
+	}
+
+	// Return all affected elements to their normal state (remove placeholder
+	// value if present).
+	function disablePlaceholders( node ) {
+		handleElem(node, hidePlaceholder);
+	}
+
+	// Show the placeholder value on all appropriate elements.
+	function enablePlaceholders( node ) {
+		handleElem(node, showPlaceholder);
+	}
+
+	// Hide the placeholder value on a single element. Returns true if the
+	// placeholder was hidden and false if it was not (because it wasn't visible
+	// in the first place).
+	function hidePlaceholder( elem, keydownValue ) {
+		var valueChanged = !!keydownValue && elem.value !== keydownValue;
+		var isPlaceholderValue = elem.value === elem.getAttribute(ATTR_CURRENT_VAL);
+
+		if (
+			( valueChanged || isPlaceholderValue ) &&
+			elem.getAttribute(ATTR_ACTIVE) === 'true'
+		) {
+
+			elem.removeAttribute(ATTR_ACTIVE);
+			elem.value = elem.value.replace(elem.getAttribute(ATTR_CURRENT_VAL), '');
+			elem.className = elem.className.replace(classNameRegExp, '');
+
+			// Restore the maxlength value. Old FF returns -1 if attribute not set.
+			// See GH-56.
+			var maxLength = elem.getAttribute(ATTR_MAXLENGTH);
+			if ( parseInt(maxLength, 10) >= 0 ) {
+				elem.setAttribute('maxLength', maxLength);
+				elem.removeAttribute(ATTR_MAXLENGTH);
+			}
+
+			// If the polyfill has changed the type of the element we need to change
+			// it back.
+			var type = elem.getAttribute(ATTR_INPUT_TYPE);
+			if ( type ) {
+				elem.type = type;
+			}
+
+			return true;
+		}
+
+		return false;
+	}
+
+	// Show the placeholder value on a single element. Returns true if the
+	// placeholder was shown and false if it was not (because it was already
+	// visible).
+	function showPlaceholder( elem ) {
+		var val = elem.getAttribute(ATTR_CURRENT_VAL);
+
+		if ( elem.value === '' && val ) {
+			elem.setAttribute(ATTR_ACTIVE, 'true');
+			elem.value = val;
+			elem.className += ' ' + placeholderClassName;
+
+			// Store and remove the maxlength value.
+			var maxLength = elem.getAttribute(ATTR_MAXLENGTH);
+			if ( !maxLength ) {
+				elem.setAttribute(ATTR_MAXLENGTH, elem.maxLength);
+				elem.removeAttribute('maxLength');
+			}
+
+			// If the type of element needs to change, change it (e.g. password
+			// inputs).
+			var type = elem.getAttribute(ATTR_INPUT_TYPE);
+			if ( type ) {
+				elem.type = 'text';
+			} else if ( elem.type === 'password' && changeType(elem, 'text') ) {
+				elem.setAttribute(ATTR_INPUT_TYPE, 'password');
+			}
+
+			return true;
+		}
+
+		return false;
+	}
+
+	this.show = function(elem) {
+		return showPlaceholder(elem);
+	}
+
+	// Returns a function that is used as a focus event handler.
+	function makeFocusHandler( elem ) {
+		return function () {
+
+			// Only hide the placeholder value if the (default) hide-on-focus
+			// behaviour is enabled.
+			if (
+				hideOnInput &&
+				elem.value === elem.getAttribute(ATTR_CURRENT_VAL) &&
+				elem.getAttribute(ATTR_ACTIVE) === 'true'
+			) {
+
+				// Move the caret to the start of the input (this mimics the behaviour
+				// of all browsers that do not hide the placeholder on focus).
+				moveCaret(elem, 0);
+			} else {
+
+				// Remove the placeholder.
+				hidePlaceholder(elem);
+			}
+		};
+	}
+
+	// Returns a function that is used as a blur event handler.
+	function makeBlurHandler( elem ) {
+		return function () {
+			showPlaceholder(elem);
+		};
+	}
+
+	// Returns a function that is used as a submit event handler on form elements
+	// that have children affected by this polyfill.
+	function makeSubmitHandler( form ) {
+		return function () {
+
+				// Turn off placeholders on all appropriate descendant elements.
+				disablePlaceholders(form);
+		};
+	}
+
+	// Functions that are used as a event handlers when the hide-on-input
+	// behaviour has been activated - very basic implementation of the 'input'
+	// event.
+	function makeKeydownHandler( elem ) {
+		return function ( e ) {
+			keydownVal = elem.value;
+
+			// Prevent the use of the arrow keys (try to keep the cursor before the
+			// placeholder).
+			if (
+				elem.getAttribute(ATTR_ACTIVE) === 'true' &&
+				keydownVal === elem.getAttribute(ATTR_CURRENT_VAL) &&
+				inArray(badKeys, e.keyCode)
+			) {
+				if ( e.preventDefault ) {
+						e.preventDefault();
+				}
+				return false;
+			}
+		};
+	}
+
+	function makeKeyupHandler(elem) {
+		return function () {
+			hidePlaceholder(elem, keydownVal);
+
+			// If the element is now empty we need to show the placeholder
+			if ( elem.value === '' ) {
+				elem.blur();
+				moveCaret(elem, 0);
+			}
+		};
+	}
+
+	function makeClickHandler(elem) {
+		return function () {
+			if (
+				elem === safeActiveElement() &&
+				elem.value === elem.getAttribute(ATTR_CURRENT_VAL) &&
+				elem.getAttribute(ATTR_ACTIVE) === 'true'
+			) {
+				moveCaret(elem, 0);
+			}
+		};
+	}
+
+	// Bind event handlers to an element that we need to affect with the
+	// polyfill.
+	function newElement( elem ) {
+
+		// If the element is part of a form, make sure the placeholder string is
+		// not submitted as a value.
+		var form = elem.form;
+		if ( form && typeof form === 'string' ) {
+
+			// Get the real form.
+			form = document.getElementById(form);
+
+			// Set a flag on the form so we know it's been handled (forms can contain
+			// multiple inputs).
+			if ( !form.getAttribute(ATTR_FORM_HANDLED) ) {
+				addEventListener(form, 'submit', makeSubmitHandler(form));
+				form.setAttribute(ATTR_FORM_HANDLED, 'true');
+			}
+		}
+
+		// Bind event handlers to the element so we can hide/show the placeholder
+		// as appropriate.
+		addEventListener(elem, 'focus', makeFocusHandler(elem));
+		addEventListener(elem, 'blur', makeBlurHandler(elem));
+
+		// If the placeholder should hide on input rather than on focus we need
+		// additional event handlers
+		if (hideOnInput) {
+			addEventListener(elem, 'keydown', makeKeydownHandler(elem));
+			addEventListener(elem, 'keyup', makeKeyupHandler(elem));
+			addEventListener(elem, 'click', makeClickHandler(elem));
+		}
+
+		// Remember that we've bound event handlers to this element.
+		elem.setAttribute(ATTR_EVENTS_BOUND, 'true');
+		elem.setAttribute(ATTR_CURRENT_VAL, placeholder);
+
+		// If the element doesn't have a value and is not focussed, set it to the
+		// placeholder string.
+		if ( hideOnInput || elem !== safeActiveElement() ) {
+			showPlaceholder(elem);
+		}
+	}
+
+	return this;
+}
+
+
+
+/* ----------------------------------------------------------------------------
+	JSON 관련
+ ----------------------------------------------------------------------------*/
+iNcruit.JSON2Html = function(_data) {
+	this.data = _data;
+
+	this.getHtml = function() {
+		var src = this.data;
+		var result = "";
+
+		for(var i=0; i< src.length; i++) {
+			var node = src[i];
+
+			result += this.getNode(node);
+
+		}
+		return result;
+	}
+
+	this.getChild = function(_child) {
+		var temp = "";
+
+		for (var i = 0 ; i < _child.length; i++) {
+			var child = _child[i];
+			if (child === undefined) continue;
+
+			temp += this.getNode(child);
+
+		}
+
+		return temp;
+	}
+
+	this.createAttr = function(_attr) {
+		var attrHtml = "";
+		try {
+
+			if (typeof _attr == "object") {
+				for (var key in _attr) {
+					var item  = _attr[key];
+					if (item === undefined) continue;
+
+					attrHtml += " " + key + "=\"" + item.toString() + "\"";
+				}
+			} else {
+				attrHtml = _attr;
+			}
+		} catch(e) {
+		}
+
+		return attrHtml;
+	}
+
+	this.getNode = function(_node) {
+		var tagname = _node.tag.toLowerCase();
+		var html = "";
+
+		html += "<" + _node.tag;
+		html += " " + (_node.id !== undefined ? "id=\"" +  _node.id +"\"" : "");
+		html += " " + (_node.value !== undefined ? "value=\"" +  _node.value +"\"" : "");
+		html += " " + (_node.val !== undefined ? "value=\"" +  _node.val +"\"" : "");
+		html += " " + (_node.attr !== undefined ? this.createAttr(_node.attr) : "");
+		html += " " + (_node.type !== undefined ? "type=\"" +  _node.type +"\"" : "");
+		html += " " + (_node["class"] !== undefined ? "class=\"" +  _node["class"] +"\"" : "");
+
+		html += " " + (_node.event !== undefined ? this.createAttr(_node.event) : "");
+
+		// Tag별 처리
+		switch (tagname) {
+
+			case (tagname.match(/a/) || {}).input :
+				html += " " + (_node.link !== undefined ? "href=\"" +  _node.link +"\"" : "");
+				break;
+			case (tagname.match(/input/) || {}).input :
+				break;
+			case (tagname.match(/select/) || {}).input :
+				break;
+			default:
+				break;
+		}
+		html += ">";
+
+
+		html += (_node.html !== undefined ? _node.html : "");
+
+		if (_node.child !== undefined)  {
+			html += this.getChild(_node.child);
+		}
+
+		if (_node.item !== undefined)  {
+			html += this.getChild(_node.item);
+		}
+
+		if (_node.option !== undefined) {
+			html += this.getChild(_node.option);
+		}
+
+		html += "</" + _node.tag + ">";
+		html += "\n";
+
+		return html;
+
+	}
+
+}
+/* ----------------------------------------------------------------------------
+	연동로그인
+ ----------------------------------------------------------------------------*/
+iNcruit.singlesign.tootip = "연동로그인 관련";
+iNcruit.singlesign.Open = function(site, callback, callbackUrl, useSSL, keepLogin) {
+	switch (site) {
+		case ("payco"):
+			document.domain = "incruit.com";
+
+			if (iNcruit.util.IsApp() == true){
+				iNcruit.popup.open(iNcruit.domain.G_HOSTNAME_SSL_EDIT + "/g_common/bizcommon/v2/payco.asp?cmd=request"
+					+ (useSSL ? "&s=true" : "") + (typeof keepLogin != "undefined" ? "&kl=" + keepLogin : "") + "&goto_url=" + jQuery("#gotoURL").val(), {width:"420",height:"550"});
+			} else {
+				if (iNcruit.util.IsMobile() && iNcruit.util.IsSnsWebView() ) {	//인스타그램앱 , 페이스북앱인 경우
+					location.href = iNcruit.domain.G_HOSTNAME_SSL_EDIT + "/g_common/bizcommon/v2/payco.asp?cmd=request" + (useSSL ? "&s=true" : "") + (typeof keepLogin != "undefined" ? "&kl=" +keepLogin : "");
+				} else {
+					iNcruit.popup.open(iNcruit.domain.G_HOSTNAME_SSL_EDIT + "/g_common/bizcommon/v2/payco.asp?cmd=request"
+						+ (useSSL ? "&s=true" : "") + (typeof keepLogin != "undefined" ? "&kl=" + keepLogin : ""), {width:"420",height:"550",left:"470",top:"240"});
+				}
+			}
+			break;
+		case ("paycojoin"):
+			document.domain = "incruit.com";
+
+			if (iNcruit.util.IsMobile() && iNcruit.util.IsSnsWebView() ) {	//인스타그램앱 , 페이스북앱인 경우
+				location.href = iNcruit.domain.G_HOSTNAME_SSL_EDIT + "/g_common/bizcommon/v2/payco.asp?cmd=join" + (useSSL ? "&s=true" : "") + (typeof keepLogin != "undefined" ? "&kl=" + keepLogin : "");
+			} else {
+				iNcruit.popup.open(iNcruit.domain.G_HOSTNAME_SSL_EDIT + "/g_common/bizcommon/v2/payco.asp?cmd=join"
+					+ (useSSL ? "&s=true" : "") + (typeof keepLogin != "undefined" ? "&kl=" + keepLogin : ""), {width:"420",height:"550"});
+			}
+			break;
+		default:
+			break;
+	}
+}
+
+iNcruit.singlesign.CheckUser = function (id, name, email, birthday, gender, access_token, access_token_secret, site, isMng, mobileNo, keepLogin, refresh_token) {
+	if (gender != "") {
+		if (typeof gender != "undefined") {
+			if (gender.indexOf("f") >= 0 || gender.indexOf("F") >= 0) {
+				gender = "2";
+			} else if (gender.indexOf("m") >= 0 || gender.indexOf("M") >= 0) {
+				gender = "1";
+			}
+		} else gender = "";
+	} else gender = "";
+
+	if (typeof email == "undefined") {
+		email = "";
+	}
+
+	if (typeof name == "undefined") {
+		name = "";
+	}
+
+	if (typeof birthday == "undefined") {
+		birthday = "";
+	}
+
+	if (typeof access_token == "undefined") {
+		access_token = "";
+	}
+
+	if (typeof refresh_token == "undefined") {
+		refresh_token = "";
+	}
+
+	if (typeof access_token_secret == "undefined") {
+		access_token_secret = "";
+	}
+
+	if (mobileNo == undefined) {
+		mobileNo = "";
+	}
+
+	var obj = {};
+	obj['id'] = id;
+	obj['name'] = name;
+	obj['email'] = email;
+	obj['birthday'] = birthday;
+	obj['mobileNo'] = mobileNo;
+	obj['sex'] = gender;
+	obj['token'] = access_token;
+	obj['sToken'] = access_token_secret;
+	obj['rToken'] = refresh_token;
+	// 소셜자동연동 파라미터
+	obj['sTypeParam'] = sTypeParam;
+	obj['sUserIdParam'] = sUserIdParam;
+	obj['sAccessParam'] = sAccessParam;
+	obj['sSecretParam'] = sSecretParam;
+
+	if (keepLogin == "true") {
+		obj['KeepLogin'] = 'Y';
+	} else {
+		obj['KeepLogin'] = 'N';
+	}
+
+	users = obj;
+
+	var eventpco = jQuery.trim(jQuery("#eventpco").val());
+
+	if (typeof jQuery.trim(eventpco) == "undefined") {
+		eventpco = "";
+	}
+
+	//휴면 계정 처리
+	try{
+		if(opener){
+			if(opener.human_status==true){
+				opener.checkHumanMatch(id, site);
+				window.close();
+				return;
+			}
+		}
+	}catch(e){
+	}
+
+	if (isMng == "true") {
+		jQuery.ajax({
+			url: "/g_common/bizcommon/v2/sociallogin_ajax_v2.asp",
+			data: { "gbn": "checkIncruitUserMng", "authResp": escape(JSON.stringify(users)), "site": site },
+			success: function (data) {
+				if (data == "Auth Exist") {
+					alert("해당 소셜 아이디로 이미 등록된 내역이 있습니다. 확인 후 다시 시도해 주십시오.");
+					window.close();
+				} else if (data == "Auth Success") {
+					alert("로그인 연동 되었습니다.");
+					window.opener.location.reload();
+					window.close();
+				} else if (data == "Auth Fail") {
+					alert("알 수 없는 문제로 인해 인증에 실패하였습니다.\n다시 시도해 보십시오.");
+					window.close();
+				}
+			},
+			error: function (request, status, error) {
+				alert("사용자가 많습니다. 다시 시도해 주십시오.");
+				//console.log("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+				window.close();
+			}
+		});
+	} else {
+		jQuery.ajax({
+			url: "/g_common/bizcommon/v2/sociallogin_ajax_v2.asp",
+			data: { "gbn": "checkIncruitUserLogin", "authResp": escape(JSON.stringify(users)), "site": site },
+			async:false,
+			success: function (data) {
+
+				if (data == "Login Success") {
+					//alert("로그인되었습니다.");
+					iNcruit.singlesign.LoginIncruit(users, window.opener, "");
+				} else if (data == "No Id") {
+					iNcruit.singlesign.LoginIncruit(users, window.opener, "");
+//					iNcruit.singlesign.LoginIncruit(users, window.opener, "No Id");
+				} else if (data == "Login Fail") {
+					alert("소셜로그인시 알 수 없는 문제로 인해 로그인하지 못했습니다.\n다시 시도해 보십시오.");
+				} else if (data == "No User") {
+					//alert("로그인 정보가 없습니다. 인크루트 회원가입 페이지로 이동합니다.");
+					iNcruit.singlesign.MakeProfileForm(users, site, eventpco, window.opener);
+				} else if (data == "Find Email") {
+					iNcruit.singlesign.SocialLinkedForm(users, site, eventpco, window.opener);
+				}else if (data == "Login dormancy") {
+					if(window.opener){
+						var f = window.opener.document.createElement("form");
+						f.setAttribute("method", "post");
+						f.setAttribute("action", "https://" + iNcruit.domain.G_SERVER_SET + "edit.incruit.com/login/loginquiescence_sns.asp");
+						window.opener.document.body.appendChild(f);
+						var i = window.opener.document.createElement("input");
+						i.setAttribute("type", "hidden");
+						i.setAttribute("name", "user_id");
+						i.setAttribute("value", users.id);
+						f.appendChild(i);
+						i = window.opener.document.createElement("input");
+						i.setAttribute("type", "hidden");
+						i.setAttribute("name", "partner_cd");
+						i.setAttribute("value", site);
+						f.appendChild(i);
+						f.submit();
+					}
+				}
+			},
+			error: function (request, status, error) {
+				alert("사용자가 많습니다. 다시 시도해 주십시오.");
+			},
+			complete: function () {
+				window.close();
+			}
+
+		});
+	}
+}
+
+iNcruit.singlesign.LoginIncruit = function (obj, target, opt) {
+
+	var changeUrl = "";
+
+	var Parserurl = new URLParser(target.location.href);
+	var curUrl = Parserurl.domain;
+	var goUrl = Parserurl.get("gotoURL");
+
+//	if (opt == "No Id") {
+//		changeUrl = iNcruit.domain.G_HOSTNAME_SSL_EDIT + "/profile/managesocialmeminfo.asp";
+		// PC웹에서 소셜자동연동한 경우
+//	} else if (obj.sTypeParam != "" && !(iNcruit.util.IsMobile())) {
+//		changeUrl = iNcruit.domain.G_HOSTNAME_SSL_EDIT + "/profile/managememinfo.asp?pageid=08";
+
+		// url상 gotoURL이 있는 경우
+//	} else if (iNcruit.util.IsMobile() && target.location.href.indexOf("edit.incruit.com") < 0) {
+	if (iNcruit.util.IsMobile() && target.location.href.indexOf("edit.incruit.com") < 0) {
+		changeUrl = target.location.href;
+	} else if ((goUrl != "") && (typeof goUrl != "undefined")) {
+		changeUrl = unescape(goUrl);
+	} else if ((goUrl == "") && target.location.href.indexOf(".incruit.com") >= 0 && target.location.href.indexOf("edit.incruit.com") < 0) {
+		changeUrl = undefined;
+	} else if ((target.document.referrer != "") && (typeof target.document.referrer != "undefined")) {
+		changeUrl = target.document.referrer;
+
+	} else if (target.location.href.indexOf("festival.incruit.com") >= 0) {
+		changeUrl = "http://festival.incruit.com/2016/";
+
+	} else {
+		changeUrl = _inc.domain.G_HOSTNAME_INCRUIT;
+
+	}
+
+	var memInfoYn = iNcruit.cookie.GetCookie("memaddInfo");
+	//이동 삭제
+	memInfoYn = "y"
+	if (changeUrl !== undefined) {
+		if((changeUrl.indexOf("www.incruit.com") >= 0 || changeUrl.indexOf("job.incruit.com") >= 0 || changeUrl.indexOf("people.incruit.com") >= 0 || changeUrl.indexOf("m.incruit.com") >= 0) && memInfoYn !="y"){
+			jQuery.ajax({
+				url: "/g_common/bizcommon/v2/sociallogin_ajax_v2.asp",
+				data: {"gbn": "SocialMemNmChk"},
+				async:false,
+				success: function (data) {
+					if(data=="y"){
+						changeUrl = iNcruit.domain.G_HOSTNAME_SSL_EDIT + "/g_common/bizcommon/v2/social_mem_addinfo.asp?ty=infoadd&gotourl=" + escape((changeUrl !== undefined)? changeUrl:"");
+					}
+					target.location.href = changeUrl;
+				}
+			});
+		}else{
+			var TargetURL = Parserurl.url;
+			if(TargetURL==_inc.domain.G_HOSTNAME_INCRUIT||TargetURL==_inc.domain.G_HOSTNAME_INCRUIT+"/"||TargetURL.indexOf(_inc.domain.G_HOSTNAME_INCRUIT+"/?")>=0||TargetURL==_inc.domain.G_HOSTNAME_SSL_INCRUIT||TargetURL==_inc.domain.G_HOSTNAME_SSL_INCRUIT+"/"||TargetURL.indexOf(_inc.domain.G_HOSTNAME_SSL_INCRUIT+"/?")>=0){
+				target.location.href = _inc.domain.G_HOSTNAME_INCRUIT+"/myhome/";
+			}else{
+				target.location.href = changeUrl;
+			}
+		}
+	} else {
+		if((curUrl.indexOf("www.incruit.com") >= 0 || curUrl.indexOf("job.incruit.com") >= 0 || curUrl.indexOf("people.incruit.com") >= 0 || curUrl.indexOf("m.incruit.com") >= 0) && memInfoYn !="y"){
+			jQuery.ajax({
+				url: "/g_common/bizcommon/v2/sociallogin_ajax_v2.asp",
+				data: {"gbn": "SocialMemNmChk"},
+				async:false,
+				success: function (data) {
+					if(data=="y"){
+						changeUrl = iNcruit.domain.G_HOSTNAME_SSL_EDIT + "/g_common/bizcommon/v2/social_mem_addinfo.asp?ty=infoadd&gotourl=" + escape((changeUrl !== undefined)? changeUrl:curUrl);
+						target.location.href = changeUrl;
+					}else{
+						target.location.reload();
+					}
+				}
+			});
+		}else{
+			var TargetURL = Parserurl.url;
+			if(TargetURL==_inc.domain.G_HOSTNAME_INCRUIT||TargetURL==_inc.domain.G_HOSTNAME_INCRUIT+"/"||TargetURL.indexOf(_inc.domain.G_HOSTNAME_INCRUIT+"/?")>=0){
+				target.location.href = _inc.domain.G_HOSTNAME_INCRUIT+"/myhome/";
+			}else{
+				target.location.reload();
+			}
+		}
+	}
+}
+
+iNcruit.singlesign.MakeProfileForm = function(users, site, eventpco, target) {
+	iNcruit.singlesign.SocialLinkedForm(users, site, eventpco, target);
+}
+
+iNcruit.singlesign.SocialLinkedForm = function(users, site, eventpco, target){
+	jQuery(target.document).find("body").append(iNcruit.singlesign.makeFormConfirmProfileForm(users, site, eventpco));
+	jQuery(target.document).find("#formSocialProfile").submit();
+};
+
+
+// 회원가입용 사용자 폼
+function makeFormConfirmProfile_v2(users, site, eventpco){
+
+	var strForm = "";
+
+	strForm += "<form id='frmConfirmProfile' method='post' action='https://" + iNcruit.domain.G_SERVER_SET + "edit.incruit.com/entrance/entrancepersonal_agree.asp'>";
+	strForm += "	<input type='hidden' name='users' value='" + escape(JSON.stringify(users)) + "' />";
+	strForm += "	<input type='hidden' name='eventpco' value='" + eventpco + "' />";
+	strForm += "	<input type='hidden' name='site' value='" + site + "' />";
+
+	if (String(document.referrer).toLowerCase().indexOf("login/loginmobile.asp") > -1 ||
+		String(document.referrer).toLowerCase().indexOf("m.incruit.com") > -1 ||
+		String(document.referrer).toLowerCase().indexOf("m.nugu.incruit.com") > -1 ) {
+
+		if(String(document.location).toLowerCase().indexOf("2014/7test") > -1 ) {
+			strForm += "	<input type='hidden' name='srcURL' value='http://" + iNcruit.domain.G_SERVER_SET + "m.nugu.incruit.com/profile/profileview.aspx?tag=new&7test=y#content' />";
+		} else {
+			strForm += "	<input type='hidden' name='srcURL' value='http://" + iNcruit.domain.G_SERVER_SET + "m.nugu.incruit.com/profile/profileview.aspx?tag=new#content' />";
+		}
+
+	} else {
+
+		if(String(document.location).toLowerCase().indexOf("2014/7test") > -1 ) {
+			strForm += "	<input type='hidden' name='srcURL' value='http://" + iNcruit.domain.G_SERVER_SET + "m.nugu.incruit.com/profile/profileview.aspx?tag=new&7test=y#content' />";
+		} else {
+			strForm += "	<input type='hidden' name='srcURL' value='http://" + iNcruit.domain.G_SERVER_SET + "www.incruit.com/resume/resume.asp' />";
+		}
+	}
+
+	if (String(document.location).toLowerCase().indexOf("login/loginmobile.asp") > -1) {
+		strForm += "	<input type='hidden' name='isMobile' value='Y' />";
+	}else{
+		strForm += "	<input type='hidden' name='isMobile' value='N' />";
+	}
+	strForm += "</form>";
+
+	return strForm;
+}
+
+// 회원가입용 사용자 폼
+iNcruit.singlesign.makeFormConfirmProfileForm = function (users, site, eventpco){
+	var strForm = "";
+
+	strForm += "<form id='formSocialProfile' method='post' action='" + iNcruit.domain.G_HOSTNAME_SSL_EDIT + "/entrance/entrancepersonal_agree.asp'>";
+	strForm += "	<input type='hidden' name='users' value='" + escape(JSON.stringify(users)) + "' />";
+	strForm += "	<input type='hidden' name='eventpco' value='" + eventpco + "' />";
+	strForm += "	<input type='hidden' name='site' value='" + site + "' />";
+
+	if (String(document.referrer).toLowerCase().indexOf("login/loginmobile.asp") > -1 ||
+		String(document.referrer).toLowerCase().indexOf("m.incruit.com") > -1 ||
+		String(document.referrer).toLowerCase().indexOf("m.nugu.incruit.com") > -1 ) {
+
+		if(String(document.location).toLowerCase().indexOf("2014/7test") > -1 ) {
+			strForm += "	<input type='hidden' name='srcURL' value='" + iNcruit.domain.G_HOSTNAME_MNUGU + "/profile/profileview.aspx?tag=new&7test=y#content' />";
+		} else {
+			strForm += "	<input type='hidden' name='srcURL' value='" + iNcruit.domain.G_HOSTNAME_MNUGU + "/profile/profileview.aspx?tag=new#content' />";
+		}
+
+	} else {
+
+		if(String(document.location).toLowerCase().indexOf("2014/7test") > -1 ) {
+			strForm += "	<input type='hidden' name='srcURL' value='" + iNcruit.domain.G_HOSTNAME_MNUGU + "/profile/profileview.aspx?tag=new&7test=y#content' />";
+		} else {
+			strForm += "	<input type='hidden' name='srcURL' value='" + iNcruit.domain.G_HOSTNAME_INCRUIT + "/resume/resume.asp' />";
+		}
+	}
+
+	if (String(document.location).toLowerCase().indexOf("login/loginmobile.asp") > -1) {
+		strForm += "	<input type='hidden' name='isMobile' value='Y' />";
+	}else{
+		strForm += "	<input type='hidden' name='isMobile' value='N' />";
+	}
+	strForm += "</form>";
+
+	return strForm;
+}
+
+iNcruit.singlesign.BuzzVilChk = function(strurl){
+	try{
+		if (localStorage.BuzzAd == null) { localStorage.BuzzAd = ""; }
+		if(localStorage.BuzzAd != ""){
+			(function (img) { img.onload = function () {
+				var length = localStorage.BuzzAd.length;
+				if(localStorage.BuzzAd.indexOf('10023_71ffbffd-ccf1-4edf-9c4c') != -1){
+					alert("[Success] Action Completed!");
+				};
+				location.href = strurl;
+			};
+			img.src = "//t.buzzad.io/action/pb/cpa/default/pixel.gif" + localStorage.BuzzAd; }) (new Image());
+		}else{
+			location.href = strurl;
+		}
+	}catch(e){
+		location.href = strurl;
+	}
+}
+
+iNcruit.singlesign.RemoveLogin = function(users, site) {
+	jQuery.ajax({
+		url			:	"/g_common/bizcommon/v2/sociallogin_ajax_v2.asp",
+		data		:   { "gbn" : "changeSocialInfo", "userInfo" : escape(JSON.stringify(users)), "site" : site },
+		success 	: 	function(data) {
+
+			if(data == "Y") {
+				//alert("해제되었습니다.");
+				location.reload();
+			} else if(data == "N"){
+				alert("사용자가 많습니다. 다시 시도해 주십시오.");
+			}
+		},
+		error		:	function(request,status,error){
+			alert("인크루트 사용자가 많습니다. 다시 시도해 주십시오.");
+		}
+	});
+}
+
+iNcruit.singlesign.Callback = function(data) {
+
+}
+
+/* ----------------------------------------------------------------------------
+	Request 처리
+ ----------------------------------------------------------------------------*/
+// init iNcruit.Request
+iNcruit.Request.tooltip = "Request Object";
+new function() {
+
+	var query = window.location.search.substring(1);
+	var vars = query.split("&");
+
+	for (var i=0;i<vars.length;i++) {
+
+		var pair = vars[i].split("=");
+
+		if (typeof iNcruit.Request[pair[0]] === "undefined") {
+			iNcruit.Request[pair[0]] = pair[1];
+
+		} else if (typeof iNcruit.Request[pair[0]] === "string") {
+			var arr = [ iNcruit.Request[pair[0]], pair[1]];
+			iNcruit.Request[pair[0]] = arr;
+
+		} else {
+			iNcruit.Request[pair[0]].push(pair[1]);
+
+		}
+	}
+}
+
+iNcruit.Request.GetParam = function(key) {
+	if (typeof iNcruit.Request[key] != "undefined" && iNcruit.Request[key] != "") {
+		return iNcruit.Request[key];
+	}
+
+	return "";
+}
+
+iNcruit.Request.GetParamWithDecode = function(key) {
+	if (typeof iNcruit.Request[key] != "undefined" && iNcruit.Request[key] != "") {
+		return decodeURIComponent(iNcruit.Request[key]);
+	}
+
+	return "";
+}
+
+/*
+	iNcruit.Storage
+*/
+iNcruit.Storage = {
+	get : function(key, aucheck) {
+
+		// 권한이 설정된 key 여부 확인 권한 검사
+		if (typeof localStorage[key+"_au"] != "undefined" || aucheck) {
+			var au = localStorage[key+"_au"];
+
+			if (typeof iNcruit.user.MemNo == "undefined" || iNcruit.user.MemNo == "" || au != iNcruit.user.MemNo ) {
+
+				// delete key
+				delete localStorage[key+"_ts"];
+				delete localStorage[key];
+				delete localStorage[key+"_interval"];
+				delete localStorage[key+"_au"];
+
+				return "";
+
+			}
+		}
+
+		var ts = localStorage[key+"_ts"];
+		var interval = localStorage[key+"_interval"];
+		var res = localStorage[key];
+		if (ts == "" || interval == "") return "";
+
+		return parseInt(ts) + parseInt(interval) - new Date().getTime() > 0 ? res : "";
+
+	},
+	set : function(key, val, time, aucheck) {
+		// 권한체크시 로그인 체크
+		if (aucheck) {
+			if (typeof iNcruit.user.MemNo == "undefined" || iNcruit.user.MemNo == "") return;
+		}
+
+		localStorage[key] = val;
+		localStorage[key+"_ts"] = new Date().getTime();
+		localStorage[key+"_interval"] = time;
+		if (aucheck) localStorage[key+"_au"] = iNcruit.user.MemNo;
+	}
+};
+_incStorage = iNcruit.Storage;
+
+
+/* ----------------------------------------------------------------------------
+	URL 분석기
+ ----------------------------------------------------------------------------*/
+function URLParser(src) {
+	this.url = src;
+	this.tooltip = "URL 분석기";
+	this.domain = "";
+	this.paramData = "";
+	this.param = {};
+
+	this.pattern1 = new RegExp(
+		"^" +
+		"(?:(?:https?|ftp)://)" +
+		"(?:\\S+(?::\\S*)?@)?" + "(?:" +
+		"(?:(?:[a-z\\u00a1-\\uffff0-9]-*)*[a-z\\u00a1-\\uffff0-9]+)" +
+		"(?:\\.(?:[a-z\\u00a1-\\uffff0-9]-*)*[a-z\\u00a1-\\uffff0-9]+)*" +
+		"(?:\\.(?:[a-z\\u00a1-\\uffff]{2,}))" +
+		"\\.?" + ")" +
+		"(?::\\d{2,5})?" +
+		"(?:[/?#]\\S*)?" + "$", "igm"
+	);
+
+
+	this.pattern2 = new RegExp(
+		"^" +
+		"(?:\\S+(?::\\S*)?@)?" + "(?:" +
+		"(?:(?:[a-z\\u00a1-\\uffff0-9]-*)*[a-z\\u00a1-\\uffff0-9]+)" +
+		"(?:\\.(?:[a-z\\u00a1-\\uffff0-9]-*)*[a-z\\u00a1-\\uffff0-9]+)*" +
+		"(?:\\.(?:[a-z\\u00a1-\\uffff]{2,}))" +
+		"\\.?" + ")" +
+		"(?::\\d{2,5})?" +
+		"(?:[/?#]\\S*)?" + "$", "igm"
+	);
+
+	if (this.url !== undefined) {
+		var  data = src.split("?");
+		this.domain = data[0];
+		this.paramData = data[1] === undefined ? "" : data[1].split("&");
+
+		for (var i=0;i<this.paramData.length;i++) {
+			var pair = this.paramData[i].split("=");
+
+			if (typeof this.param[pair[0]] == "undefined") {
+				this.param[pair[0]] = pair[1];
+
+			} else if (typeof this.param[pair[0]] == "string") {
+				var arr = [ this.param[pair[0]], pair[1]];
+				this.param[pair[0]] = arr;
+
+			} else {
+				this.param[pair[0]].push(pair[1]);
+			}
+		}
+	}
+
+	this.get = function(key) {
+		return this.param[key] === undefined ? "" : this.param[key];
+	}
+
+	this.validate = function(src) {
+		if (src == undefined) {
+			src = this.url;
+		}
+		return pattern1.test(src) || pattern2.test(src) ;
+	}
+
+
+	this.makelink = function(text) {
+
+		var target = ((("<a>" || "") + "").toLowerCase().match(/<[a-z][a-z0-9]*>/g) || []).join('');
+		var tags = /<\/?([a-z][a-z0-9]*)\b[^>]*>/gi;
+		var commentsAndPhpTags = /<!--[\s\S]*?-->|<\?(?:php)?[\s\S]*?\?>/gi;
+
+		text = text.replace(commentsAndPhpTags, '')
+				   .replace(tags, function ($0, $1) { return target.indexOf('<' + $1.toLowerCase() + '>') > -1 ? '' : $0; });
+
+		var urlPattern = /\b(?:https?|ftp):\/\/[a-z0-9-+&@#\/%?=~_|!:,.;]*[a-z0-9-+&@#\/%=~_|]/gim;
+		var pseudoUrlPattern = /(^|[^\/])(www\.[\S]+(\b|$))/gim;
+		var emailAddressPattern = /[\w.]+@[a-zA-Z_-]+?(?:\.[a-zA-Z]{2,6})+/gim;
+
+		return text
+			//.replace(urlPattern, '<a href="$&">$&</a>')
+			.replace(pseudoUrlPattern, '$1<a href="http://$2">$2</a>')
+			.replace(emailAddressPattern, '<a href="mailto:$&">$&</a>');
+	}
+
+	//return this;
+ }
+
+/* ----------------------------------------------------------------------------
+	자동완성기
+ ----------------------------------------------------------------------------*/
+iNcruit.AutoComplete.EmailAddress = [
+	"naver.com",
+	"hanmail.net",
+	"daum.net",
+	"gmail.com",
+	"nate.com",
+	"kakao.com"
+];
+
+iNcruit.AutoComplete.email = function(_option) {
+	this.defaultoption = {
+		text : "",
+		list : iNcruit.AutoComplete.EmailAddress,
+		target : null,
+		callback : null
+	};
+
+	this.option = jQuery.extend(this.defaultoption, _option);
+	var callback = typeof this.option.callback == "function" ? this.option.callback  : function(data) {};
+
+
+	var template = "<ul class=\"suggestList\">%ITEM%</ul>";
+	var itemHtml = "";
+	var list = this.option.list;
+	var text = this.option.text;
+
+	if (text.indexOf("@") >0) {
+		var cVal1 = text.substring(0, text.indexOf("@"));
+		var cVal2 = text.substring(text.indexOf("@")+1, text.length);
+
+		for(var i = 0 ; i < list.length ; i++){
+			if (cVal2 == "") {
+				var cVal3 = list[i];
+				itemHtml += "<li item-index=" + i + ">" + cVal1 + "@" + cVal2 + "<span class=\"idName\">" + cVal3 + "</span></li>";
+			} else if ( list[i].indexOf(cVal2) == 0 ) {
+				var cVal3 = list[i].substring(list[i].indexOf(cVal2)+cVal2.length, list[i].length);
+				itemHtml += "<li>" + cVal1 + "@" + cVal2 + "<span class=\"idName\">" + cVal3 + "</span></li>";
+			}
+
+		}
+	} //else {
+	//	for(var i = 0 ; i < iNcruit.AutoComplete.EmailAddress.length ; i++){
+	//		itemHtml += "<li>" + text + "@<span class=\"idName\">" + list[i] + "</span></li>";
+	//	}
+	//}
+
+	template = template.replace("%ITEM%", itemHtml);
+
+	if (itemHtml == "") {
+		jQuery(this.option.target).html("");
+		jQuery(this.option.target).find("ul.suggestList > li").unbind("click");
+		return false;
+	} else {
+		if (this.option.target != null) {
+			jQuery(this.option.target).html(template);
+			jQuery(this.option.target).find("ul.suggestList > li").bind("click", callback);
+		}
+
+		return true;
+	}
+
+}
+
+
+iNcruit.Component.PNotify = function() {
+	this.load = function(callback) {
+
+		if (typeof PNotify === "undefined") {
+			jQuery('head').append('<link rel="stylesheet" rel="nofollow" href="//i.incru.it/ui/static/css/component/pnotify.custom.css?20210511" type="text/css" />');
+			jQuery('head').append('<link rel="stylesheet" rel="nofollow" href="//i.incru.it/ui/static/css/component/animate.css" type="text/css" />');
+			jQuery.getScript("//s.incru.it/gjs/component/pnotify.custom.js", function() {
+				if (typeof callback == "function") callback();
+			});
+		} else {
+			if (typeof callback == "function") callback();
+		}
+	}
+
+	this.removeAll = function() {
+		if (typeof PNotify !== "undefined") {
+			PNotify.removeAll();
+		}
+
+	}
+}
+
+/* ----------------------------------------------------------------------------
+	CSS Loader
+ ----------------------------------------------------------------------------*/
+iNcruit.Component.CSSLoader = function(href) {
+	var link = document.createElement('link');
+	link.type = 'text/css';
+	link.rel = 'stylesheet';
+	link.href = href;
+
+	document.getElementsByTagName('head')[0].appendChild(link);
+}
+
+
+/* ----------------------------------------------------------------------------
+	ObjectLoader Loader
+ ----------------------------------------------------------------------------*/
+iNcruit.Component.ObjectLoader = function(array) {
+	var length = array.length,
+	document = window.document,
+	body = document.body,
+	isIE = 'fileSize' in document,
+	object;
+	while (length--) {
+		if (isIE) {
+			new Image().src = array[length];
+			continue;
+		}
+		object = document.createElement('object');
+		object.data = array[length];
+		object.width = object.height = 0;
+		body.appendChild(object);
+	}
+}
+
+/* ----------------------------------------------------------------------------
+	FingerPrint 쿠키저장
+ ----------------------------------------------------------------------------*/
+iNcruit.Component.FingerPrint = function() {
+	jQuery.getScript("//s.incru.it/gjs/component/fingerPrint.js", function() {
+		new Promise(function(resolve){
+			var fingerPrint = {};
+			resolve(FingerprintJS(fingerPrint));
+		}).then(fingerPrint => {
+			fingerPrint.load()
+					   .then(fp => fp.get())
+					   .then(result => {
+							//console.log(result.visitorId)
+							document.cookie = 'incfp=uid=' + result.visitorId + ';max-age=31536000' + ';domain=incruit.com;path=/';
+					   });
+		});
+	});
+}
+/* ----------------------------------------------------------------------------
+	레이어 템플릿
+ ----------------------------------------------------------------------------*/
+iNcruit.template.LoginLayer =  "<div class=\"loginchange_box\" id=\"divLoginBox\" style=\"display:none\">"
+							 + "\n	<div id=\"login_wrap\" class=\"apply\">"
+							 + "\n		<div class=\"login_info\">"
+							 + "\n			<p>인크루트 <strong>서비스 이용을 위해 로그인 </strong>해주세요.</p>"
+							 + "\n		</div>"
+							 + "\n		<div class=\"login_img\"></div>"
+							 + "\n		<div class=\"loginWrap_c\">"
+							 + "\n			<form id=\"frmLogin\" class=\"loginform\" method=\"post\" action=\"%HOSTNAME_EDIT%/login/loginprocess.asp?gotourl=%CURRENT_URL%\">"
+							 + "\n			<fieldset>"
+							 + "\n			<legend>로그인 정보</legend>"
+							 + "\n			<div class=\"idpwd\">"
+							 + "\n				<p class=\"membership\">"
+							 + "\n					<a href=\"%HOSTNAME_EDIT%/entrance/entrancechoice.asp\"><strong>회원가입</strong></a>"
+							 + "\n					<span class=\"ver_line\">|</span>"
+							 + "\n					<a href=\"%HOSTNAME_EDIT%/support/searchlogininfo.asp\" class=\"find\">ID</a> / <a href=\"%HOSTNAME_EDIT%/support/searchlogininfo.asp?pageid=L02\" class=\"find\">PW 찾기</a>"
+							 + "\n				</p>"
+							 + "\n				<div class=\"wrap1\">"
+							 + "\n					<input type=\"text\" class=\"txt id \" id=\"txtUserID\" name=\"txtUserID\" title=\"아이디\" maxlength=\"20\">"
+							 + "\n					<input type=\"password\" class=\"txt pwd\" id=\"txtPassword\" name=\"txtPassword\" title=\"비밀번호\" maxlength=\"20\">"
+							 + "\n				</div>"
+							 + "\n				<div class=\"wrap2\">"
+							 + "\n					<div class=\"scWrap\">"
+							 + "\n						<input type=\"radio\" class=\"rd\" name=\"slogin\" value=\"on\" id=\"slogin_on\" checked=\"checked\">"
+							 + "\n						<label for=\"slogin_on\" class=\"sc slogin_on active\">보안접속 <span>ON</span></label>"
+							 + "\n						<input type=\"radio\" class=\"rd\" name=\"slogin\" value=\"off\" id=\"slogin_off\"><label for=\"slogin_off\" class=\"sc slogin_off\">보안접속 <span>Off</span></label>"
+							 + "\n					</div>"
+							 + "\n					<input type=\"submit\" value=\"로그인\" title=\"로그인\" class=\"bt_login\">"
+							 + "\n				</div>"
+							 + "\n				<div class=\"socialwrap\">"
+							 + "\n					<div class=\"loginkeep\"><input type=\"checkbox\" id=\"keepLogIn\"><label for=\"keepLogIn\"><span>로그인 유지</span></label></div>"
+							 + "\n					<a id=\"fb_social\">계정으로 로그인</a>"
+							 + "\n				</div>"
+							 + "\n			</div>"
+							 + "\n				<input type=\"hidden\" name=\"SSL\" value=\"on\">"
+							 + "\n				<input type=\"hidden\" name=\"EncID\">"
+							 + "\n				<input type=\"hidden\" name=\"EncPW\">"
+							 + "\n				<input type=\"hidden\" name=\"txtPartnerCode\" value=\"0\">"
+							 + "\n				<input type=\"hidden\" name=\"txtSubDomain\" value=\"www\">"
+							 + "\n				<input type=\"hidden\" name=\"isKeepLogIn\" value=\"Y\">"
+							 + "\n			</fieldset>"
+							 + "\n			</form>"
+							 + "\n		</div>"
+							 + "\n	</div>"
+							 + "\n	<p class=\"closeWrap\"><button class=\"btXhoverPop\" type=\"button\" id=\"btnClose_LoginBox\"><span>닫기</span></button></p>"
+							 + "\n</div>";
+
+iNcruit.template.RequestEmailTemplate = "<div class=\"resumeSendMailWrap show\" lang=\"1\" style=\"left: 126px; top: 83px;\">"
+									  + "\n	<div class=\"resumeSendMail\">"
+									  + "\n		<h4>이메일로 전달</h4>"
+									  + "\n		<p class=\"tipBox\">%MAIL_DESCRIPTION%</p>"
+									  + "\n		<div class=\"writeMail\">"
+									  + "\n			<label><span>제목</span>%MAIL_TITLE%<input type=\"hidden\" title=\"제목\" name=\"emailtitle\" id=\"emailtitle\" value=\"%MAIL_TITLE%\"></label>"
+									  + "\n			<input type=\"hidden\" name=\"compnm\" id=\"compnm\" value=\"%COMPANYNM%\">"
+									  + "\n			<input type=\"hidden\" name=\"compno\" id=\"compno\" value=\"%COMPANYNO%\">"
+									  + "\n			<textarea rows=\"10\" cols=\"10\" title=\"내용\" name=\"emailcontent\" id=\"emailcontent\"></textarea>"
+									  + "\n			<p class=\"btGroup\">"
+									  + "\n				<button type=\"submit\" id=\"sendeMail\" class=\"submit\"><span>보내기</span></button>"
+									  + "\n				<button type=\"button\" id=\"sendeMail_Cancel\" class=\"cancel\"><span>취소</span></button>"
+									  + "\n			</p>"
+									  + "\n		</div>"
+									  + "\n		<p class=\"closeWrap\">"
+									  + "\n		<button class=\"btXhoverPop\" type=\"button\"><span>닫기</span></button>"
+									  + "\n		</p>"
+									  + "\n	</div>"
+									  + "\n</div>";
+
+
+function DebugPanel() {
+	this.panel = {};
+	this.className = "";
+	this.defaultPanelID = "_incDebugPanel";
+	this.defaultCardStyle = {
+		"border"		  : "1px solid rgb(141, 141, 141)",
+		"color"			  : "rgb(51, 51, 51)",
+		"background-color": "rgb(235, 194, 194)",
+		"padding"		  : "3px",
+		"margin"		  : "3px",
+		"font-size"		  : "18px",
+		"font-weight"	  : "bold"
+	};
+	this.defaultPanelStyle ={
+		"background-color": "#EEE",
+		"padding"		  : "3px",
+		"position"		  : "fixed",
+		"top"			  : "0px",
+		"z-index"		  : "999999",
+		"opacity"		  : "0.7"
+	};
+
+	this.cardRepository = {};
+	this.cardScheduler = {};
+
+	this.setStyle = function(css) {
+		jQuery(this.panel).css(css);
+	}
+
+	this.setCardClass = function(className) {
+		this.className = className;
+	}
+
+	this.createPanel = function(_id) {
+		this.panel = jQuery("<div>").attr("id", _id === undefined ? this.defaultPanelID : _id).css(this.defaultPanelStyle);
+		jQuery(this.panel).prependTo("body");
+		this.init();
+
+		return;
+	}
+
+	this.init = function() {
+		this.addCard("debugMX");
+		this.addCard("debugMY");
+
+		document.addEventListener("mousemove", function(e) {
+			var x = e.pageX;
+			var y = e.pageY;
+
+			jQuery("#debugMX").html("Mouse X:" + x);
+			jQuery("#debugMY").html("Mouse Y:" + y);
+
+		}, false);
+	}
+
+	this.clearCardSchedule = function(_id) {
+		var schedule = this.cardScheduler[_id];
+		clearInterval(schedule);
+		schedule = null;
+
+		this.cardScheduler[_id] = schedule;
+	}
+
+	this.setCard = function(_id, object, interval) {
+
+		var card = this.cardRepository[_id];
+
+		if (card === undefined) return;
+
+		if(typeof object == "function") {
+			var schedule;
+			try {
+				schedule = setInterval(function() {
+					var result = object();
+					jQuery(card).html(result);
+				}, interval === undefined ? 100: interval);
+				this.cardScheduler[_id] = schedule;
+			} catch(e) {
+				clearInterval(schedule);
+				schedule = null;
+			}
+
+		} else {
+			jQuery(card).html(object);
+		}
+	}
+
+	this.addCard = function( _id, object, interval) {
+		var id = _id === undefined ? "debugcard" + new Date().getTime() : _id;
+		var card = jQuery("<span>").attr("id", id);
+
+
+		if (this.className == "") {
+			jQuery(card).css(this.defaultCardStyle);
+		} else {
+			jQuery(card).addClass(this.className);
+		}
+
+		jQuery(card).appendTo(jQuery(this.panel));
+		this.cardRepository[id] = card;
+
+		if (object !== undefined) {
+			this.setCard(_id, object, interval);
+		}
+		return id;
+	}
+
+	this.delCard = function(_id) {
+		if (this.cardScheduler[_id] !== undefined) {
+			this.clearCardSchedule(_id);
+		}
+
+		this.cardRepository[_id] = null;
+		jQuery("#"+_id).remove();
+	}
+}
+
+// INIT
+/* Window DOM ALias */
+window._inc = window.iNcruit;
+_inc.d = _inc.domain;
+
+if (_inc.core !== undefined) {
+	for (var x in _inc.core) {
+		if (_inc.core[x] === undefined) continue;
+
+		_inc[x] = _inc.core[x];
+	}
+}
+
+_inc.ieplaceholder = _inc.supportIE_PlaceHolder(this);
+_inc.URL = new URLParser(location.href);
+
+if (_inc.URL.get("debugtrace") == "true") {
+	if(_inc["DebugPanel"] === undefined) {
+		_inc.DebugPanel = new DebugPanel();
+		document.addEventListener("load", _inc.DebugPanel.createPanel());
+	}
+}
+
+/* ----------------------------------------------------------------------------
+	APP
+ ----------------------------------------------------------------------------*/
+var iNcruitApp = {
+	_ua: navigator.userAgent,
+	_name: "",
+	_version: "",
+	_info: function() {
+		if (this._ua.indexOf("INCRUIT") > -1){
+			var regx = /INCRUIT\((?:(inapp); *)(?:(main|cal|unse|albacall); *)(\d{0,}; ?[0-9]{1,}[\.0-9]{0,}|[0-9]{1,}[\.0-9]{0,})\)/i;
+			if (regx.exec(this._ua)) {
+				this._name = RegExp.$2;
+				var version = RegExp.$3;
+				this._version = this._ua.match(/Android/i) ? version.replace(/(\d{0,}; *)/i, "") : version;
+			}
+
+			// ios일경우(위에 것으로는 IOS 앱버전을 알아내질 못해 아래와 같이 추가처리함
+
+			if (this._version == ""){
+				if (this._ua.indexOf("INCRUIT") > -1){
+					var strIosVer = "";
+					strIosVer = this._ua.substr(this._ua.indexOf("INCRUIT"), this._ua.length-this._ua.indexOf("INCRUIT"));
+
+					if (strIosVer != ""){
+						var arrIosVer = strIosVer.split(";");
+
+						this._name = arrIosVer[1].trim();
+						if (arrIosVer.length > 2 && arrIosVer[1].trim() == "main"){		// 배열개수가 2개 이상이면서 main 이 있는 앱일때만
+							this._version = arrIosVer[2].trim();
+						}
+					}
+				}
+			}
+
+		} else {
+			var regx = /INC_PAD\((?:(inapp); *)(?:(main|cal|unse|albacall); *)(\d{0,}; ?[0-9]{1,}[\.0-9]{0,}|[0-9]{1,}[\.0-9]{0,})\)/i;
+			if (regx.exec(this._ua)) {
+				this._name = RegExp.$2;
+				var version = RegExp.$3;
+				this._version = this._ua.match(/Android/i) ? version.replace(/(\d{0,}; *)/i, "") : version;
+			}
+
+			// ios일경우(위에 것으로는 IOS 앱버전을 알아내질 못해 아래와 같이 추가처리함
+
+			if (this._version == ""){
+				if (this._ua.indexOf("INC_PAD") > -1){
+					var strIosVer = "";
+					strIosVer = this._ua.substr(this._ua.indexOf("INC_PAD"), this._ua.length-this._ua.indexOf("INC_PAD"));
+
+					if (strIosVer != ""){
+						var arrIosVer = strIosVer.split(";");
+
+						if (arrIosVer.length > 2 && arrIosVer[1].trim() == "main"){		// 배열개수가 2개 이상이면서 main 이 있는 앱일때만
+							this._version = arrIosVer[2].trim();
+						}
+					}
+				}
+			}
+
+		}
+
+		return {"platform":this._platform(),"name":this._name,"version":this._version};
+	},
+	_platform: function() {
+		return (this._ua.match(/Android/i) ? "AOS" : (this._ua.match(/iPhone|iPad|iPod/i) ? "iOS" : ""));
+	},
+	_compare: function(a,b) {
+		var A = a.split('.'), B = b.split('.'), ret = 0, base, sig, x, y;
+		for(var i = 0, n = Math.max(A.length, B.length); i < n; i++) {
+			x = 'undefined' == typeof A[i] ? 0 : parseInt(A[i]);
+			y = 'undefined' == typeof B[i] ? 0 : parseInt(B[i]);
+			base = Math.pow(10, n - i - 1);
+			sig = 0;
+
+			if( x < y ) { sig = -1; }
+			else if( x > y ) { sig = 1; }
+
+			ret += sig * base;
+		}
+		return ret == 0 ? 0 : ret / Math.abs(ret);
+	},
+	getInfo: function() {
+		return this._info();
+	},
+	getPlatform: function() {
+		return this._info().platform;
+	},
+	getName: function() {
+		return this._info().name;
+	},
+	getVersion: function() {
+		return this._info().version;
+	},
+	getCompare: function(p,n,v) {
+		var app = this._info();
+		return (p.toUpperCase() == app.platform.toUpperCase() && n.toUpperCase() == app.name.toUpperCase()) ? this._compare(app.version,v) : -99;
+	},
+	test: function() {
+		return this.ua;
+	},
+	sendAirBridge: function(pkey, cate, act, label, val, memno){
+		// 에어브릿지 실행
+		if(typeof act == "undefined"){act="";}
+		if(typeof label == "undefined"){label="";}
+		if(typeof val == "undefined"){val="";}
+		if(typeof memno == "undefined"){memno="";}
+
+		var jsonData;
+		var sendData = {  Category : cate ,
+						  Action : act ,
+						  Label : label,
+						  Value : val,
+						  Memno : memno
+						};
+		sendData = JSON.stringify(sendData);
+		//alert(pkey + " / " + sendData);
+
+		/*if (cate=='user.resume.complete'
+		||cate=='user.letter.complete'
+		||cate=='user.add.wishlist'){
+			alert(pkey + " / " + sendData);
+		}*/
+
+		if(typeof pkey != "undefined"){
+			switch(pkey.toLowerCase()){
+				case "airbridge_event" : 			// 소셜회원가입 시도
+					if(iNcruitApp.getPlatform() == "AOS"){
+						window.INCRUITAPP.sendMessage(pkey, sendData);
+					}else if(iNcruitApp.getPlatform() == "iOS"){
+						window.webkit.messageHandlers.INCRUITAPP.postMessage({"Airbridge_Event": sendData });
+					}
+					break;
+				default :
+					break;
+			}
+		}
+	},
+	sendBridge: function(flag, data1, data2){		// 웹에서 실행하는 부분
+		if(typeof data1 == "undefined"){data1="";}
+		if(typeof data2 == "undefined"){data2="";}
+
+		if(typeof flag != "undefined"){
+			switch(flag.toUpperCase()){
+				case "A" : 			//입사지원 성공
+					break;
+				case "HA": 			//홈페이지 입사지원시(https://betajob.incruit.com/jobdb_info/jobpost.asp?job=2103090000002&handle= 의 홈페이지 입사지원시 fn_jobpost_clickCnt('03','2103267D7BCC01CAEE9BD9BACB97C063363CF8006B4647E5A232D96E2BC033CF','B5BAE0B4E64FCC3624690B0838BFDEEBF9F93F9D06463A79DCFC2D812DE64022','2103090000002'); 에 의해 실행됨
+						// OPENOUTLINK 로 대체. 이리로 오는 것은 OpenOutLink로 다시보냄
+						iNcruitApp.sendBridge('OpenOutlink', data1);
+					break;
+				case "I" : 			//관심기업
+					break;
+				case "S" : 			//스크랩
+					break;
+				case "RECENT" : 	//최근본공고
+					break;
+				case "WEBVIEWZOOM" : 	// 공고뷰 줌인  WebviewZoom
+					if(iNcruitApp.getPlatform() == "AOS"){
+						window.INCRUITAPP.sendMessage(flag, data1);
+					}else if(iNcruitApp.getPlatform() == "iOS"){
+						//window.webkit.messageHandlers.INCRUITAPP.postMessage({"ShareEmail": data1 });  ios에선 사용 안함
+					}
+					break;
+				case "SHAREEMAIL" : // sns공유 이메일
+					if(iNcruitApp.getPlatform() == "AOS"){
+						//alert("aos ShareEmail 실행 : " + flag + " / "  + data1);
+						window.INCRUITAPP.sendMessage(flag, data1);
+					}else if(iNcruitApp.getPlatform() == "iOS"){
+						//alert("ios ShareEmail 실행 " + flag + " / "  + data1);
+						//window.webkit.messageHandlers.INCRUITAPP.postMessage({"flag":flag,"value":data1});
+						window.webkit.messageHandlers.INCRUITAPP.postMessage({"ShareEmail": data1 });
+					}
+					break;
+				case "SHAREKAKAO" : // sns공유 카카오
+					if(iNcruitApp.getPlatform() == "AOS"){
+						//alert("aos ShareKakao 실행 : " + flag + " / "  + data1);
+						window.INCRUITAPP.sendMessage(flag, data1);
+					}else if(iNcruitApp.getPlatform() == "iOS"){
+						//alert("ios ShareKakao 실행 " + flag + " / "  + data1);
+						//window.webkit.messageHandlers.INCRUITAPP.postMessage({"flag":flag,"value":data1});
+						window.webkit.messageHandlers.INCRUITAPP.postMessage({"ShareKakao": data1 });
+					}
+					break;
+				case "PHOTO" : 		//사진관련
+					if(iNcruitApp.getPlatform() == "AOS"){
+						//alert("aos PHOTO 실행 : " + flag + " / "  + data1);
+						window.INCRUITAPP.sendMessage(flag, data1);
+					}else if(iNcruitApp.getPlatform() == "iOS"){
+						//alert("ios PHOTO 실행 " + flag + " / "  + data1);
+						//window.webkit.messageHandlers.INCRUITAPP.postMessage({"flag":flag,"value":data1});
+						window.webkit.messageHandlers.INCRUITAPP.postMessage({"Photo": data1 });
+					}
+					break;
+
+				case "FILEDOWNLOAD"	: 	// 파일다운로드
+					if(iNcruitApp.getPlatform() == "AOS"){
+						//alert("aos FILEDOWNLOAD 실행 : " + flag + " / "  + data1);
+						window.INCRUITAPP.sendMessage(flag, data1);
+					}else if(iNcruitApp.getPlatform() == "iOS"){
+						//alert("ios FILEDOWNLOAD 실행 : " + flag + " / "  + data1);
+						window.webkit.messageHandlers.INCRUITAPP.postMessage({"FileDownLoad": data1 });
+					}
+					break;
+
+				case "OPENSETTINGS" : 	// 환경설정 (아무값이나 보내면 됨, 1로 보냄)
+					if(iNcruitApp.getPlatform() == "AOS"){
+						window.INCRUITAPP.sendMessage(flag, data1);
+					}else if(iNcruitApp.getPlatform() == "iOS"){
+						window.webkit.messageHandlers.INCRUITAPP.postMessage({"OpenSettings": data1 });
+					}
+					break;
+				case "EVENTONOFFALERT" : // 신입공채 알림
+					if(iNcruitApp.getPlatform() == "AOS"){
+						//alert("aos  : " + flag );
+						window.INCRUITAPP.sendMessage(flag, "");
+					}else if(iNcruitApp.getPlatform() == "iOS"){
+						//alert("ios  : " + flag );
+						//window.webkit.messageHandlers.INCRUITAPP.postMessage({"key":flag,"value":""});
+						window.webkit.messageHandlers.INCRUITAPP.postMessage({"EventOnOffAlert": data1 });
+					}
+					break;
+				case "USER" : 		//회원정보 업데이트
+					if(iNcruitApp.getPlatform() == "AOS"){
+						window.INCRUITAPP.sendMessage(flag, data1);
+					}else if(iNcruitApp.getPlatform() == "iOS"){
+						window.webkit.messageHandlers.INCRUITAPP.postMessage({"flag":flag,"jobPostNo":data1});
+					}
+					break;
+				case "JOIN" : 		//회원가입완료
+					/*if(iNcruitApp.getPlatform() == "AOS"){
+						window.INCRUITAPP.onJoinSuccess(data1, data2);
+					}else if(iNcruitApp.getPlatform() == "iOS"){
+						window.webkit.messageHandlers.INCRUITAPP.postMessage({"emailId":data1,"pwd":data2});
+					}*/
+					// 회원가입완료시 data1은 json형태로 넘김
+					if(iNcruitApp.getPlatform() == "AOS"){
+						//alert("aos: " + flag + " / " + data1 );
+						window.INCRUITAPP.sendMessage(flag, data1);
+					}else if(iNcruitApp.getPlatform() == "iOS"){
+						//alert("ios: " + flag + " / " + data1);
+						//window.webkit.messageHandlers.INCRUITAPP.postMessage({"key":flag,"value":""});
+						window.webkit.messageHandlers.INCRUITAPP.postMessage({"Join": data1 });
+					}
+
+					break;
+
+				case "SOCIALLOGIN" : 	// 소셜로그인 브릿지 호출
+					if(iNcruitApp.getPlatform() == "AOS"){
+					//	alert("aos: " + flag + " / " + data1 );
+						window.INCRUITAPP.sendMessage(flag, data1);
+					}else if(iNcruitApp.getPlatform() == "iOS"){
+					//	alert("ios: " + flag + " / " + data1 );
+						window.webkit.messageHandlers.INCRUITAPP.postMessage({"SocialLogin": data1 });
+					}
+					break;
+				case "LOGIN" : 		//로그인 완료
+					/*if(iNcruitApp.getPlatform() == "AOS"){
+						window.INCRUITAPP.onJoinSuccess(flag, data2);
+					}else if(iNcruitApp.getPlatform() == "iOS"){
+						window.webkit.messageHandlers.INCRUITAPP.postMessage({"emailId":flag,"pwd":data2});
+					}*/
+					//alert(flag + "/" + data1);
+
+					// 로그인시 data1은 json형태로 넘김
+					if(iNcruitApp.getPlatform() == "AOS"){
+						window.INCRUITAPP.sendMessage(flag, data1);
+					}else if(iNcruitApp.getPlatform() == "iOS"){
+						//window.webkit.messageHandlers.INCRUITAPP.postMessage({"flag":flag,"pwd":data1});
+						window.webkit.messageHandlers.INCRUITAPP.postMessage({"Login": data1 });
+					}
+					break;
+				case "LOGOUT" : 		//로그아웃
+					/*if(iNcruitApp.getPlatform() == "AOS"){
+						window.INCRUITAPP.onJoinSuccess(flag, data2);
+					}else if(iNcruitApp.getPlatform() == "iOS"){
+						window.webkit.messageHandlers.INCRUITAPP.postMessage({"flag":flag,"value":""});
+					}*/
+					//alert(flag + "/" + data1);
+					if(iNcruitApp.getPlatform() == "AOS"){
+						window.INCRUITAPP.sendMessage(flag, data1);
+					}else if(iNcruitApp.getPlatform() == "iOS"){
+						window.webkit.messageHandlers.INCRUITAPP.postMessage({"Logout": data1 });
+					}
+					break;
+				case "OPENOUTLINK" :				// 홈페이지 입사지원시(https://betajob.incruit.com/jobdb_info/jobpost.asp?job=2103090000002&handle= 의 홈페이지 입사지원시 fn_jobpost_clickCnt('03','2103267D7BCC01CAEE9BD9BACB97C063363CF8006B4647E5A232D96E2BC033CF','B5BAE0B4E64FCC3624690B0838BFDEEBF9F93F9D06463A79DCFC2D812DE64022','2103090000002'); 에 의해 실행됨
+					if(iNcruitApp.getPlatform() == "AOS"){
+						window.INCRUITAPP.sendMessage(flag, data1);
+					}else if(iNcruitApp.getPlatform() == "iOS"){
+						window.webkit.messageHandlers.INCRUITAPP.postMessage({"OpenOutlink": data1 });
+					}
+				case "OPENALERTLIST" :	// 알림리스트
+					//alert("OpenAlertList");
+					if(iNcruitApp.getPlatform() == "AOS"){
+						if (data1 == '') {
+							window.INCRUITAPP.sendMessage(flag, "");
+						}
+					}else if(iNcruitApp.getPlatform() == "iOS"){
+						// 이렇게 처리한 이유는 이상하게 앱에선 공유 터치시 알림리스트도 같이 실행된다. 따라서 data1값이 없을때(알림터치시에만)만 작동되도록 함
+						if (data1 == '') {
+							window.webkit.messageHandlers.INCRUITAPP.postMessage({"OpenAlertList": data1 });
+						}
+					}
+					break;
+
+				case "OPENKCBCERT" :	// kcb인증실행
+					if(iNcruitApp.getPlatform() == "AOS"){
+						//alert(flag + ' / ' +  data1);
+						window.INCRUITAPP.sendMessage(flag, data1);
+					}else if(iNcruitApp.getPlatform() == "iOS"){
+						// window.webkit.messageHandlers.INCRUITAPP.postMessage({"key":flag,"value":data1});
+						// window.webkit.messageHandlers.INCRUITAPP.postMessage({'OpenKcbCert' :'https://semiedit.incruit.com/g_common/popup/PopupKcbCert_NonMemApp.asp?loc=BZ'});
+					 	window.webkit.messageHandlers.INCRUITAPP.postMessage({"OpenKcbCert": data1 });
+					}
+					break;
+
+				case "OPENKCBRECV" :	// kcb인증 후 결과값을 받기 위해 실행
+					if(iNcruitApp.getPlatform() == "AOS"){
+						//alert(flag + ' / ' +  data1);
+						window.INCRUITAPP.sendMessage(flag, data1);
+					}else if(iNcruitApp.getPlatform() == "iOS"){
+						window.webkit.messageHandlers.INCRUITAPP.postMessage({"OpenKcbRecv": data1 });
+					}
+					break;
+
+
+				case "OPENPOPUP" :	// 브릿지로 팝업 오픈(이력서에서 사용됨)
+					if(iNcruitApp.getPlatform() == "AOS"){
+						//alert(flag + ' / ' +  data1);
+						window.INCRUITAPP.sendMessage(flag, data1);
+					}else if(iNcruitApp.getPlatform() == "iOS"){
+						window.webkit.messageHandlers.INCRUITAPP.postMessage({"OpenPopup": data1 });
+					}
+					break;
+
+
+				case "POPUPCLOSE" :	// 브릿지로 팝업 오픈된거 닫기(이력서에서 사용됨)
+					try{
+						if(iNcruitApp.getPlatform() == "AOS"){
+							window.INCRUITAPP.sendMessage(flag, data1);
+						}else if(iNcruitApp.getPlatform() == "iOS"){
+							window.webkit.messageHandlers.INCRUITAPP.postMessage({"PopupClose": data1 });
+						}
+					}catch(e){}
+					break;
+
+				case "SETBOTTOMNAVI" :	// 앱 액션바 on/off용도
+					if(iNcruitApp.getPlatform() == "AOS"){
+						//alert(flag + ' / ' +  data1);
+						window.INCRUITAPP.sendMessage(flag, data1);
+					}else if(iNcruitApp.getPlatform() == "iOS"){
+						window.webkit.messageHandlers.INCRUITAPP.postMessage({"SetBottomNavi": data1 });
+					}
+					break;
+
+				case "PRELOAD" :	// PreLoad 페이지 사용 (자동로그인 여부)
+					if(iNcruitApp.getPlatform() == "AOS"){
+						window.INCRUITAPP.sendMessage(flag, data1);
+					}else if(iNcruitApp.getPlatform() == "iOS"){
+						window.webkit.messageHandlers.INCRUITAPP.postMessage({"PreLoad": data1 });
+					}
+					break;
+
+				case "AUTOLOGIN" :	// 자동로그인 여부 체크
+					if(iNcruitApp.getPlatform() == "AOS"){
+						window.INCRUITAPP.sendMessage(flag, data1);
+					}else if(iNcruitApp.getPlatform() == "iOS"){
+						window.webkit.messageHandlers.INCRUITAPP.postMessage({"AutoLogin": data1 });
+					}
+					break;
+
+				case "UNSESECESSION" :	// 운세탈퇴
+					if(iNcruitApp.getPlatform() == "AOS"){
+						window.INCRUITAPP.sendMessage(flag, data1);
+					}else if(iNcruitApp.getPlatform() == "iOS"){
+						window.webkit.messageHandlers.INCRUITAPP.postMessage({"UnseSecession": data1 });
+					}
+					break;
+
+				case "HIDESPLASH" : 		//스플래시 화면 처리
+					if(iNcruitApp.getPlatform() == "AOS"){
+						window.INCRUITAPP.sendMessage(flag, data1);
+					}else if(iNcruitApp.getPlatform() == "iOS"){
+						window.webkit.messageHandlers.INCRUITAPP.postMessage({"HideSplash": data1 });
+					}
+					break;
+
+				case "DORMANCY" : 		//휴면해제완료
+					if(iNcruitApp.getPlatform() == "AOS"){
+						window.INCRUITAPP.sendMessage(flag, data1);
+					}else if(iNcruitApp.getPlatform() == "iOS"){
+						window.webkit.messageHandlers.INCRUITAPP.postMessage({"Dormancy": data1 });
+					}
+					break;
+
+				default :
+					break;
+			}
+		}
+	}
+	/*,
+	CallBack: function(flag, data){
+		if(typeof flag == "undefined"){flag="";}
+		if(typeof data == "undefined"){data="";}
+
+
+		switch(flag.toUpperCase()){
+			case "LOGIN" : 		//로그인
+				alert("로그인 완료");
+				location.reload();
+				break;
+			case "LOGOUT" : 	//로그아웃
+				alert("로그아웃 완료");
+				location.reload();
+				break;
+			case "RELOAD" : 	//단순 새로고침
+				location.reload();
+				break;
+			default :
+				break;
+		}
+
+	}*/
+};
+
+//인크루트 APP CallBack (위 함수 iNcruitApp.CallBack 사용시 IOS 에서 호출이 안되서 신규로 생성), 앱에서 호출
+var iNcruitApp_CallBack = function(flag,data){
+	if(typeof flag == "undefined"){flag="";}
+	if(typeof data == "undefined"){data="";}
+
+	switch(flag.toUpperCase()){
+		case "LOGIN" : 		//로그인
+			alert("로그인 완료");
+			location.reload();
+			break;
+		case "LOGOUT" : 	//로그아웃
+			alert("로그아웃 완료");
+			location.reload();
+			break;
+		case "RELOAD" : 	//단순 새로고침
+			location.reload();
+			break;
+		case "OPENKCBRECV" : 	//KCB인증 후 결과
+
+			// 아이폰의 경우 19세 성인 본인인증시 이곳에서 데이터 19OK값으로 넘어옴. 이 외엔 아래 ajax 실행하면 됨.
+			if (data=="19OK"){
+				//alert("문자 성인인증 완료!");
+				//history.back();
+				location.reload();
+			} else {
+				// 기업 회원가입시 KCB인증결과
+				// kcb인증 로그 조회 및 결과값 대입
+				jQuery.ajax({
+					url		: G_HOSTNAME_SSL_EDIT + "/entrance/entrancebiz_kcbcert_ajax.asp",
+					type	: 'GET',
+					data	: { tx_seq_no: data },
+					success	: function(data) {
+
+						// DI & "^" & CI& "^" & RSLT_NAME & "^" & RSLT_BIRTHDAY & "^" & IIF(RSLT_SEX_CD="M","1","2") & "^" & RSLT_MOBILE_NO
+						var arrdata = data.split("^");
+						var di;
+						var ci;
+						var rslt_name;
+						var rslt_birthday;
+						var rslt_sex_cd;
+						var rslt_mobile_no;
+
+						di = arrdata[0];
+						ci = arrdata[1];
+						rslt_name = arrdata[2];
+						rslt_birthday = arrdata[3];
+						rslt_sex_cd   = arrdata[4];
+						rslt_mobile_no= arrdata[5];
+						//alert(rslt_mobile_no);
+						if(location.pathname == "/support/searchlogininfo.asp"){ //아이디,비밀번호 찾기
+							jQuery("#username").val(rslt_name);
+							jQuery("#birthday").val(rslt_birthday);
+							jQuery("#mobile").val(rslt_mobile_no);
+							jQuery('#frm').submit();
+						}else{
+							jQuery("#MemCertWrap").addClass("hide");
+							jQuery("#MemCertYn").val('Y');
+							jQuery("#Mem_DI").val(di);
+							jQuery("#Mem_CI").val(ci);
+							jQuery("#Mem_BIRTH").val(rslt_birthday);
+							jQuery("#Mem_SEX_CD").val(rslt_sex_cd);
+
+							jQuery("#txtChargerName").val(rslt_name);
+							jQuery("#txtMobileNo").val(rslt_mobile_no);
+							//jQuery("#confirmationInfo").val(rslt_name + ' / ' + rslt_mobile_no.substr(0,3) + '-' + rslt_mobile_no.substr(3,4) + '-' + rslt_mobile_no.substr(7,4));
+							jQuery("#confirmationInfo").val('인증이 완료되었습니다.');
+							//jQuery("#btnMemCertNo2").removeClass("hide");
+							jQuery("#area_confirmationInfo").show();
+							jQuery("#divMemCertNo").hide();
+							fn_chkBtnJoin();
+						}
+					}
+				});
+			}
+			break;
+		case "19OK" : 		// 성인 본인인증 (Aos전용)
+			//alert("문자 성인인증 완료!");
+			//history.back();
+			location.reload();
+			break;
+
+		case "NOR_LOGIN" :	// 인크루트 일반로그인(ios에서만 보내줌. aos는 보내주지 않음)
+			// ios 전용임
+			var loginData = JSON.parse(data);
+			var strGotoUrl = "";
+
+			if(typeof loginData.Go_To_Url == "undefined"){
+				strGotoUrl="";
+			} else {
+				strGotoUrl = loginData.Go_To_Url;		// escape처리 안되어있음
+
+				if (iNcruitApp.getPlatform() == "iOS"){
+					if (strGotoUrl != '') {
+						//alert(strGotoUrl);
+						location.replace(strGotoUrl);
+					}
+				}
+			}
+
+		case "SNS_LOGIN" :	// sns로그인(네이티브)
+			var loginData = JSON.parse(data);
+			var loginSite = loginData.Site;
+			var strGotoUrl = "";
+			var strmobileNo = "";
+
+			if(typeof loginData.mobileNo == "undefined"){
+				strmobileNo="";
+			} else {
+				strmobileNo = loginData.mobileNo;			// escape처리 안되어있음
+			}
+
+			if(typeof loginData.gotourl == "undefined"){
+				strGotoUrl="";
+			} else {
+				strGotoUrl = loginData.gotourl;			// escape처리 안되어있음
+			}
+
+			if (loginSite == 'kakaotalk' ){
+				loginSite = 'kakaoTalk';
+			}
+			else if(loginSite == 'facebook'){
+				loginSite = 'FaceBook';
+			}
+			else if(loginSite == 'google+'){
+				loginSite = 'Google+';
+			}
+			else if(loginSite == 'twitter'){
+				loginSite = 'Twitter';
+			}
+			else if(loginSite == 'apple'){
+				loginSite = 'Apple';
+			}
+			else if(loginSite == 'naver'){
+				loginSite = 'NAVER';
+			}
+			else if(loginSite == 'payco'){
+				loginSite = 'PAYCO';
+			}
+
+			//애플로그인 관련 예외처리
+			if (loginSite == 'Apple') {
+				checkUserInfo(loginData.ID, loginData.Name, loginData.Email, loginData.BirthDay, loginData.Sex, loginData.access_token, loginData.authCode, loginSite, '', strGotoUrl,loginData.clientId,'');
+			} else {
+				checkUserInfo(loginData.ID, loginData.Name, loginData.Email, loginData.BirthDay, loginData.Sex, loginData.access_token, loginData.refresh_token, loginSite, '', strGotoUrl,'',strmobileNo);
+			}
+
+			break;
+
+		case "PRELOAD" : 		//PreLoad
+
+			Fn_PreLoad_Set(data);	//preload.asp 에서처리
+			break;
+
+		case "AUTOLOGIN" : 		//자동로그인
+
+			Fn_AutoLogin_Set(data);	//loginmobile.asp 에서처리
+			break;
+
+		default :
+			break;
+	}
+}
+
+// 옛날 앱인지 (true:옛날앱, false:최신앱)
+var IsOldApp = function() {
+	var boolReturn = false;
+
+	//  이전버전앱 비교할 기준 버전
+	var strIOSVer = "3.5.1"
+	var strAOSVer = "3.0.66"
+
+	if (iNcruit.util.IsApp() == true){
+		if(iNcruitApp.getName() == "main"){
+			if(iNcruitApp.getPlatform() == "iOS"){
+				// 현재 IOS앱 버전이 기준버전보다 낮거나 같다면 True(오래된 앱) 반환
+				if (iNcruitApp.getVersion() <= strIOSVer){
+					boolReturn = true;
+				}
+			}else if(iNcruitApp.getPlatform() == "AOS"){
+				// 현재 AOS앱 버전이 기준버전보다 낮거나 같다면 True(오래된 앱) 반환
+				if (iNcruitApp.getVersion() <= strAOSVer){
+					boolReturn = true;
+				}
+			}
+		}
+	}
+
+	return boolReturn;
+}
+
+//로그인 관련
+var UserIDSave = function(value){
+	var expires = new Date();
+	var output = new String;
+	var Temp = new Array();
+	var Temp2 = new Array();
+	var TextSize = value.length;
+
+	for (i = 0; i < TextSize; i++) {
+		rnd = Math.round(Math.random() * 122) + 68;
+		Temp[i] = value.charCodeAt(i) + rnd;
+		Temp2[i] = rnd;
+	}
+	for (i = 0; i < TextSize; i++) {
+		output += String.fromCharCode(Temp[i], Temp2[i]);
+	}
+
+	expires.setTime(expires.getTime() + (1000*60*60*24*1000));
+	document.cookie = "LUSID=" + escape(output) + (";expires=" + expires.toGMTString()) + (";path=/;domain=incruit.com");
+
+	BeforeSnsLogin("");
+}
+
+//로그인 관련
+var UserIDRetrun = function(){
+	var returnVal = "";
+	returnVal = jQuery.trim(LoginGetCookie("LUSID"));
+
+	var output = new String;
+	var Temp = new Array();
+	var Temp2 = new Array();
+	var TextSize = returnVal.length;
+	for (i = 0; i < TextSize; i++) {
+		Temp[i] = returnVal.charCodeAt(i);
+		Temp2[i] = returnVal.charCodeAt(i + 1);
+	}
+	for (i = 0; i < TextSize; i = i+2) {
+		output += String.fromCharCode(Temp[i] - Temp2[i]);
+	}
+
+	return output
+};
+
+var BeforeSnsLogin = function(value){
+	var expires = new Date();
+	expires.setTime(expires.getTime() + (1000*60*60*24*1000));
+	document.cookie = "LUSSns=" + escape(value) + (";expires=" + expires.toGMTString()) + (";path=/;domain=incruit.com");
+};
+
+var BeforeSnsSet = function(){
+	var SnsCd = jQuery.trim(LoginGetCookie("LUSSns"));
+	if(SnsCd!=""){
+		jQuery(".bf_"+SnsCd).parent().addClass("active");
+	}
+};
+
+var BeforeSnsLoginApp = function(site,id){
+	var expires = new Date();
+	expires.setTime(expires.getTime() + (1000*60*60*24*1000));
+
+	var SnsData = iNcruit.cookie.GetCookie("LUSSnsApp");
+	var setSnsData = "";
+
+	setSnsData = site + "|" + id;
+
+	if (SnsData != "") {
+
+		var arrUser = SnsData.split('$$');
+		var userInfo = "";
+		var strSite	= "";
+		var strUserId = "";
+
+		for (var i=0;i<arrUser.length;i++) {
+			userInfo = arrUser[i].split('|');
+
+			strSite = userInfo[0];
+			strUserId = userInfo[1];
+
+			if (strSite != site) {
+				setSnsData = setSnsData +"$$" + strSite + "|" + strUserId;
+			}
+		}
+
+	}
+
+	document.cookie = "LUSSnsApp=" + setSnsData + (";expires=" + expires.toGMTString()) + (";path=/;domain=incruit.com");
+};
+
+var DelSnsLoginApp = function(site){
+	var expires = new Date();
+	expires.setTime(expires.getTime() + (1000*60*60*24*1000));
+
+	var SnsData = iNcruit.cookie.GetCookie("LUSSnsApp");
+	var setSnsData = "";
+
+	if (SnsData != "") {
+
+		var arrUser = SnsData.split('$$');
+		var userInfo = "";
+		var strSite	= "";
+		var strUserId = "";
+
+		for (var i=0;i<arrUser.length;i++) {
+			userInfo = arrUser[i].split('|');
+
+			strSite = userInfo[0];
+			strUserId = userInfo[1];
+
+			if (strSite != site) {
+				if (setSnsData == "") {
+					setSnsData = strSite + "|" + strUserId;
+				} else {
+					setSnsData = setSnsData +"$$" + strSite + "|" + strUserId;
+				}
+			}
+		}
+
+	}
+
+	document.cookie = "LUSSnsApp=" + setSnsData + (";expires=" + expires.toGMTString()) + (";path=/;domain=incruit.com");
+};
+
+var PCMainLoginForm = function(){
+	var loginID = UserIDRetrun();
+	var snsID = jQuery.trim(LoginGetCookie("LUSSns"));
+	var loginType = "";
+
+	if(snsID!=""){
+		loginType = snsID;
+	}else if(loginID!=""){
+		loginType = "incruit";
+	}
+	if (windoc.cookie.indexOf("IsPersonal=Y") < 0 && windoc.cookie.indexOf("IsPersonal=N") < 0) {
+		if(loginType!="" && loginType!="incruit"){
+			jQuery.ajax({
+				url		: "/g_common/bizcommon/v2/loginform-ajax.asp",
+				type	: "POST",
+				dataType : "html",
+				data	: { logintype: loginType, userid: escape(loginID), mode : "wwwmain"},
+				success	: function(data) {
+					jQuery("#loginWrap").html(data);
+					if(data != "" ){
+						jQuery("#idpwd").html(data);
+					}
+					jQuery("#loginPer").html(loginID);
+					jQuery("#txtUserID").val(loginID);
+				}
+			});
+		}
+	}
+};
+
+
+var PCMainLoginFormDef = function(){
+	if (windoc.cookie.indexOf("IsPersonal=Y") < 0 && windoc.cookie.indexOf("IsPersonal=N") < 0) {
+		jQuery.ajax({
+			url		: "/g_common/bizcommon/v2/loginform-ajax.asp",
+			type	: "POST",
+			dataType : "html",
+			data	: { logintype: "wwwmaindef"},
+			success	: function(data) {
+				jQuery("#loginWrap").html(data);
+				try{
+					var LUSID = jQuery.trim(UserIDRetrun());
+					if(LUSID!=""){
+						jQuery("#SaveID").attr("checked",true);
+						jQuery("#txtUserID").val(LUSID);
+					}
+				}catch(e){
+				}
+			}
+		});
+	}
+};
+
+
+var LoginError = function(){
+	setTimeout(function(){if(jQuery("#SnsLoginForm").length>0){}else{jQuery("#error_mng").removeClass("hide");}},1500);
+};
+
+
+var LogoutApp = function(){
+	if (windoc.cookie.indexOf("IsPersonal=Y") > 0) {
+		var result = confirm("로그아웃 하시면 입사지원 활동, 채용정보\n알림을 받으실 수 없습니다.\n로그아웃 하시겠습니까?");
+	} else if (windoc.cookie.indexOf("IsPersonal=N") > 0) {
+		var result = confirm("로그아웃 하시면 채용관리\n알림을 받으실 수 없습니다.\n로그아웃 하시겠습니까?");
+	} else {
+		location.href = G_HOSTNAME_SSL_EDIT + "/login/logoutprocess.asp?gotourl="+ G_HOSTNAME_MOBILE;
+	}
+
+	if (result == true) {
+		location.href = G_HOSTNAME_SSL_EDIT + "/login/logoutprocess.asp?gotourl="+ G_HOSTNAME_MOBILE;
+	}
+};
+
+
+var LoginLayerForm = function(){
+	var isdev = iNcruit.util.GetDeviceType();
+	if(isdev=="mobile"){
+		isdev = "layermobile";
+	}else{
+		isdev = "layerpc";
+	}
+	jQuery.ajax({
+		url		: "/g_common/bizcommon/v2/loginform-ajax.asp",
+		type	: "POST",
+		dataType : "html",
+		data	: { logintype: isdev},
+		success	: function(data) {
+			jQuery("body").append(data);
+			try{
+				var LUSID = jQuery.trim(UserIDRetrun());
+				if(LUSID!=""){
+					jQuery("#SaveID").attr("checked",true);
+					jQuery("label[for='SaveID']").removeClass("off");
+					jQuery("#txtUserID").val(LUSID).removeClass("id");
+				}
+			}catch(e){
+			}
+		}
+	});
+};
+
+var LoginGetCookie = function (name) {
+    var nameStr = name + "=";
+    var nameLen = nameStr.length;
+    var cookieLen = document.cookie.length;
+
+    var i = 0;
+    while (i < cookieLen) {
+        var j = i + nameLen;
+        if (document.cookie.substring(i, j) == nameStr) {
+            var end = document.cookie.indexOf(";", j);
+            end = (end == -1) ? document.cookie.length : end;
+            return unescape(document.cookie.substring(j, end));
+        }
+        i = document.cookie.indexOf(" ", i) + 1;
+        if (i == 0) {
+            break;
+        }
+    }
+};
+
+/* ----------------------------------------------------------------------------
+	LayerLogin
+	iNcruitLayerLogin - 개인전용
+	iNcruitLayerLoginCompany - 기업전용
+ ----------------------------------------------------------------------------*/
+
+var iNcruitLayerLogin = {
+	_template: "<div class=\"cLayer-login \" id=\"LayerLoginWrap\">"
+				+ "\n<div class=\"cLayer-login-wrap\">"
+				+ "\n<form method=\"post\" id=\"g_layer_login_box\">"
+				+ "\n	<div class=\"cLayer-login-container\">"
+				+ "\n		<h3 class=\"cLayer-login-h3\"><strong>개인회원 로그인</strong>이 필요한 서비스입니다.</h3>"
+				+ "\n		<ul class=\"cLayer-login-input-idpw\">"
+				+ "\n			<li>"
+				+ "\n				<input type=\"text\" id=\"txtUserID\" name=\"txtUserID\" class=\"cLayer-login-Input\" autocapitalize=\"off\" placeholder=\"인크루트 아이디 또는 이메일 아이디\" maxlength=\"100\" tabindex=\"1\">"
+				+ "\n				<button type=\"button\" onclick=\"\" class=\"cLayer-login-remove\" style=\"display:none\" id=\"id_cremove\"><span>지우기</span></button>"
+				+ "\n			</li>"
+				+ "\n			<li>"
+				+ "\n				<input type=\"password\" id=\"txtPassword\" name=\"txtPassword\" maxlength=\"20\" class=\"cLayer-login-Input\" placeholder=\"비밀번호\"  tabindex=\"2\">"
+				+ "\n				<button type=\"button\" onclick=\"\" class=\"cLayer-login-remove\" style=\"display:none\" id=\"pw_cremove\"><span>지우기</span></button>"
+				+ "\n				<span class=\"cError hide\" id=\"error_mng\">아이디 또는 비밀번호가 일치하지 않습니다.</span>"
+				+ "\n			</li>"
+				+ "\n			<li class=\"d-flex\" id=\"capse_area\" style=\"display:none\">"
+				+ "\n				<div class=\"cell-1\">"
+				+ "\n					<img src=\""+G_HOSTNAME_SSL_EDIT+"/login/logincaptcha.asp?key=\" id=\"captcha\">"
+				+ "\n				</div>"
+				+ "\n				<div class=\"cell-2\">"
+				+ "\n					<input type=\"button\" value=\"새로고침\" id=\"btnreload\" class=\"cDef-btn\" style=\"cursor:pointer;font-size: small\">"
+				+ "\n				</div>"
+				+ "\n				<div class=\"cell-3\">"
+				+ "\n					<input type=\"text\" id=\"txtcapse\" name=\"txtcapse\" class=\"cInput\" autocapitalize=\"off\" autocomplete=\"off\" placeholder=\"보안문자 입력\" maxlength=\"6\" tabindex=\"4\">"
+				+ "\n				</div>"
+				+ "\n			</li>"
+				+ "\n		</ul>"
+				+ "\n		<div class=\"cLayer-login-save\">"
+				+ "\n			<input type=\"checkbox\" id=\"SaveID\" onclick=\"goCL(this,'18790','edit','아이디저장');\" checked=\"checked\" /><label for=\"SaveID\">아이디저장</label>"
+				+ "\n			<input type=\"checkbox\" id=\"keepLogIn\" onclick=\"goCL(this,'18790','edit','로그인유지');\" /><label for=\"keepLogIn\">로그인 상태 유지</label>"
+				+ "\n		</div>"
+				+ "\n		<button type=\"button\" onclick=\"iNcruitLayerLogin.submit();\" class=\"cLayer-login-cDef-btn on\">로그인</button>"
+				+ "\n		<ul class=\"cLayer-login-links\">"
+				+ "\n			<li><a href=\""+G_HOSTNAME_SSL_EDIT+"/support/searchlogininfo.asp?pageid=L01\" target=\"_blank\" onclick=\"return goCL(this,'18792','edit','아이디찾기');\" class=\"lineAfter\">아이디 찾기</a></li>"
+				+ "\n			<li><a href=\""+G_HOSTNAME_SSL_EDIT+"/support/searchlogininfo.asp?pageid=L02\" target=\"_blank\" onclick=\"return goCL(this,'18792','edit','비밀번호찾기');\" class=\"lineAfter\">비밀번호 찾기</a></li>"
+				+ "\n			<li><a href=\""+G_HOSTNAME_SSL_EDIT+"/entrance/entrancepersonal.asp\" target=\"_blank\" onclick=\"goCL(this,'18790','edit','회원가입');\" class=\"JoinLink\">회원가입</a></li>"
+				+ "\n		</ul>"
+				+ "\n	</div>"
+				+ "\n	<div class=\"cLayer-login-container snslogin\">"
+				+ "\n		<div class=\"cLayer-login-sns-button\">"
+				+ "\n			<h3><span>간편로그인</span></h3>"
+				+ "\n			<ul>"
+				+ "\n				<li><button type=\"button\" id=\"payco_signin_btn\" onclick=\"goCL(this,'18790','edit','간편로그인_페이코');return false;\"><img src=\""+G_HOSTNAME_IMG+"/ui/static/image/edit/sns_login_payco_v2.svg\" alt=\"페이코\" /></button></li>"
+				+ "\n				<li><button type=\"button\" id=\"naver_signin_btn\" onclick=\"goCL(this,'18790','edit','간편로그인_네이버');return false;\"><img src=\""+G_HOSTNAME_IMG+"/ui/static/image/edit/sns_login_naver_v2.svg\" alt=\"네이버\" /></button></li>"
+				+ "\n				<li><button type=\"button\" id=\"kakao_signin_btn\" onclick=\"goCL(this,'18790','edit','간편로그인_카카오톡');return false;\"><img src=\""+G_HOSTNAME_IMG+"/ui/static/image/edit/sns_login_kakao_v2.svg\" alt=\"카카오톡\" /></button></li>"
+				+ "\n				<li><button type=\"button\" id=\"google_signin_btn\" onclick=\"goCL(this,'18790','edit','간편로그인_구글');return false;\"><img src=\""+G_HOSTNAME_IMG+"/ui/static/image/edit/sns_login_google_v2.svg\" alt=\"구글\" /></button></li>"
+				+ "\n				<li><button type=\"button\" id=\"apple_signin_btn\" onclick=\"goCL(this,'18790','edit','간편로그인_애플');return false;\"><img src=\""+G_HOSTNAME_IMG+"/ui/static/image/edit/sns_login_apple_v2.svg\" alt=\"Apple\" /></button></li>"
+				+ "\n				#LastLogin"
+				+ "\n			</ul>"
+				+ "\n		</div>"
+				+ "\n		<button type=\"button\" class=\"cLayer-btnClose\" onclick=\"iNcruitLayerLogin.close();\"><span>닫기</span></button>"
+				+ "\n	</div>"
+				+ "\n	<input type=\"hidden\" name=\"SSL\" value=\"on\">"
+				+ "\n	<input type=\"hidden\" name=\"EncID\" id=\"EncID\">"
+				+ "\n	<input type=\"hidden\" name=\"EncPW\" id=\"EncPW\">"
+				+ "\n	<input type=\"hidden\" name=\"gotoURL\" id=\"gotoURL\" value=\""+document.location+"\">"
+				+ "\n	<input type=\"hidden\" name=\"txtPartnerCode\" value=\"0\">"
+				+ "\n	<input type=\"hidden\" name=\"txtSubDomain\" value=\"www\">"
+				+ "\n	<input type=\"hidden\" name=\"isKeepLogIn\" value=\"Y\">"
+				+ "\n	<input type=\"hidden\" name=\"isPerson\" value=\"Y\">"
+				+ "\n	<input type=\"hidden\" name=\"LoginTry\" id=\"LoginTry\"value=\"0\">"
+				+ "\n	</form>"
+				+ "\n</div>"
+
+	,show: function(strType,strGoToUrl) {
+		var goUrl = document.location;
+
+		if (strGoToUrl != "") {
+			if (strGoToUrl != undefined) {
+				goUrl = strGoToUrl;
+			}
+		}
+		location.href = G_HOSTNAME_SSL_EDIT + "/login/login.asp?gotoURL="+encodeURI(goUrl);
+
+		/* document.domain 이슈로 로그인 페이지로 리다이렉트 처리함
+		//strType : apply(바로지원) , scrap(스크랩) , company(관심기업)
+		var loginhtml = this._template;
+
+		var strLusPerson = jQuery.trim(LoginGetCookie("LUSPERSON"));
+		var strLusSns = jQuery.trim(LoginGetCookie("LUSSns"));
+		var strHtml = "";
+
+		var strLoginTry = 0;
+
+		//자바스크립트에서 Decrypt 처리 못하여 ajax로 로그인 시도 횟수 가져오기
+		jQuery.ajax({
+			url		: "/g_common/bizcommon/v2/loginprocess_Chktry.asp",
+			type	: 'GET',
+			success: function(data) {
+				strLoginTry = data;
+
+				if (strLusPerson == "Y" && strLusSns !="") {
+					if (strLusSns == "payco") {
+						strHtml = "<div class=\"tooltip-text-wrap5\" ><div class=\"tooltip-text\"><span>최근 로그인</span></div></div>";
+					} else if (strLusSns == "naver") {
+						strHtml = "<div class=\"tooltip-text-wrap4\" ><div class=\"tooltip-text\"><span>최근 로그인</span></div></div>";
+					} else if (strLusSns == "kakao") {
+						strHtml = "<div class=\"tooltip-text-wrap3\" ><div class=\"tooltip-text\"><span>최근 로그인</span></div></div>";
+					} else if (strLusSns == "google") {
+						strHtml = "<div class=\"tooltip-text-wrap2\" ><div class=\"tooltip-text\"><span>최근 로그인</span></div></div>";
+					} else if (strLusSns == "apple") {
+						strHtml = "<div class=\"tooltip-text-wrap\" ><div class=\"tooltip-text\"><span>최근 로그인</span></div></div>";
+					}
+
+					if (strHtml != "") {
+						loginhtml = loginhtml.replace("#LastLogin",strHtml);
+					}
+				} else {
+					loginhtml = loginhtml.replace("#LastLogin","");
+				}
+
+				if (jQuery("#LayerLoginWrap").length > 0) {
+					//jQuery('html').addClass("noFlow");
+					jQuery("#g_layer_login_box #error_mng").html("").addClass("hide");
+					jQuery("#LayerLoginWrap").addClass("open");
+				} else {
+					jQuery("body").append(loginhtml);
+					//jQuery('html').addClass("noFlow");
+					jQuery("#LayerLoginWrap").addClass("open");
+				}
+
+				if (strGoToUrl != "") {
+					if (strGoToUrl != undefined) {
+						jQuery("#gotoURL").val(strGoToUrl);
+					}
+				}
+
+				jQuery("#LoginTry").val(strLoginTry);
+
+				if (strLoginTry >= 3 ) {
+					jQuery("#capse_area").show();
+				}
+
+				//ready
+				iNcruitLayerLogin.init();
+			}
+		});
+		*/
+
+		//구글 로그인인 경우 해당 소스를 넣어줘야 작동함.
+		/*if(typeof(login_google) == "function"){
+			if (jQuery("#google_signin_btn").length>0) {
+				login_google();
+			}
+		}*/
+
+	}
+	,close: function() {
+		//jQuery('html').removeClass("noFlow");
+		jQuery("#LayerLoginWrap").removeClass("open");
+	}
+	,submit: function() {
+
+		var $txtId = jQuery("#g_layer_login_box #txtUserID");
+		var $txtPw = jQuery("#g_layer_login_box #txtPassword");
+
+		var $encId = jQuery("#g_layer_login_box #EncID");
+		var $encPw = jQuery("#g_layer_login_box #EncPW");
+
+		var gotoUrl	= jQuery("#gotoURL").val();
+
+		var pattern = /\s/g;
+
+		if (jQuery.trim($txtId.val()) == "") {
+			jQuery("#g_layer_login_box #error_mng").html("아이디를 입력해주세요.");
+			$txtId.val("").focus();
+			jQuery("#g_layer_login_box #error_mng").removeClass('hide');
+			return;
+		}
+
+		if( jQuery($txtId).val().match(pattern) ) {
+			jQuery("#g_layer_login_box #error_mng").html("아이디에 공백이 있습니다. 공백을 제거해주세요.");
+			$txtId.val("").focus();
+			jQuery("#g_layer_login_box #error_mng").removeClass('hide');
+			return;
+		}
+
+		if (jQuery.trim($txtPw.val()) == "") {
+			jQuery("#g_layer_login_box #error_mng").html("비밀번호를 입력해주세요.");
+			$txtPw.val("").focus();
+			jQuery("#g_layer_login_box #error_mng").removeClass('hide');
+			return;
+		}
+
+		if (jQuery.trim($txtPw.val()).length < 8 || jQuery.trim($txtPw.val()).length > 20) {
+			jQuery("#g_layer_login_box #error_mng").html("비밀번호는 영문, 숫자, 특수문자 조합 8~20자 입니다.");
+			$txtPw.val("").focus();
+			jQuery("#g_layer_login_box #error_mng").removeClass('hide');
+			return;
+		}
+
+		if (jQuery("#LoginTry").val()>=3) {
+			if (jQuery('#txtcapse').val().length!=6) {
+				jQuery("#g_layer_login_box #error_mng").html("보안문자 6자를 입력하세요.").removeClass('hide');
+				jQuery('#txtcapse').focus();
+				return;
+			}
+		}
+
+		jQuery("#g_layer_login_box #error_mng").addClass('hide');
+
+		$encId.val(Encrypt(jQuery.trim($txtId.val())));
+		$encPw.val(Encrypt(jQuery.trim($txtPw.val())));
+
+		jQuery("input[name='SSL']", this).val("on");
+
+		//ID 저장
+		if(jQuery("#SaveID").is(":checked")){
+			UserIDSave(jQuery.trim($txtId.val()));
+		}else{
+			UserIDSave("");
+		}
+
+		$txtId.val("");
+		$txtPw.val("");
+
+		jQuery("input[name='isKeepLogIn']", this).val(jQuery("input:checkbox[id=keepLogIn]").attr("checked") ? "Y" : "N");
+
+		var formData = iNcruit.util.FormSerialize(jQuery("#g_layer_login_box"));
+
+		jQuery.ajax({
+			url		: "/g_common/bizcommon/v2/loginprocess_layer.asp",
+			type	: 'POST',
+			data	: formData,
+			success: function(data) {
+				if(data == "Success") {
+					//goAIR('user.signin', 'incruit', '', '');
+
+					//로그인Tab 기록
+					var expires = new Date();
+					expires.setTime(expires.getTime() + (1000*60*60*24*1000));
+					if (window.document.cookie.indexOf("IsPersonal=Y")>0) {
+						document.cookie = "LUSPERSON=Y" + (";expires=" + expires.toGMTString()) + (";path=/;domain=incruit.com");
+					} else if (window.document.cookie.indexOf("IsPersonal=N")>0) {
+						document.cookie = "LUSPERSON=N" + (";expires=" + expires.toGMTString()) + (";path=/;domain=incruit.com");
+					}
+
+					if (gotoUrl != "") {
+						location.href= gotoUrl;
+					} else {
+						location.reload();
+					}
+
+				} else if (data == "TempPassword") {	//임시비번
+
+					location.href= G_HOSTNAME_SSL_EDIT + "/profile/managememinfo.asp?PageId=02&mode=temppassword";
+
+				} else if (data == "ExpireTerm") {	//비밀번호 변경기간 초과시
+
+					location.href= G_HOSTNAME_SSL_EDIT + "/profile/managememinfo.asp?PageId=02&mode=expireterm";
+
+				} else if (data == "Company") {	//기업로그인
+
+					alert("개인회원 전용 서비스입니다");
+
+				} else {
+
+					jQuery("#g_layer_login_box #error_mng").html(data);
+					jQuery("#g_layer_login_box #error_mng").removeClass('hide');
+
+					try{
+						var LUSID = jQuery.trim(UserIDRetrun());
+						if(LUSID!=""){
+							jQuery("#SaveID").attr("checked",true);
+							jQuery("#txtUserID").val(LUSID);
+						}
+					}catch(e){
+					}
+				}
+			}
+		});
+
+	}
+	,init: function() {
+
+		document.domain = "incruit.com";
+
+		//아이디 로딩
+		try{
+			var LUSID = jQuery.trim(UserIDRetrun());
+			if(LUSID!=""){
+				jQuery("#g_layer_login_box #SaveID").attr("checked",true);
+				jQuery("#g_layer_login_box #txtUserID").val(LUSID);
+			}
+		}catch(e){
+		}
+
+		// 인풋삭제버튼
+		jQuery(document).on("click", ".cLayer-login-remove", function(e){
+			jQuery(this).prev().val('').focus();
+		});
+		// 삭제버튼노출조건
+		jQuery(document).on("click", ".cLayer-login-input-idpw li input", function(e){
+			jQuery(this).keyup(function(){
+				if(jQuery(this).val()==''){
+					jQuery(this).next(".cLayer-login-remove").hide();
+				}
+				else{
+					jQuery(this).next(".cLayer-login-remove").show();
+				}
+			});
+		});
+		jQuery(document).on("click", ".cLayer-login-input-idpw li .cLayer-login-remove", function(e){
+			jQuery(this).prev("input").val('').focus();
+			jQuery(this).hide();
+		});
+
+		jQuery(document).on("click", "label[for='keepLogIn']", function(e){
+			e.preventDefault();
+
+			var selBool;
+			selBool = jQuery(this).prev().attr("checked") ? false : true;
+
+			if(selBool) {
+				alert("개인 정보 보호를 위해 개인 기기에서만 사용해주세요.");
+			}
+
+			jQuery(this).prev().attr("checked", selBool);
+		});
+
+		jQuery(document).on("click", "body", function(e){
+			var focusEle = document.activeElement.id;
+
+			if (focusEle =="txtUserID") {
+				jQuery("#pw_cremove").hide();
+			} else if (focusEle == "txtPassword") {
+				jQuery("#id_cremove").hide();
+			} else {
+				jQuery(".cLayer-login-remove").hide();
+			}
+
+		});
+
+		jQuery(document).on("focus", ".cLayer-login-input-idpw li input", function(e){
+			if (jQuery(this).attr("id")=="txtUserID") {
+				jQuery("#pw_cremove").hide();
+			} else if (jQuery(this).attr("id")=="txtPassword") {
+				jQuery("#id_cremove").hide();
+			}
+		});
+
+		//끝자리 공백제거
+		jQuery(document).on("keyup", "#txtUserID", function(e){
+			var pattern = /\s/g;
+			if( jQuery("#txtUserID").val().match(pattern) ) {
+				jQuery("#txtUserID").val(jQuery("#txtUserID").val().trim());
+			}
+		});
+
+
+		jQuery(document).on("click", "#btnreload", function(e){
+			var d = Math.floor(+ new Date() / 1000);
+			var src = jQuery("#captcha").attr("src");
+			if(src.indexOf('&d=') != -1) {
+				var resrc = src.replace(/\&d=([0-9]+)/ig,'&d='+d);
+			} else {
+				var resrc = src + '&d='+d ;
+			}
+			jQuery("#captcha").attr("src",resrc);
+		});
+
+		document.addEventListener('keydown', (event) => {
+			if (event.keyCode==13) {
+				if (jQuery("#LayerLoginWrap").hasClass("open")) {
+					iNcruitLayerLogin.submit();
+				}
+			}
+		});
+
+		if (iNcruit.domain.G_SERVER_SET == "beta") {
+			gappId = "512569068760-2uv23bgl80l8br33mhf4loua74rm7tqk.apps.googleusercontent.com";
+		} else if (iNcruit.domain.G_SERVER_SET == "semi") {
+			gappId = "512569068760-8bmpn3mv54v7msgl6h9josji90gqvpr2.apps.googleusercontent.com";
+		} else if (iNcruit.domain.G_SERVER_SET == "") {
+			gappId = "512569068760-57qtqrnos6c2b5k0ep2tbo7bkip2fce4.apps.googleusercontent.com";
+		}
+
+		google.accounts.id.initialize({
+			client_id: gappId,
+			callback: signInWithGoogle
+		});
+
+		google.accounts.id.renderButton(
+			document.getElementById('google_signin_btn'),
+			{
+				type: "icon",
+				shape: "circle",
+				theme: "outline",
+				size: "large",
+				click_listener: googleCl
+			}
+		);
+
+		//FingerPrint 기록
+		iNcruit.Component.FingerPrint();
+
+	}
+};
+
+var iNcruitLayerLoginCompany = {
+	_template: "<div class=\"cNewLoginLayer\" id=\"LayerLoginCompanyWrap\">"
+				+ "\n	<div class=\"cLogin-container\">"
+				+ "\n		<form method=\"post\" id=\"g_layer_login_box_company\">"
+				+ "\n		<div class=\"cLogin-contents\">"
+				+ "\n			<div class=\"cLogin-center\">"
+				+ "\n				<h3 class=\"cLogin-h3\"><span>기업회원 로그인</span>이 필요한 서비스입니다.</h3>"
+				+ "\n			</div>"
+				+ "\n			<div class=\"joinLayer_txt_Wrap\">"
+				+ "\n				<div class=\"jTxt_input_ct\">"
+				+ "\n					<dl>"
+				+ "\n						<dd class=\"jTxt_idWrap\">"
+				+ "\n							<input type=\"text\" id=\"txtUserID\" name=\"txtUserID\" autocapitalize=\"off\" placeholder=\"인크루트 아이디\" maxlength=\"100\" tabindex=\"1\">"
+				+ "\n							<button type=\"button\" onclick=\"\" class=\"cRemove\" style=\"display:none\" id=\"id_cremove\"><span>지우기</span></button>"
+				+ "\n						</dd>"
+				+ "\n					</dl>"
+				+ "\n					<dl>"
+				+ "\n						<dd class=\"jTxt_pwWrap\">"
+				+ "\n							<input type=\"password\" id=\"txtPassword\" name=\"txtPassword\" maxlength=\"20\" placeholder=\"비밀번호\"  tabindex=\"2\">"
+				+ "\n							<button type=\"button\" onclick=\"\" class=\"cRemove\" style=\"display:none\" id=\"pw_cremove\"><span>지우기</span></button>"
+				+ "\n							<span class=\"input_error_t hide\" id=\"error_mng\">아이디 또는 비밀번호가 일치하지 않습니다.</span>"
+				+ "\n						</dd>"
+				+ "\n					</dl>"
+				+ "\n					<dl id=\"capse_area\" style=\"display:none\">"
+				+ "\n						<dd class=\"jTxt_pwWrap d-flex\">"
+				+ "\n						<div class=\"cell-1\">"
+				+ "\n							<img src=\""+G_HOSTNAME_SSL_EDIT+"/login/logincaptcha.asp?key=\" id=\"captcha\">"
+				+ "\n						</div>"
+				+ "\n						<div class=\"cell-2\">"
+				+ "\n							<input type=\"button\" value=\"새로고침\" id=\"btnreload\" class=\"cDef-btn\" style=\"cursor:pointer;font-size: small\">"
+				+ "\n						</div>"
+				+ "\n						<div class=\"cell-3\">"
+				+ "\n							<input type=\"text\" id=\"txtcapse\" name=\"txtcapse\" class=\"cInput\" autocapitalize=\"off\" autocomplete=\"off\" placeholder=\"보안문자 입력\" maxlength=\"6\" tabindex=\"3\">"
+				+ "\n						</div>"
+				+ "\n						</dd>"
+				+ "\n					</dl>"
+				+ "\n				</div>"
+				+ "\n			</div>"
+				+ "\n			<div class=\"cLogin-save2\">"
+				+ "\n				<input type=\"checkbox\" id=\"SaveID\" onclick=\"goCL(this,'18790','edit','아이디저장');\" checked=\"checked\" /><label for=\"SaveID\">아이디저장</label>"
+				+ "\n				<input type=\"checkbox\" id=\"keepLogIn\" onclick=\"goCL(this,'18790','edit','로그인유지');\" /><label for=\"keepLogIn\">로그인 상태 유지</label>"
+				+ "\n			</div>"
+				+ "\n			<div class=\"cLogin-btns\">"
+				+ "\n				<button type=\"button\" class=\"cLogin-btn on\" onclick=\"iNcruitLayerLoginCompany.submit();\"><span>로그인</span></button>"
+				+ "\n			</div>"
+				+ "\n			<ul class=\"cLogin-links in-tooltip\">"
+				+ "\n				<li><a href=\"https://edit.incruit.com/support/searchlogininfo.asp\" onclick=\"goCL(this,'18790','edit','아이디찾기');\" class=\"lineAfter\" target=\"_blank\">아이디 찾기</a></li>"
+				+ "\n				<li class=\"txtBar_left\"><a href=\"https://edit.incruit.com/support/searchlogininfo.asp?pageid=L02\" onclick=\"goCL(this,'18790','edit','비밀번호찾기');\" class=\"lineAfter\" target=\"_blank\">비밀번호 찾기</a></li>"
+				+ "\n				<li class=\"txtBar_left\"><a href=\"https://edit.incruit.com/entrance/entrancebiz.asp\" onclick=\"goCL(this,'18790','edit','회원가입');\" class=\"JoinLink\" id=\"joinlink\" target=\"_blank\">회원가입</a>"
+				+ "\n					<div class=\"tooltip-text-wrap\">"
+				+ "\n						<div class=\"tooltip-text\" id=\"tooltip_area\">"
+				+ "\n							<span>유료 상품 할인 쿠폰 제공!</span>"
+				+ "\n						</div>"
+				+ "\n					</div>"
+				+ "\n				</li>"
+				+ "\n			</ul>"
+				+ "\n			<div class=\"cLogin-go\"><a href=\"https://help.incruit.com/faq/faqlist.asp?bno=c&amp;mno=01&amp;kw_group=2\" target=\"_blank\"><span>로그인이 안되시나요?</span></a></div>"
+				+ "\n		</div>"
+				+ "\n		<button type=\"button\" class=\"cLogin-btnClose\" onclick=\"iNcruitLayerLoginCompany.close();\"><span>닫기</span></button>"
+				+ "\n	<input type=\"hidden\" name=\"SSL\" value=\"on\">"
+				+ "\n	<input type=\"hidden\" name=\"EncID\" id=\"EncID\">"
+				+ "\n	<input type=\"hidden\" name=\"EncPW\" id=\"EncPW\">"
+				+ "\n	<input type=\"hidden\" name=\"gotoURL\" id=\"gotoURL\"value=\""+document.location+"\">"
+				+ "\n	<input type=\"hidden\" name=\"txtPartnerCode\" value=\"0\">"
+				+ "\n	<input type=\"hidden\" name=\"txtSubDomain\" value=\"www\">"
+				+ "\n	<input type=\"hidden\" name=\"isKeepLogIn\" value=\"Y\">"
+				+ "\n	<input type=\"hidden\" name=\"isPerson\" value=\"N\">"
+				+ "\n	<input type=\"hidden\" name=\"LoginTry\" id=\"LoginTry\"value=\"0\">"
+				+ "\n	</form>"
+				+ "\n	</div>"
+				+ "\n</div>"
+	,show: function(goToUrl) {
+
+		var loginhtml = this._template;
+
+		var strLoginTry = 0;
+
+		//자바스크립트에서 Decrypt 처리 못하여 ajax로 로그인 시도 횟수 가져오기
+		jQuery.ajax({
+			url		: "/g_common/bizcommon/v2/loginprocess_Chktry.asp",
+			type	: 'GET',
+			success: function(data) {
+				strLoginTry = data;
+
+				jQuery('html').addClass("noFlow");
+
+				if (jQuery("#LayerLoginCompanyWrap").length > 0) {
+					jQuery("#LayerLoginCompanyWrap").addClass("open");
+				} else {
+					jQuery("body").append(loginhtml);
+					jQuery("#LayerLoginCompanyWrap").addClass("open");
+				}
+
+				if (goToUrl != "") {
+					jQuery("#gotoURL").val(goToUrl);
+				}
+
+				intRndnum = Math.trunc(Math.random() * 4 + 1);
+				switch (intRndnum) {
+					case 1 :
+						tabTxt = "<span>유료 상품 할인 쿠폰 제공!</span>";
+						break;
+					case 2 :
+						tabTxt = "<span>첫 공고 등록하면 인재검색 10건 무료!</span>";
+						break;
+					case 3 :
+						tabTxt = "<span>첫 공고 등록하면 랭크업 효과 무료!</span>";
+						break;
+					case 4 :
+						tabTxt = "<span>가입당일 채용광고 결제시 30% 추가 할인!</span>";
+						break;
+				}
+				jQuery("#tooltip_area").html(tabTxt);
+
+				jQuery("#LoginTry").val(strLoginTry);
+
+				if (strLoginTry >= 3 ) {
+					jQuery("#capse_area").show();
+				}
+
+				//ready
+				iNcruitLayerLoginCompany.init();
+			}
+		});
+	}
+	,close: function() {
+		jQuery('html').removeClass("noFlow");
+		jQuery("#LayerLoginCompanyWrap").removeClass("open");
+	}
+	,submit: function() {
+
+		var $txtId = jQuery("#g_layer_login_box_company #txtUserID");
+		var $txtPw = jQuery("#g_layer_login_box_company #txtPassword");
+
+		var $encId = jQuery("#g_layer_login_box_company #EncID");
+		var $encPw = jQuery("#g_layer_login_box_company #EncPW");
+
+		var pattern = /\s/g;
+
+		if (jQuery.trim($txtId.val()) == "") {
+			jQuery("#g_layer_login_box_company #error_mng").html("아이디를 입력해주세요.");
+			$txtId.val("").focus();
+			jQuery("#g_layer_login_box_company #error_mng").removeClass('hide');
+			return;
+		}
+
+		if( jQuery($txtId).val().match(pattern) ) {
+			jQuery("#g_layer_login_box_company #error_mng").html("아이디에 공백이 있습니다. 공백을 제거해주세요.");
+			$txtId.val("").focus();
+			jQuery("#g_layer_login_box_company #error_mng").removeClass('hide');
+			return;
+		}
+
+		if (jQuery.trim($txtPw.val()) == "") {
+			jQuery("#g_layer_login_box_company #error_mng").html("비밀번호를 입력해주세요.");
+			$txtPw.val("").focus();
+			jQuery("#g_layer_login_box_company #error_mng").removeClass('hide');
+			return;
+		}
+
+		if (jQuery.trim($txtPw.val()).length < 8 || jQuery.trim($txtPw.val()).length > 20) {
+			jQuery("#g_layer_login_box_company #error_mng").html("비밀번호는 영문, 숫자, 특수문자 조합 8~20자 입니다.");
+			$txtPw.val("").focus();
+			jQuery("#g_layer_login_box_company #error_mng").removeClass('hide');
+			return;
+		}
+
+		jQuery("#g_layer_login_box_company #error_mng").addClass('hide');
+
+		$encId.val(Encrypt(jQuery.trim($txtId.val())));
+		$encPw.val(Encrypt(jQuery.trim($txtPw.val())));
+
+		jQuery("input[name='SSL']", this).val("on");
+
+		//ID 저장
+		if(jQuery("#SaveID").is(":checked")){
+			UserIDSave(jQuery.trim($txtId.val()));
+		}else{
+			UserIDSave("");
+		}
+
+		$txtId.val("");
+		$txtPw.val("");
+
+		jQuery("input[name='isKeepLogIn']", this).val($("input:checkbox[id=keepLogIn]").attr("checked") ? "Y" : "N");
+
+		var formData = iNcruit.util.FormSerialize(jQuery("#g_layer_login_box_company"));
+
+		jQuery.ajax({
+			url		: "/g_common/bizcommon/v2/loginprocess_layer.asp",
+			type	: 'POST',
+			data	: formData,
+			success: function(data) {
+				if(data == "Success") {
+					//goAIR('user.signin', 'incruit', '', '');
+
+					//로그인Tab 기록
+					var expires = new Date();
+					expires.setTime(expires.getTime() + (1000*60*60*24*1000));
+					if (window.document.cookie.indexOf("IsPersonal=Y")>0) {
+						document.cookie = "LUSPERSON=Y" + (";expires=" + expires.toGMTString()) + (";path=/;domain=incruit.com");
+					} else if (window.document.cookie.indexOf("IsPersonal=N")>0) {
+						document.cookie = "LUSPERSON=N" + (";expires=" + expires.toGMTString()) + (";path=/;domain=incruit.com");
+					}
+
+					var gotoURL = jQuery("#gotoURL").val()
+
+					if (gotoURL != "" ) {
+						location.href=gotoURL;
+					} else {
+						location.reload();
+					}
+
+				} else if (data == "TempPassword") {	//임시비번
+
+					location.href= G_HOSTNAME_SSL_EDIT + "/profile/managememinfo.asp?PageId=02&mode=temppassword";
+
+				} else if (data == "ExpireTerm") {	//비밀번호 변경기간 초과시
+
+					location.href= G_HOSTNAME_SSL_EDIT + "/profile/managememinfo.asp?PageId=02&mode=expireterm";
+
+				} else if (data == "Person") {	//기업로그인
+
+					alert("기업회원 전용 서비스입니다");
+
+				} else {
+
+					jQuery("#g_layer_login_box_company #error_mng").html(data);
+					jQuery("#g_layer_login_box_company #error_mng").removeClass('hide');
+
+					try{
+						var LUSID = jQuery.trim(UserIDRetrun());
+
+						if(LUSID!=""){
+							jQuery("#SaveID").attr("checked",true);
+							jQuery("#txtUserID").val(LUSID);
+						}
+					}catch(e){
+					}
+				}
+			}
+		});
+
+	}
+	,init: function() {
+
+		//아이디 로딩
+		try{
+			var LUSID = jQuery.trim(UserIDRetrun());
+
+			if(LUSID!=""){
+				jQuery("#SaveID").attr("checked",true);
+				jQuery("#g_layer_login_box_company #txtUserID").val(LUSID);
+			}
+		}catch(e){
+		}
+
+		// 인풋삭제버튼
+		jQuery(document).on("click", ".cRemove", function(e){
+			jQuery(this).prev().val('').focus();
+		});
+		// 삭제버튼노출조건
+		jQuery(document).on("click", ".jTxt_input_ct dd input", function(e){
+			jQuery(this).keyup(function(){
+				if(jQuery(this).val()==''){
+					jQuery(this).next(".cRemove").hide();
+				}
+				else{
+					jQuery(this).next(".cRemove").show();
+				}
+			});
+		});
+		jQuery(document).on("click", ".jTxt_input_ct dd .cRemove", function(e){
+			jQuery(this).prev("input").val('').focus();
+			jQuery(this).hide();
+		});
+
+		jQuery(document).on("click", "label[for='keepLogIn']", function(e){
+			e.preventDefault();
+
+			var selBool;
+			selBool = jQuery(this).prev().attr("checked") ? false : true;
+
+			if(selBool) {
+				alert("개인 정보 보호를 위해 개인 기기에서만 사용해주세요.");
+			}
+
+			jQuery(this).prev().attr("checked", selBool);
+		});
+
+		jQuery(document).on("click", "body", function(e){
+			var focusEle = document.activeElement.id;
+
+			if (focusEle =="txtUserID") {
+				jQuery("#pw_cremove").hide();
+			} else if (focusEle == "txtPassword") {
+				jQuery("#id_cremove").hide();
+			} else {
+				jQuery(".cRemove").hide();
+			}
+
+		});
+
+		jQuery(document).on("focus", ".jTxt_input_ct dd input", function(e){
+			if (jQuery(this).attr("id")=="txtUserID") {
+				jQuery("#pw_cremove").hide();
+			} else if (jQuery(this).attr("id")=="txtPassword") {
+				jQuery("#id_cremove").hide();
+			}
+		});
+
+		//끝자리 공백제거
+		jQuery(document).on("keyup", "#txtUserID", function(e){
+			var pattern = /\s/g;
+			if( jQuery("#txtUserID").val().match(pattern) ) {
+				jQuery("#txtUserID").val(jQuery("#txtUserID").val().trim());
+			}
+		});
+
+		jQuery(document).on("click", "#btnreload", function(e){
+			var d = Math.floor(+ new Date() / 1000);
+			var src = jQuery("#captcha").attr("src");
+			if(src.indexOf('&d=') != -1) {
+				var resrc = src.replace(/\&d=([0-9]+)/ig,'&d='+d);
+			} else {
+				var resrc = src + '&d='+d ;
+			}
+			jQuery("#captcha").attr("src",resrc);
+		});
+
+		document.addEventListener('keydown', (event) => {
+			if (event.keyCode==13) {
+				if (jQuery("#LayerLoginCompanyWrap").hasClass("open")) {
+					iNcruitLayerLoginCompany.submit();
+				}
+			}
+		});
+
+		//FingerPrint 기록
+		iNcruit.Component.FingerPrint();
+
+	}
+};
+/* ----------------------------------------------------------------------------
+	LayerLogin
+ ----------------------------------------------------------------------------*/
+
+
+jQuery.IPChk||(function($){
+	jQuery.IPChk={
+		Country:function(){
+			return jQuery.ajax({type:"post",url:"/g_common/bizcommon/v2/ip_addr_chk.asp",async:false,dataType:"json",data:{}});
+		}
+	};
+})(jQuery);
+
+
+function fn_NewletterReg(){
+
+	var goFlag = true;
+	var rcp8, rcp9;
+
+	if( jQuery("#email").val()=="") {
+		alert("이메일을 확인해주세요.");
+		jQuery("#email").focus();
+		goFlag = false;
+		return;
+	}
+	else{
+		if(jQuery("#email").val().isEmail() == false) {
+			alert("이메일을 확인해주세요.");
+			jQuery("#email").focus();
+			goFlag = false;
+			return;
+		}
+	}
+
+	if( (jQuery("#NewLetterEntry").is(":checked") == false ) && (jQuery("#NewLetterExper").is(":checked") == false ) ){
+		alert("신입/경력 공채소식지를 선택해주세요.");
+		jQuery("#NewLetterEntry").focus();
+		goFlag = false;
+		return;
+	}
+
+	if(jQuery("#cNewLetAgree1").is(":checked") == false ){
+		alert("개인정보 수집에 동의해주세요.");
+		jQuery("#cNewLetAgree1").focus();
+		goFlag = false;
+		return;
+	}
+
+	if( jQuery("#cNewLetAgree2").is(":checked") == false ){
+		alert("[채용정보 뉴스레터(비회원 신입/경력 공채소식지)] 광고성 정보 수신에 동의해주세요");
+		jQuery("#cNewLetAgree2").focus();
+		goFlag = false;
+		return;
+	}
+
+	if(jQuery("#NewLetterEntry").is(":checked")) rcp8 = "8";
+	if(jQuery("#NewLetterExper").is(":checked")) rcp9 = "9";
+
+	if(goFlag) {
+		jQuery.ajax({
+			url		: "/g_common/bizcommon/v2/inc_job_email_ajax.asp",
+			type	: "POST",
+			dataType : "html",
+			data	: {   Act : "nonmemnewsletter"
+						, email: jQuery("#email").val()
+						, rcp8: rcp8
+						, rcp9: rcp9
+						, isM : jQuery("#isM").val()
+			},
+			success	: function(data) {
+				if(data == "수신중"){
+					alert("이미 공채소식지 수신 중입니다.");
+					return;
+				}
+				else {
+					alert("확인 메일이 발송되었습니다. \n24시간 내에 발송된 메일 내에 구독 버튼을 눌러 완료해주세요.");
+					return;
+				}
+			}
+		});
+	}
+
+}
+
+(function(){var FingerPrint = iNcruit.cookie.GetCookie("incfp");if (FingerPrint == "" ) {iNcruit.Component.FingerPrint();}})();
+/*
+	USER Info
+*/
+(function(){var userinfo = iNcruit.cookie.GetCookie("incUInfo");var arrUserInfo = _inc.cookie.GetCookie("incUinfo").split("&");for (var i=0;i<arrUserInfo.length;i++) { var item = arrUserInfo[i].split("="); if (item.length ==2) {var key = item[0], value = item[1];iNcruit.user[key] = value;}}})();
+//로그인 관련 - End
+
+/*
+	Common Lib Lazy Loading
+	이 아래쪽으로는 소스를 추가하지 마세요.
+*/
+(function() {var as = document.createElement('script'); as.type = 'text/javascript'; as.async = true; as.src = '//s.incru.it/gjs/lz.min.js'; var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(as, s); })();
+
+

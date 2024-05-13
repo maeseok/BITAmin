@@ -1,0 +1,332 @@
+﻿var notiscroll = false;			// 모바일웹 스크롤시 알림레이어 작동(false:작동안함, true:작동함)
+
+var NotiTemplate = {
+	"default" : {
+		addclass: 'foryou',
+		animate: {
+			animate: true,
+			in_class: "slideInDown",
+			out_class: "slideOutUp"
+		},
+		hide: true,
+		delay: 8000,
+		icon: false,
+		buttons: {closer_hover:false},
+		history: {
+			history: false
+		}
+	},
+	"FORYOU" : {
+		addclass : "foryou",
+		icon : "incruit-info",
+		animate: {
+			animate: true,
+			in_class: "slideInDown",
+			out_class: "slideOutUp"
+		},
+		hide: true,
+		delay: 8000,
+		buttons: {closer_hover:false},
+		history: {
+			history: false
+		}
+	},
+	"FORYOU_M" : {
+		addclass : "foryou_m",
+		icon : "incruit-info",
+		animate: {
+			animate: true,
+			in_class: 'slideInDown',
+			out_class: 'slideOutUp'
+		},
+		hide: true,
+		delay: 8000,
+		buttons: {closer_hover:false},
+		history: {
+			history: false
+		}
+	}
+}
+
+function pnotiTest() {
+	if (_inc.URL.get("notitest") == "true" && typeof PNotify != "undefined") {
+		var _notiTemplate = window.NotiTemplate["FORYOU" + (_inc.util.IsMobile() == true ? "_M":"")];
+		var link = "http://" + _inc.d.G_SERVER_SET + "www.incruit.com";
+		var notioption = jQuery.extend(_notiTemplate, {
+			title: "알림", 
+			text:"<a href=\"" + link + "\" target=\"_blank\" >[인크루트] 2016년 하반기 공채</a>",
+			link: link
+		});
+		if (typeof window.TransitionEvent == "undefined") {
+			notioption.animate.animate = false;
+		}
+
+		window.notice3 = new PNotify(notioption);
+		
+		notice3.get().css("cursor", "pointer").click(function(e) {
+			if (jQuery(e.target).is('.ui-pnotify-closer *, .ui-pnotify-sticker *')) {
+				e.preventDefault();
+				notice3.remove();
+				return;
+			}
+
+			if (notice3.options.link != undefined) {
+				window.open(link,"_blank");
+				notice3.remove();
+			}
+		});
+	}
+}
+
+
+
+jQuery(document).ready(function() {
+
+	// 모바일웹 알림레이어 작동시작
+	notiscroll = true;
+
+	// Noti Event 정의
+	if (!_inc.util.IsApp() && _inc.login.IsLogin()) {
+		if(_inc.util.IsMobile()){	
+			/*
+			new _inc.Component.PNotify().load(function() {
+				// 페이지 스크롤시
+				_inc.Component.PNotify.IsScroll = true;
+				jQuery(window).bind("scroll", function() {
+					if (_inc.Component.PNotify.IsScroll) {			
+						_inc.Component.PNotify.IsScroll = false;
+						fnCreateNoti({
+							complete:function() {
+								// 스크를 로딩 재 활성화
+								setTimeout(function() {
+									_inc.Component.PNotify.IsScroll = true;
+								}, 15000);
+							}
+						});
+					}
+				});
+			});*/
+
+			// 스크롤시에만 1번 실행하도록 해야하는데 어케해야하나.. 스크롤시 아래 실행 후 특정 플래그를 false로 만들어 해당 시간까진 실행하지 않도록 해야하는 뭔가가 있어야 할듯
+			$(window).scroll( function(){
+				// 공지 작동일때 작동 중지 후 15초 뒤 다시 작동시작하도록 함
+				if (notiscroll == true){
+					notiscroll = false;
+					
+					//   숨겨져 있을때만 실행
+					if (jQuery("#cRecommended_Noti_Layer_M").is(':visible')== false){
+						fn_createNoti_M();
+					}
+					
+					// 해당 초 뒤에 다시 스크롤 이벤트 활성화
+					setTimeout(function() {
+						notiscroll = true;
+					  }, 15000);
+				}
+			});
+
+		}else{
+			fn_createNoti_PC();
+		}
+	} 
+});
+
+function fnCreateNoti(_option) {
+
+	var defaultOption = {
+		success : function() {},
+		complete : function() {}
+	};
+
+	_inc.Component.PNotify.option = jQuery.extend(defaultOption, _option);	
+	
+	PNotify.prototype.options.delay = 5000;
+
+	jQuery.ajax({
+		url : "/g_common/bizcommon/alarminfo_ajax.asp",
+		data : {req:"getalarm", size: _inc.util.IsMobile() == true ? "1" : "3"},
+		dataType : "json",
+		success : function(data) {
+
+			if (data.Count > 0) {
+				var itemlist = data.ResultSet;			
+
+				for (var i= 0; i<itemlist.length; i++) {
+					var item = itemlist[i];
+					var link  = _inc.d.TransDomainURL(item.link);
+
+					var _notiTemplate = window.NotiTemplate["FORYOU" + (_inc.util.IsMobile() == true ? "_M":"")] !== undefined ? window.NotiTemplate["FORYOU" + (_inc.util.IsMobile() == true ? "_M":"")] : window.NotiTemplate["default"];
+
+					var notioption = jQuery.extend(_notiTemplate, {
+						title: "알림", 
+						text:"<a id=\"notice_" + item.seq + "\" href=\"" + link + "\" target=\"_blank\" >" + item.cont + "</a>",
+						link: link
+					});
+					console.log(notioption);
+					var notice = new PNotify(notioption);
+
+					notice.get().css("cursor", "pointer").click(function(e) {
+						if (jQuery(e.target).is('.ui-pnotify-closer *, .ui-pnotify-sticker *')) {
+							notice.remove();
+							return;
+						}
+
+
+						if (notice.options.link != undefined) {
+							window.open(link,"_blank");
+							notice.remove();
+						}
+					});
+
+					// End Noti
+
+				}
+			}
+			_inc.Component.PNotify.option.success();
+		},
+		error : function() {
+		},
+		complete : function() {
+			_inc.Component.PNotify.option.complete();
+		}
+	});
+
+}
+
+// PC 알림 노출 방식 변경
+function fn_createNoti_PC(){
+	jQuery.ajax({
+		url : "/g_common/bizcommon/alarminfo_ajax.asp",
+		data : {req:"getalarm"+(_inc.URL.param.alarmtest=="true"?"_test":""), size: _inc.util.IsMobile() == true ? "1" : "3"},
+		dataType : "json",
+		success : function(data) {
+
+			if(jQuery(".cRecommended_Noti_Layer").length == 0){	
+				if (data.Count > 0) {
+					var itemlist = data.ResultSet;	
+					var _html = "<div class=\"cRecommended_Noti_Layer\" style=\"display:none;\"><h3>"+data.MemNm+"님에게 <strong>딱 맞는<br />공고</strong>를 찾았어요!</h3><ul>";
+					for (var i= 0; i<itemlist.length; i++) {
+						var item = itemlist[i];
+						var link  = _inc.d.TransDomainURL(item.link);
+						
+						var title = "알림";
+						
+						switch(item.alarmid){
+							case "P01":
+								title = "회원님에게 관심있는 기업이에요!"
+								break;
+							case "P84":
+								title = "추천받기 알림"
+								break;
+							case "Y02":
+								title = "이 공고 찾고 계셨나요?"
+								break;
+							case "Y03":
+								title = "당신을 위한"
+								break;
+							case "Y04":
+								title = "혹시, 이 공고 놓치지 않았나요?"
+								break;
+							case "C21":
+								title = "추천인재 알림"
+								break;
+							case "C24":
+								title = "공고 유지 확인 안내"
+								break;
+							default:
+								title = "알림"
+								break;
+						}
+						
+						_html += "<li><a href=\""+link.replace("http://", "https://")+"\"><em>["+title+"]</em><strong>"+item.cont+"</strong><span>더보기</span></a></li>";
+					}
+					_html += "</ul></div>";
+					jQuery("body").append(_html);
+					jQuery(".cRecommended_Noti_Layer").show();
+					jQuery(".cRecommended_Noti_Layer li:nth-child(1)").delay(0).slideDown(300).delay(3500).slideUp(600);
+					jQuery(".cRecommended_Noti_Layer li:nth-child(2)").delay(200).slideDown(300).delay(3700).slideUp(600);
+					jQuery(".cRecommended_Noti_Layer li:nth-child(3)").delay(400).slideDown(300).delay(3900).slideUp(600);
+					jQuery(".cRecommended_Noti_Layer li:nth-child(4)").delay(600).slideDown(300).delay(4100).slideUp(600);
+
+					jQuery(".cRecommended_Noti_Layer").delay(5000).fadeOut(600);
+				}
+			}
+		},
+		error : function() {
+		},
+		complete : function() {
+		}
+	});
+}
+
+
+
+
+// M 알림 노출 방식 변경
+function fn_createNoti_M(){
+	jQuery.ajax({
+		url : "/g_common/bizcommon/alarminfo_ajax.asp",
+		data : {req:"getalarm"+(_inc.URL.param.alarmtest=="true"?"_test":""), size: _inc.util.IsMobile() == true ? "1" : "3"},
+		dataType : "json",
+		success : function(data) {
+
+			var _html = "";
+
+			// 알람 div가 없다면 생성
+			if(jQuery("#cRecommended_Noti_Layer_M").length == 0){	
+				_html = "<div id=\"cRecommended_Noti_Layer_M\" style=\"display:none;\">";
+			}
+			// 알람 div가 있다면 기존알람 지우고 계속
+			else {
+				jQuery("#cRecommended_Noti_Layer_M").html("");
+				_html = "";
+			}
+
+			_html+= 	"<div class='alram_top_noti'>";
+
+			if (data.Count > 0) {
+				var itemlist = data.ResultSet;	
+
+				for (var i= 0; i<itemlist.length; i++) {
+					var item = itemlist[i];
+					var link  = _inc.d.TransDomainURL(item.link);
+									
+					_html+= 		"<div class='noti_inner'>";
+					_html+= 			"<div class='inner_box'>";
+					_html+=					"<a id=\"notice_" + item.seq + "\" href=\"" + link.replace("http://", "https://") + "\" target=\"_blank\" >" + item.cont + "</a>";
+					_html+= 			"</div>";
+					_html+= 			"<span class='inner_box_arrow_top'></span>";
+					_html+= 		"</div>";
+				}
+				_html+= 	"</div>";
+				
+				// 알람 div가 없다면 div를 생성했기에 </div> 닫기 추가 및 body에 알람 append
+				if(jQuery("#cRecommended_Noti_Layer_M").length == 0){	//  "<div id=\"cRecommended_Noti_Layer_M\" style=\"display:none;\">"
+					_html += "</div>";
+					jQuery("body").append(_html);
+
+					// 상단 알림 창 외부영역 클릭 시 닫기 이벤트 설정(해당 이벤트는 cRecommended_Noti_Layer_M div 생성시에만 1번 호출하면 됨)
+					$("#cRecommended_Noti_Layer_M").mouseup(function (e){
+						var alram_notiPop = $(".alram_top_noti");
+						if(alram_notiPop.length > 0){
+							alram_notiPop.stop(); 		// 외부영역 클릭시 아래 5초 뒤 fadeOut 때문에 아래 fadeOut가 바로 작동하지 않는다. 따라서 이전의 모든 명령 중지시킨 후 fadeOut 시킴
+							alram_notiPop.fadeOut();
+						}
+					});
+
+				// 알람 div가 있다면 기존 알람 div에 알림 append
+				} else {
+					jQuery("#cRecommended_Noti_Layer_M").append(_html);
+				}
+
+				jQuery("#cRecommended_Noti_Layer_M").show();
+				jQuery(".alram_top_noti").delay(5000).fadeOut(600);	// 알림 페이드아웃
+				jQuery("#cRecommended_Noti_Layer_M").delay(6000).hide(600);	// 알림을 감싸고 있는 레이어 6초 뒤 숨김
+			}
+		},
+		error : function() {
+		},
+		complete : function() {
+		}
+	});
+}

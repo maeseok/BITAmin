@@ -1,0 +1,581 @@
+jQuery(document).ready(function () {
+
+	fn_CalLenVal(jQuery("#FileResume_Cont"));
+
+	jQuery(document).on("click", "input[name=careerType]",function(){
+		if (jQuery("input[name=careerType]:checked").val() == "1") {
+			jQuery("#div-career").hide();
+		}else {
+			jQuery("#div-career").show();
+		}
+	});
+
+	jQuery(document).off("click","div.custslct button").on("click", "div.custslct button",function(){
+		jQuery(this).parent(".custslct").toggleClass('active');
+	});
+	
+	// 셀렉트 > 닫기
+	jQuery(document).on("click", "div.custslct .boxv2 ul li",function(){
+		jQuery(this).parents().parents().parent(".custslct").removeClass('active');
+	});
+
+	// 셀렉트 벗어났을때
+	jQuery(document).on("mouseleave", "div.custslct",function(){
+		jQuery(this).removeClass('active');
+	});
+
+	// 셀렉트 벗어났을때 LI 형태의셀렉트 option 선택. name에 따라 액션 설정됨.
+	jQuery(document).on("click", "div.custslct .boxv2 li",function(){
+		var $self  = jQuery(this);
+		var selfValue = $self.find("span").attr("value");
+		var selfText = $self.find("span").html();
+		var selectLabel = $self.parent().parent().siblings("button");
+		$self.siblings("li").removeClass("selected");
+		$self.addClass("selected");
+		$self.parent().parent().siblings("input").val(selfValue);
+		selectLabel.find("span").html(selfText);
+		//Validation에서 필수항목 오류 표시 제거
+		if(selectLabel.hasClass("error")) selectLabel.removeClass("error");
+	});
+
+	jQuery(document).on("keyup","#tmpInExpert", function(event){
+		var _schwd = jQuery(this).val();
+		jQuery.ajax({
+			type: "POST",
+			mode: "abort",
+			url: "/g_common/bizcommon/resumelayeradd_autocmplt_ajax.asp",
+			data: {
+				schty : 10,
+				schwd : escape(_schwd),
+				limit : 5,
+				timestamp : +new Date()
+			},
+			success: function(data){
+
+				var rows, row, btnhtml
+				var _html = "";
+				var _selExpertCdList = "";
+				jQuery("#Sel_Occu input[name=selOccuCd]").each(function(){
+					if(_selExpertCdList != "") _selExpertCdList += ",";
+					_selExpertCdList += jQuery(this).val();
+				});
+
+				rows = data.split("\n");
+				var _regexp = new RegExp(_schwd,"gi");
+				for (var i=0; i < rows.length; i++) {
+					row = jQuery.trim(rows[i]);
+					if (row) {
+						row = row.split("|");
+						btnhtml = "<button type=\"button\" class=\"sch_select\"><span class=\"keyword\">"+row[2]+"</span></button>"
+						_html += "<li class=\"\">" + btnhtml + "</li>";
+					}
+				}
+				if(_html != ""){
+					_html = "	<ul>" + _html + "</ul>";
+					jQuery("#ExpertKeyword").html(_schwd);
+					jQuery("#divAutoComplete1").show();
+					jQuery("#divAutoComplete").html(_html).show();
+				}else{
+					_html =  "<div class=\"completList_none\" style=\"display: none;\"><p>일치하는 직무기술이 없습니다.</p></div>";
+					jQuery("#ExpertKeyword").html(_schwd);
+					jQuery("#divAutoComplete1").show();
+					jQuery("#divAutoComplete").html(_html).show();
+				}
+			}
+		});
+	});
+
+	jQuery(document).on("click", ".sch_select, .add_keyword",function(){
+		var _html = "";
+			_html += "	<span class=\"hope_htag\">";
+			_html += "		<input type=\"hidden\" name=\"Expert\" value=\""+jQuery(this).find("span").text()+"\">"+jQuery(this).find("span").text()+"";
+			_html += "		<button onclick=\"fn_remove_hope(this);\"></button>";
+			_html += "	</span>";
+			jQuery(".jobDes_hope_tag").prepend(_html);
+			jQuery("#divAutoComplete1").hide();
+	});
+
+	jQuery(document).on("click", ".showCf",function(){
+		jQuery(".cfbtn_show").attr("style", "display:block");
+	});
+
+	jQuery(document).on("click", ".custslct",function(){
+		jQuery(".c_newPopupLayer_container").attr("style", "min-height: 250px;");
+	});
+
+	jQuery(document).on("click", ".btn_recruitFd",function(){
+		jQuery(".cfbtn_show").attr("style", "display:none");
+	});
+});
+
+function fn_fileResume_apply() {
+	var $pstn = jQuery("#cboPstnLyr option");
+	if ($pstn.size() > 2 && jQuery.trim(jQuery("#cboPstnLyr").val()) == "") {
+		alert("모집분야를 선택하세요.");
+		jQuery("#cboPstnLyr").focus();
+		return;
+	} else {
+		fn_LayerPopUpOpen(2);
+	}
+}
+
+/*레이어 팝업 닫기*/
+function fn_LayerPopUpClose() {
+	jQuery('.c_newPopupLayer').remove();
+}
+
+function fn_LayerPopUpOpen(ty) {
+	
+	if (ty == "1") {
+		jQuery('.c_newPopupLayer').remove();
+	}
+	jQuery('.c_newPopupLayer').hide();
+
+	jQuery.ajax({
+		type: 	"POST",
+		url: 	"/g_common/bizcommon/resumelayeradd_ajax.asp",
+		data: 	{ ty : ty
+				},
+		success: function(data) {
+			if (ty == "2" && location.href.indexOf("resume.asp") > 0) {
+			}else {
+				jQuery('body').append(data);
+			}
+		}
+	});
+}
+
+/* 파일 등록*/
+function fn_setFileForm(){
+	var filenm = jQuery("#UploadRsmFile").val();
+	jQuery("#UploadFileNm").val(filenm);
+	jQuery("#UploadType").val('upload');
+}
+
+/* 내파일함 불러오기*/
+function fn_setAttachForm(){
+	var seq = jQuery("#divAttachFile").find("input[name='tmpAttachfile']:checked").val();
+	var tmpCopyFileNm = jQuery("#tmpCopyFileNm_"+seq).val();
+	var tmpCopyFile = jQuery("#tmpCopyFile_"+seq).val();
+	var tmpCopyFileSize = jQuery("#tmpCopyFileSize_"+seq).val();
+	
+	jQuery("#UploadFileNm").val(tmpCopyFileNm);
+	jQuery("#UploadFileNm").html(tmpCopyFileNm);
+
+	jQuery("#UploadType").val('copy');
+	jQuery("#UploadFile").val('');
+
+	jQuery("#CopyFile").val(tmpCopyFile);
+	jQuery("#CopyFileSize").val(tmpCopyFileSize);
+}
+
+function fn_RsmAjaxAgreeOpen() {
+	jQuery.ajax({
+		type: 	"POST",
+		url: 	"/g_common/bizcommon/resumelayeradd_ajax.asp",
+		data: 	{ ty : "6"
+				},
+		success: function(data) {
+			jQuery('body').append(data);
+		}
+	}).done(function(){
+		jQuery('.c_newPopupLayer').removeClass("open").addClass("hide");
+		jQuery('#RsmAgreeLayer').removeClass("hide").addClass('open');
+		jQuery('body').addClass('not-scroll');
+		return false;
+	});
+}
+
+//파일이력서 추가
+function fn_resumeF_add(){
+	
+	if(jQuery("#ResumeFileUrlCnt").val() >= "5"){
+		alert("파일이력서와 URL 이력서는 최대 5개까지 등록 가능합니다.\n등록하신 이력서를 확인해주세요.");
+		return false;
+	}
+
+	if (jQuery("#schoolCd").val() == "") {
+		alert("최종학력을 선택하여 주세요.");
+		return false;
+	}
+
+	if ("99,40,50,60,70,80".indexOf(jQuery("#schoolCd").val()) < 0 ) {
+		alert("최종학력을 선택하여 주세요.");
+		return false;
+	}
+
+	if (jQuery("#GC_RSM_AGREE_YN").val() != "Y") {
+		fn_RsmAjaxAgreeOpen();
+		return false;
+	}
+
+	jQuery('.c_newPopupLayer').hide();
+	jQuery(".loadingArea_new.mult_load").removeClass("hide").addClass("show");
+
+	// 파일 업로드 시
+	if (jQuery("#UploadType").val() == "upload"){
+		fn_resumefile_ajaxFileUpload();
+	}
+	// 내 파일함 불러오기 시
+	else if (jQuery("#UploadType").val() == "copy") {
+		fn_resumefile_ajaxFileProcess();
+	}
+}
+
+function fn_fileconfirm() {
+	var file		= jQuery("#UploadFile").val();
+	var copyfile	= jQuery("#CopyFile").val();
+	var subject		= jQuery("#tmpFileResume_Subject").val();
+	var cont		= jQuery("#tmpFileResume_Cont").val();
+
+	if (file == "" && copyfile == "") {
+		alert("파일을 선택해 주시기 바랍니다.");
+		return false;
+	}
+	if (subject == "") {
+		alert("제목 입력해주세요.");
+		return false;
+	}
+	if (cont == "") {
+		alert("내용 입력해주세요.");
+		return false;
+	}
+	jQuery("#FileResume_Subject").val(subject);
+	jQuery("#FileResume_Cont").val(cont);
+	fn_LayerPopUpOpen(5);
+}
+
+// 파일 업로드
+function fn_resumefile_ajaxFileUpload()
+{
+	jQuery.ajaxFileUpload
+	(
+		{
+			url:G_HOSTNAME_SSL_FILE + '/upload/fileupload.asp',
+			secureuri:false,
+			fileElementId:'UploadRsmFile',
+			addElementId:'',
+			dataType: 'json',
+			data:{Upload_Type:'85'
+				, Upload_FileType:'10'
+				, Upload_Method:'1'
+				, Redirect_Url: document.location.origin + '/g_common/bizcommon/resumelayerfileupload_ajax.asp'
+				, FileResume_Subject : escape(jQuery("#FileResume_Subject").val())
+				, FileResume_Cont : escape(jQuery("#FileResume_Cont").val())
+				, AjaxCaller:'fileresume'},
+			success: function(data, status)
+			{
+				jQuery('#hidRsmNoLyr').val(data);
+				fn_resumelist_hopeadd(data);
+			},
+			error: function(data, status, e)
+			{
+				//alert(e);
+				alert("파일 업로드중 장애가 발생하였습니다. \n관리자에게 문의하세요.");
+			}
+		}
+	)
+
+	return false;
+}
+
+// 이력서페이지 파일 업로드
+function fn_resumefile_ajaxFileUploadV2()
+{
+	jQuery.ajaxFileUpload
+	(
+		{
+			url:G_HOSTNAME_SSL_FILE + '/upload/fileupload.asp',
+			secureuri:false,
+			fileElementId:'UploadRsmFile',
+			dataType: 'json',
+			data:{md: "RESUMEFILE_INSERT"
+				, Upload_Type:'85'
+				, Upload_FileType:'10'
+				, Upload_Method:'1'
+				, Redirect_Url: document.location.origin + '/g_common/bizcommon/resumelayerfileupload_ajax.asp'
+				, FileResume_Subject : escape(jQuery("#FileResume_Subject").val())
+				, FileResume_Cont : escape(jQuery("#FileResume_Cont").val())
+				, UploadResumeNo : jQuery('#rsm').val()
+				, AjaxCaller:'fileresume'
+				},
+			success: function(data, status)
+			{
+			},
+			error: function(data, status, e)
+			{
+				//alert(e);
+				alert("파일 업로드중 장애가 발생하였습니다. \n관리자에게 문의하세요.");
+			}
+		}
+	)
+
+	return false;
+}
+
+
+function fn_resumefile_ajaxFileProcess(){
+
+	jQuery.ajaxFileUploadv2
+	(
+		{
+			url:G_HOSTNAME_SSL_FILE + '/upload/fileUpload_fileresume.asp',
+			secureuri:false,
+			fileElementId:'',
+			addElementId:'CopyFile',
+			dataType: 'html',
+			data:{Redirect_Url:document.location.origin + '/g_common/bizcommon/resumelayerfileupload_ajax.asp'
+				, File_Size : jQuery("#CopyFileSize").val()
+				, FileResume_Subject : escape(jQuery("#FileResume_Subject").val())
+				, FileResume_Cont : escape(jQuery("#FileResume_Cont").val())
+				
+				 },
+			success: function(data, status)
+			{
+				fn_resumelist_hopeadd(data);
+				fn_LayerPopUpClose();
+				fn_resumelist_load();
+			},
+			error: function(data, status, e)
+			{
+				//alert(e);
+				alert("파일 처리중 장애가 발생하였습니다. \n관리자에게 문의하세요.");
+				return;
+				alert("이력서의 최근 수정일자가 현재 시각으로 업데이트되었습니다.");
+			}
+		}
+	)
+	return false;
+}
+
+function fn_resumefile_ajaxFileProcessV2(){
+
+	jQuery.ajaxFileUploadv2
+	(
+		{
+			url:G_HOSTNAME_SSL_FILE + '/upload/fileUpload_fileresume.asp',
+			secureuri:false,
+			fileElementId:'',
+			addElementId:'CopyFile',
+			dataType: 'html',
+			data:{md: "RESUMEFILE_INSERT"
+				, Redirect_Url:document.location.origin + '/g_common/bizcommon/resumelayerfileupload_ajax.asp'
+				, File_Size : jQuery("#CopyFileSize").val()
+				, FileResume_Subject : escape(jQuery("#FileResume_Subject").val())
+				, FileResume_Cont : escape(jQuery("#FileResume_Cont").val())
+				, rsm : jQuery('#rsm').val()
+				 },
+			success: function(data, status)
+			{
+			},
+			error: function(data, status, e)
+			{
+				//alert(e);
+				alert("파일 처리중 장애가 발생하였습니다. \n관리자에게 문의하세요.");
+				return;
+			}
+		}
+	)
+	return false;
+}
+
+//이력서 희망근무조건 Content Load
+function fn_resumelist_hopeadd(rsmno){
+	var strSalary, strSalary1, strSalary2, strSalaryNegoCd ;
+	var strCareerYear, strCareerMonth;
+	var arrSalary;
+	var strExpert = "";
+	jQuery("input[name=Expert]").each(function(idx){
+		if (idx == 0) {
+			strExpert += jQuery(this).val()
+		} else {
+			strExpert += "," + jQuery(this).val();
+		}
+	});
+
+	if (jQuery("input[name='careerType']:checked").val() == "1") {
+		strCareerYear	= 0;
+		strCareerMonth	= 0;
+	}else {
+		strCareerYear	= jQuery("#careerYear").val();
+		strCareerMonth	= jQuery("#careerMonth").val();
+	}	
+
+	strSalary = jQuery("#salary").val();
+	if (strSalary == "") {
+		strSalary1 = "0";
+		strSalary2 = "0";
+		strSalaryNegoCd = "01"
+	}else if (strSalary == "협의 후 결정") {
+		strSalary1 = "0";
+		strSalary2 = "0";
+		strSalaryNegoCd = "02"
+	} 
+	else {
+		arrSalary = strSalary.split("|");
+		strSalary1 = arrSalary[0];
+		strSalary2 = arrSalary[1];
+		strSalaryNegoCd = "01"
+	}
+	
+
+	jQuery.ajax({
+		type: 	"POST",
+		url: 	'/g_common/bizcommon/resumelayeradd_inc_ajax.asp',
+		data: 	{ md : 'RESUMELIST_HOPEADD'
+				, rsm : rsmno
+				, schoolCd       : jQuery("#schoolCd").val()
+				, careerYear     : strCareerYear
+				, careerMonth    : strCareerMonth
+				, salary1        : strSalary1
+				, salary2        : strSalary2
+				, expert         : escape(strExpert)
+				, salaryNegoCd	 : strSalaryNegoCd
+				},
+		success: function(data) {
+			if (data == "Err_Mem_No") {
+			}else{
+				var $this = jQuery("#btn_fileresume_save");
+				ApplyProcAjax($this);
+				fn_LayerPopUpClose();
+				jQuery(".loadingArea_new.mult_load").removeClass("show").addClass("hide");
+				jQuery("#divResumeLayer").remove();
+			}
+		}
+	});
+}
+
+/****************************************************
+*  글자 / byte 수 입력
+****************************************************/
+function fn_CalLenVal(obj) {
+
+	var $obj = jQuery(obj);
+	var $txt = $obj.val();
+
+	if ($txt != undefined) {
+		var $byte = fn_LenVal($txt);
+
+		jQuery("#FileResume_ContByte").html($byte);				// 현재 byte수를 넣는다
+	}
+}
+
+/****************************************************
+*  byte 체크
+****************************************************/
+function fn_LenVal(val) {
+	var nbytes = 0;
+
+	for (i=0; i<val.length; i++) {
+		var ch = val.charAt(i);
+
+		if(escape(ch).length > 4) {			// 한글일경우
+			nbytes += 2;
+		}
+		else {							// 나머지는 모두 1byte
+			nbytes += 1;
+		}
+
+		if (nbytes >= 1000) {
+			alert("최대 1,000 byte 까지 작성 가능합니다.");
+			jQuery("#FileResume_Cont").val(val.substring(0,i));
+			break;
+		}
+	}
+	return nbytes;
+}
+
+function checkFile(input) {
+	var blnfile = true;
+
+	if(jQuery("#ResumeFileUrlCnt").val() >= "5"){
+		alert("파일이력서와 URL 이력서는 최대 5개까지 등록 가능합니다.\n등록하신 이력서를 확인해주세요.");
+		return false;
+	}
+
+	if (navigator.userAgent.match("Mac.OS") != null || iNcruit.util.isiOS() != null) {
+		if (input.files && input.files[0].name.normalize('NFC').length > 25) {
+			alert("파일명을 25자 내로 입력하여 등록해 주세요. 선택하신 파일을 다시 확인해주세요.");
+			input.value = null;
+			blnfile = false;
+			return false;
+		}
+	}
+	else {
+		if (input.files && input.files[0].name.length > 25) {
+			alert("파일명을 25자 내로 입력하여 등록해 주세요. 선택하신 파일을 다시 확인해주세요.");
+			input.value = null;
+			blnfile = false;
+			return false;
+		}
+	}
+
+	if (input.files && input.files[0].type.indexOf("pdf") < 0) {
+		alert("파일이력서는 PDF 파일만 등록할 수 있습니다. 선택하신 파일을 다시 확인해주세요.");
+        input.value = null;
+		blnfile = false;
+		return false;
+	}
+    if (input.files && input.files[0].size > (10 * 1024 * 1024)) {
+        alert("파일이력서는 10MB를 초과할 수 없습니다. 선택하신 파일 용량을 다시 확인해주세요.");
+        input.value = null;
+		blnfile = false;
+		return false;
+    }
+
+	if (blnfile) {
+		jQuery("#UploadFileNm").val(input.value);
+		jQuery("#UploadFileNm").html(input.value);
+		if (!jQuery(".c_newPopupLayer.selFile").hasClass("selFile")) {
+			fn_LayerPopUpOpen(2);
+		}
+	}
+}
+
+function fn_fileclick() {
+	if(jQuery("#ResumeFileUrlCnt").val() >= "5"){
+		alert("파일이력서와 URL 이력서는 최대 5개까지 등록 가능합니다.\n등록하신 이력서를 확인해주세요.");
+		return false;
+	} else {
+		jQuery('#UploadRsmFile').click();
+	}
+}
+
+function fn_remove_hope(obj) {
+	jQuery(obj).parent().remove();
+}
+
+function fn_RsmAgreeOpen() {		
+	jQuery('#RsmAgreeLayer').addClass('open');
+	jQuery('body').addClass('not-scroll');
+	return false;
+};
+function fn_RsmAgreeClose(strTy) {		
+	if(strTy == "1") alert("개인정보 수집 및 이용에 동의하지 않을 경우 변경사항이 저장되지 않습니다.")
+	jQuery('#RsmAgreeLayer').removeClass('open');
+	jQuery('body').removeClass('not-scroll');
+};
+
+function fn_RsmAgreeOK(strTy) {
+
+	var currentSubmitMd = jQuery("#currentSubmitMd").val(); 
+
+	if(jQuery("#chkRsmAgree").is(":checked") == false) {
+		jQuery("#RsmAgreeTooltip").addClass("active");
+		return false; 
+	}
+	else {
+
+		jQuery.ajax({
+			type: 	"POST",
+			url: 	"/g_common/bizcommon/resumelayeradd_inc_ajax.asp",
+			data: 	{ md: "RESUME_AGREE" },
+			success: function(data) {
+				jQuery("#GC_RSM_AGREE_YN").val("Y");
+				fn_RsmAgreeClose();			
+				fn_resumeF_add();
+				return false;
+			}
+		});
+	}
+}

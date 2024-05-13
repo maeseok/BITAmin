@@ -1,0 +1,14 @@
+건축자재 - KCC 
+1. 건설수주액 : 계약  (1990~2023) -> 월간 데이터 - 계약한 규모 확인 가능 KOSIS
+2. 건설기성액 : 실제 지급 (1997~2023) -> 월간 데이터 - 현장의 건설경기 확인 가능 KOSIS
+3. 규소의 가격 : 실리콘의 주요 원자재(2004 10~) -> 월간 데이터 - KOMIS https://www.kores.net/komis/price/mineralprice/minormetals/pricetrend/minorMetals.do
+4. 유가 : 국제 유가 데이터(1996~2024) -> 월간 데이터
+https://www.petronet.co.kr/main2.jsp
+
+
+실리콘 - 58.7% -> 실리콘 데이터 수집 어려움 -> 규소로 대체
+도료(페인트) - 22.1% -> 원자재 수급(유가 영향) - 수입 의존도 60%이상
+건자재 - 13.2% -> 도료와 마찬가지로 유가에 영향 받음
+
+
+https://ecodemy.cafe24.com/sa.html

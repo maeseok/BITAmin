@@ -1,0 +1,43 @@
+
+<!-- saved from url=(0067)https://job.incruit.com/s_common/jobpost/auto_size.html?height=1163 -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
+<title>Resizing Page</title>
+<script type="text/javascript">
+<!--
+	function fn_ResizePage()
+	{
+		try
+		{
+			var params = window.location.search.substring( 1 ).split( '&' );
+			var height;
+			for( var i = 0, l = params.length; i < l; ++i ) {
+				var parts = params[i].split( '=' );
+				switch( parts[0] ) {
+					case 'height':
+					height = parseInt( parts[1] );
+					break;
+				}
+			}
+			if( typeof( height ) == 'number' ) {
+				window.top.fn_jobpost_autoResize_Ifr( height );
+			}
+		}
+		catch(e)
+		{
+			setTimeout("fn_ResizePage()",3000);
+		}
+	}
+
+	function onLoad() {
+		fn_ResizePage();
+
+		setTimeout("fn_ResizePage()",3000);
+	}
+//->
+</script>
+</head>
+<body onload="onLoad();">
+<p>Resizing IFrame...</p>
+
+
+</body></html>

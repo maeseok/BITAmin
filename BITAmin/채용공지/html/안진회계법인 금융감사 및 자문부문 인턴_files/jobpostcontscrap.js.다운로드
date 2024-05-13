@@ -1,0 +1,47 @@
+//----------------------------------------------------------------------------------
+// 화 일 명 : jobpostcontscrap.js
+// 용    도 : 채용공고 iframe 내의 관심기업 추가 
+// 작성일시 : 2018-09-05 (김아영)
+// 수정일시 : 
+// 주의사항 :
+//----------------------------------------------------------------------------------
+
+jQuery(document).ready(function(){
+	jQuery("#mkscrapbtn").bind('click', function() {
+		var jobpostno = $(this).attr("jpn"); 
+		ListCorpScrapAddV3("add", jobpostno);
+	});
+});
+var ListCorpScrapAddV3 = function(ftype, job_post_no){
+
+	if(job_post_no==""){
+		alert("관심기업 추가에 오류가 있습니다.");
+		return;
+	}
+	jQuery.ajax({
+		type:"POST",
+		url:"/g_common/bizcommon/V2/job_list_corp_scrap_ajax.asp",
+		dataType:"text",
+		data:{"flag":ftype,"job_post_no":job_post_no},
+		success:function(data,status){
+			if(data=="login"){
+				var url = document.URL;
+				location.href = (url.indexOf("m.incruit.com") > -1)? G_HOSTNAME_EDIT + "/login/loginmobile.asp?gotoURL=" + escape(url):G_HOSTNAME_EDIT + "/login/login.asp?gotoURL=" + escape(url);
+				return;
+			}else if(data=="corp"){
+				alert("개인회원 로그인 후 관심기업 추가를 해주세요.");
+				return;
+			}else if(data=="n"){
+				alert("관심기업에 추가 하지 못했습니다.\n다시 시도해 주세요.");
+				return;
+			}else if(data=="d"){
+				alert("등록된 기업이 없습니다.\n다시 확인해 주세요.");
+				return;
+			}else if(data=="r"){
+				alert("이미 관심기업에 추가되어 있습니다.");
+				return;
+			}else{
+			}
+		}
+	});
+};
