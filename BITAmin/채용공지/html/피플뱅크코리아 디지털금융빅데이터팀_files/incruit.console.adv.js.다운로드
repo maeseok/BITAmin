@@ -1,3 +1,0 @@
-// Copyright ⓒ 1998~2017 Incruit Corporation All rights reserved
-
-jQuery(document).ready(function(){if(window.console!=undefined){if(document.referrer.indexOf("incruit.com")<0){setTimeout(console.log.bind(console,'%c인%c크루트','font:8em Arial;color:#EC6521;font-weight:bold','font:8em Arial;color:#000000;font-weight:bold'),0);setTimeout(console.log.bind(console,'%c  좋은 일 찾을 땐, %c인크루트','font:2em sans-serif;color:#333;','font:2em Arial;color:#EC6521;font-weight:bold'),0);}}});
