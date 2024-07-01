@@ -175,6 +175,7 @@ https://www.studocu.com/ko/document/sejong-university/electric-circuits/chap02sp
 7월 03일 : 파이썬 중간고사 + 머신러닝 1일차
 
 
+공모전 : 임신주차 높을수록 주변 산부인과 거리까지도 계산하여 추천
 
 270만개 -> 데이터 정교화해서 필요한 부분만 추출
 eos, pos 똑같다.
