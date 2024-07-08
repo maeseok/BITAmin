@@ -39,8 +39,8 @@ while(True):
 print('*'*39)
 
 # [2] 명지투데이 뉴스 이용해 각 모듈 함수 실행
-import requests
-from bs4 import BeautifulSoup as bs
+import requests # pip install requests
+from bs4 import BeautifulSoup as bs # pip install bs4
 
 req = 'https://www.mju.ac.kr/mjukr/302/subview.do?enc=Zm5jdDF8QEB8JTJGYmJzJTJGbWp1a3IlMkYxNjYlMkYyMTI5ODclMkZhcnRjbFZpZXcuZG8lM0ZwYWdlJTNEMiUyNnNyY2hDb2x1bW4lM0QlMjZzcmNoV3JkJTNEJTI2YmJzQ2xTZXElM0QlMjZiYnNPcGVuV3JkU2VxJTNEJTI2cmdzQmduZGVTdHIlM0QlMjZyZ3NFbmRkZVN0ciUzRCUyNmlzVmlld01pbmUlM0RmYWxzZSUyNmlzVmlldyUzRHRydWUlMjZwYXNzd29yZCUzRCUyNg%3D%3D'
 response = requests.get(req)
