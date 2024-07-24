@@ -193,18 +193,18 @@ https://www.studocu.com/ko/document/sejong-university/electric-circuits/chap02sp
 7월 21일 : 머신러닝 7일차(3) + 오픽 2일차(영상 시청)
 7월 22일 : 예습+복습과제 + 머신러닝 8일차(4)
 7월 23일 : 머신러닝 9일차(5) + 오픽 2일차(영상 시청)
-7월 24일 : 예습과제 회의
+7월 24일 : 예습과제 회의 + 
+
+다음주 중으로 시간표 짜기
+8월 5일 : 미리 담기
+https://m.blog.naver.com/fbfbf1/222425629431
+https://twinw.tistory.com/247
+https://deep-learning-study.tistory.com/161
+
 머신러닝 복습 : 1회독 -> 정리 포스팅
 블로그 : ai 서비스 관련, 경제 관련, ai 관련 나의 생각
 
 개인 프로젝트-> 1안 : 버츄얼, VR 관련 분야의 최근 성장세 및 NLP : 왜 성장했는지, 어느 것을 기점으로? (해당 분야의 유명한 이세계아이돌, 플레이브)
-
-추천 시스템 관련 
-https://dacon.io/codeshare/6046
-- 데이터가 있는 것이 중요 
-https://dacon.io/competitions/official/236170/overview/description - 이력서 관련 추천 
-https://dacon.io/competitions/official/236290/overview/description - 웹 기사 추천
-https://dacon.io/competitions/official/236093/overview/description - 도서 추천
 (SQL,SAS 학습)
 - git도 수정하기
 
@@ -217,6 +217,8 @@ https://dacon.io/competitions/official/236093/overview/description - 도서 추�
 
 3-1 : 세부 분야 정하기 - 기업 지원서 분석해서 특정하기 -> NLP or CV?
 여름방학 : 계절학기 + 오픽 IH (계절도중? or 계절 끝나고)
+https://www.allforyoung.com/posts/50661
+https://www.allforyoung.com/posts/49412
 
 3-2 : 자소서 미리 준비 + 프로젝트 및 공모전 + 코테?
 겨울방학 : 기사, 자소서, 코테 준비, 되면 방학 부트캠프 정도?
