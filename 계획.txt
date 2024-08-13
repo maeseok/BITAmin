@@ -214,7 +214,7 @@ https://www.studocu.com/ko/document/sejong-university/electric-circuits/chap02sp
 8월 10일 : API 도서 데이터 수집 
 8월 11일 : 공모전 전체적 흐름, 가독성, 맞춤법 등 확인 및 제출 + 예습,복습 과제 제출
 8월 12일 : 머신러닝(9) + 오픽 방향성
-8월 13일 : 연계전공 수강신청 확인해보기
+8월 13일 : 머신러닝(10) 
 
 8월 16일 : 수강신청
 
