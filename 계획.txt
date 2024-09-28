@@ -261,7 +261,7 @@ https://www.studocu.com/ko/document/sejong-university/electric-circuits/chap02sp
 9월 25일 : 동아리 + 프로젝트 데이터 관련
 9월 26일 : 운동 + 공모전 질의 응답 준비
 9월 27일 : 오픽
-9월 28일 : 오픽 + 프로젝트 구체화(가능하면 데이터 json csv화)
+9월 28일 : 프로젝트 구체화(가능하면 데이터 json csv화)
 9월 29일 : 수업 복습 및 과제 + 10시 회의
 9월 30일 : 공모전 오후 2시까지 + 수업 복습
 ~11월 중순 : 오픽 끝내기
