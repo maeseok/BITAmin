@@ -280,8 +280,8 @@ https://www.studocu.com/ko/document/sejong-university/electric-circuits/chap02sp
 10월 14일 : 글문 진도 및 복습 + 딥러닝 과제 복습
 10월 15일 : 캡디 + 딥러닝 전체 복습
 10월 16일 : 글문 전체 복습 + 데사 복습 + 데마 프로젝트 주제
-10월 17일 : R 복습 및 과제
-10월 18일 : 딥러닝 복습 + @
+10월 17일 : R 복습
+10월 18일 : 딥러닝 복습 + R 과제
 10월 19일 : 데사 + R 복습 
 10월 20일 : 딥러닝 전체 복습
 10월 21일 : 딥러닝 오후 7시 시험 + 글문 복습
@@ -289,6 +289,7 @@ https://www.studocu.com/ko/document/sejong-university/electric-circuits/chap02sp
 10월 23일 : 글문 오후 1시 시험 + 데사 복습
 10월 24일 : 오후 4시 데사 시험 + R 복습
 10월 25일 : R 시험 + 집
+10월 26~28일 : 프로젝트 학습 + 오픽
 
 ~11월 중순 : 오픽 끝내기
 
