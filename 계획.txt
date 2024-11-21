@@ -317,6 +317,8 @@ https://www.studocu.com/ko/document/sejong-university/electric-circuits/chap02sp
 11월 20일 : 동아리 + 글문 복습(보류) + 코드 flask로 변환
 11월 21일 : 회의 및 웹 페이지 완성 
 11월 22일 : 포스터 마무리 및 밀린 복습
+11월 23일 : 밀린 복습 + 데마 과제
+11월 24일 : 웹 페이지 다시
 
 11월 11일 주에 핸즈온 + 학교 수업 복습
 
