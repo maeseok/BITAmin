@@ -1,0 +1,24 @@
+body {
+  font-size: 16px;
+}
+div#app_body{
+  max-width: none; 
+}
+div#application {
+  max-width: none;
+}
+div#application .attach-or-paste .file-types {
+  margin-top: 0;
+}
+div#custom_fields div.field label {
+  font-size: 1rem;
+}
+.file-types {
+  font-size: 1rem;
+}
+/* mobile */
+@media (max-width: 640px) {
+  div#application .attach-or-paste .file-types {
+    margin-top: -10px;
+  }
+}
