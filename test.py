@@ -1,80 +1,39 @@
-import random
-import math
+vertices = ['a', 'b', 'c', 'd', 'e']
+idx = {v: i for i, v in enumerate(vertices)}
+n = len(vertices)
 
-# 해시 테이블 구현 (개방 주소법 - 선형 조사)
-class HashTable:
-    def __init__(self, size):
-        self.size = size
-        self.table = [None] * size
-    
-    def hash(self, key):
-        return key % self.size
+edges = [
+    ('b', 'a', 1),
+    ('a', 'd', -2),
+    ('d', 'e', -3),
+    ('e', 'b', 3),
+    ('e', 'c', -5),
+    ('b', 'c', -12),
+    ('a', 'e', 5)
+]
 
-    def insert(self, key):
-        idx = self.hash(key)
-        probes = 0
-        while self.table[idx] is not None:
-            idx = (idx + 1) % self.size
-            probes += 1
-        self.table[idx] = key
-        return probes + 1  # 자기 자신도 조사하므로 +1
+dist = [float('inf')] * n
+prev = [None] * n
+dist[idx['a']] = 0
+history = [dist.copy()]
 
-    def search(self, key):
-        idx = self.hash(key)
-        probes = 1
-        while self.table[idx] is not None:
-            if self.table[idx] == key:
-                return probes
-            idx = (idx + 1) % self.size
-            probes += 1
-            if probes > self.size:  # 탐색 실패로 간주
-                return probes
-        return probes  # 탐색 실패
+for _ in range(n - 1):
+    updated = dist.copy()
+    for u, v, w in edges:
+        u_i, v_i = idx[u], idx[v]
+        if dist[u_i] != float('inf') and dist[u_i] + w < updated[v_i]:
+            updated[v_i] = dist[u_i] + w
+            prev[v_i] = u
+    dist = updated
+    history.append(dist.copy())
 
-def simulate(m=1000, alpha=0.5, trials=100):
-    n = int(m * alpha)
-    results_success = []
-    results_failure = []
+# Distance Table
+print("Distance Table:")
+print("Step\t" + "\t".join(vertices))
+for i, row in enumerate(history):
+    print(f"{i}\t" + "\t".join(["inf" if x == float('inf') else str(x) for x in row]))
 
-    for _ in range(trials):
-        # 무작위 키 생성
-        keys = random.sample(range(10 * m), n)
-        table = HashTable(m)
-        
-        for key in keys:
-            table.insert(key)
-
-        # 성공 검색: 테이블에 있는 키 중 무작위 선택
-        success_key = random.choice(keys)
-        probes_success = table.search(success_key)
-        results_success.append(probes_success)
-
-        # 실패 검색: 없는 키 생성
-        while True:
-            fail_key = random.randint(0, 10 * m)
-            if fail_key not in keys:
-                break
-        probes_fail = table.search(fail_key)
-        results_failure.append(probes_fail)
-
-    avg_success = sum(results_success) / trials
-    avg_failure = sum(results_failure) / trials
-
-    # 이론값
-    theory_fail = 1 / (1 - alpha)
-    theory_success = (1 / alpha) * math.log(1 / (1 - alpha))
-
-    return {
-        'alpha': alpha,
-        'avg_probes_success': avg_success,
-        'theory_success': theory_success,
-        'avg_probes_failure': avg_failure,
-        'theory_failure': theory_fail
-    }
-
-# 시뮬레이션 실행
-for alpha in [0.1, 0.3, 0.5, 0.7, 0.9]:
-    result = simulate(alpha=alpha)
-    print(f"[α={result['alpha']}]")
-    print(f"  성공 평균 조사 횟수: {result['avg_probes_success']:.2f} (이론: {result['theory_success']:.2f})")
-    print(f"  실패 평균 조사 횟수: {result['avg_probes_failure']:.2f} (이론: {result['theory_failure']:.2f})\n")
+# Previous Vertex Table
+print("\nPrevious Vertex Table:")
+print("Vertex\t" + "\t".join(vertices))
+print("Prev\t" + "\t".join([p if p else "-" for p in prev]))
