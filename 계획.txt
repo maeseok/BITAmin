@@ -548,7 +548,8 @@ https://www.studocu.com/ko/document/sejong-university/electric-circuits/chap02sp
 06월 23일 : 계획
 06월 24일 : 프롬프트 엔지니어링 기획
 06월 25일 : KT m&s 3개 작성
-06월 26일 : 자기소개서, CS 준비
+06월 26일 : 네붙캠 정리 및 강의 1차 + 코테 정리
+06월 27일 : 네붙캠 강의 2차 + 코테 시작
 
 06월 30일 : 서울대학원 마감
 
