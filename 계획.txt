@@ -553,7 +553,8 @@ https://www.studocu.com/ko/document/sejong-university/electric-circuits/chap02sp
 06월 28일 : 취준 내용 정리
 06월 29일 : 휴식
 06월 30일 : 네붙캠 강의 2차(~2) + 코테 + AI 정리
-07월 01일 : 네붙캠 강의 2차(~3) + 코테 + BNK 전부
+07월 01일 : 코테 + BNK 전부
+07월 02일 : 코테 + 코오롱베니트 전부
 07월 04일 : 장학금 신청
 
 
