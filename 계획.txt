@@ -556,8 +556,8 @@ https://www.studocu.com/ko/document/sejong-university/electric-circuits/chap02sp
 07월 01일 : 코테 + BNK 전부
 07월 02일 : 코테 + 코오롱베니트 전부
 07월 03일 : PTKOREA 작성 + 코테
-07월 04일 : 장학금 신청 + 코테 + 파수
-
+07월 04일 : 파수(1~2번) + 빅분기 포스팅
+07월 05일 : 파수(3번) + 코테2 
 
 --------------------
 7월 11일 : 빅분기 실기 발표
