@@ -558,6 +558,9 @@ https://www.studocu.com/ko/document/sejong-university/electric-circuits/chap02sp
 07월 03일 : PTKOREA 작성 + 코테
 07월 04일 : 파수(1~2번) + 빅분기 포스팅
 07월 05일 : 파수(3번) + 코테2 
+07월 06일 : 파수(4번) + 코테
+07월 07일 : 이노베이트 + 코테 + 네붙캠 강의 2차(~3)
+
 
 --------------------
 7월 11일 : 빅분기 실기 발표
