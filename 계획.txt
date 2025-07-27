@@ -579,6 +579,7 @@ https://www.studocu.com/ko/document/sejong-university/electric-circuits/chap02sp
 07월 24일 : 휴식
 07월 25일 : 코테
 07월 26일 : 코테 3 + EY 
+07월 27일 : 코테 2 + 핸즈온 1D
 
 -------------------------------
 -> 7월까지 : 토스(140이상), 코테 
