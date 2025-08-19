@@ -1,35 +1,22 @@
-# Bellman-Ford Algorithm 구현
+n=int(input())
+k=int(input())
 
-# 그래프 정의
-edges = [
-    ("b", "a", 1),
-    ("b", "c", -12),
-    ("a", "d", -2),
-    ("a", "e", 5),
-    ("d", "e", -3),
-    ("e", "c", -5),
-    ("e", "b", 3)
-]
+visited = [False]*n
+graph=[[] for _ in range(n)]
+for i in range(k):
+     a,b=map(int,input().split())
+     graph[a-1].append(b-1)
+     graph[b-1].append(a-1)
 
-vertices = ["a", "b", "c", "d", "e"]
-dist = {v: float("inf") for v in vertices}
-prev = {v: None for v in vertices}
-
-# 시작점
-dist["a"] = 0
-
-# V-1 번 반복
-for i in range(len(vertices) - 1):
-    for u, v, w in edges:
-        if dist[u] != float("inf") and dist[u] + w < dist[v]:
-            dist[v] = dist[u] + w
-            prev[v] = u
-
-# 결과 출력
-print("최단 거리:")
-for v in vertices:
-    print(f"{v}: {dist[v]}")
-
-print("\n이전 정점:")
-for v in vertices:
-    print(f"{v}: {prev[v]}")
+def dfs(graph, v, visited):
+    visited[v]=True
+    tmp=0
+    for neighbor in graph[v]:
+        if not visited[neighbor]:
+            tmp+=1
+            tmp +=dfs(graph, neighbor, visited)
+    return tmp
+    
+    
+answer = dfs(graph, 0, visited)
+print(answer)
